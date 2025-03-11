@@ -1,14 +1,19 @@
-const fs = require('fs');
-const csv = require('csv-parser');
-const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs'); // permet de travailler avec des fichiers (lire, écrire, ...)
+const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
+const path = require('path'); // module path pour gérer les chemins de manière robuste
+const sqlite3 = require('sqlite3').verbose(); // importe sqlite3 ; .verbose() permet d'afficher des messages d'erreur plus détaillés
 
-const db = new sqlite3.Database('students.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+const dbPath = path.resolve(__dirname, '../students.db'); // crée le fichier students.db dans le dossier PSE
+
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => { // crée le fichier dans le dossier PSE
     if (err) {
         console.error("Erreur lors de l'ouverture de la base de données:", err.message);
         return;
     }
     console.log("Base de données ouverte.");
 });
+
+const csvFilePath = path.resolve(__dirname, '../scripts/Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
 
 // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
 db.run('PRAGMA journal_mode = WAL', (err) => {
@@ -19,7 +24,7 @@ db.run('PRAGMA journal_mode = WAL', (err) => {
     }
 });
 
-db.serialize(() => {
+db.serialize(() => { // les requêtes sont exécutées dans l'ordre
     // Création de la table si elle n'existe pas
     db.run(`CREATE TABLE IF NOT EXISTS students (
         num_insa INTEGER PRIMARY KEY,
@@ -51,7 +56,7 @@ db.serialize(() => {
         }
 
         // Lecture du fichier CSV et insertion des données
-        fs.createReadStream('scripts/Sujet5_base.csv')
+        fs.createReadStream(csvFilePath)
             .pipe(csv({ separator: ',' }))
             .on('data', (row) => {
                 console.log("Ligne lue du CSV:", row); // Affiche chaque ligne lue
