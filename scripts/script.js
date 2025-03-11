@@ -1,12 +1,28 @@
 const fs = require('fs');
 const csv = require('csv-parser');
-
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('students.db');
+
+const db = new sqlite3.Database('students.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+    if (err) {
+        console.error("Erreur lors de l'ouverture de la base de données:", err.message);
+        return;
+    }
+    console.log("Base de données ouverte.");
+});
+
+// Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
+db.run('PRAGMA journal_mode = WAL', (err) => {
+    if (err) {
+        console.error("Erreur lors de l'activation du mode WAL:", err.message);
+    } else {
+        console.log("Mode WAL activé.");
+    }
+});
 
 db.serialize(() => {
+    // Création de la table si elle n'existe pas
     db.run(`CREATE TABLE IF NOT EXISTS students (
-        num_insa INTEGER PRIMARY KEY AUTOINCREMENT,
+        num_insa INTEGER PRIMARY KEY,
         civilite TEXT,
         prenom TEXT,
         nom TEXT,
@@ -16,20 +32,86 @@ db.serialize(() => {
         section TEXT,
         groupe TEXT,
         decision_jury TEXT,
-        commentaire TEXT
-    )`);
+        commentaire TEXT,
+        an INTEGER
+    )`, (err) => {
+        if (err) {
+            console.error("Erreur lors de la création de la table:", err.message);
+            return;
+        }
+        console.log("Table 'students' créée ou déjà existante.");
+    });
 
-    fs.createReadStream('Sujet5_base.csv')
-        .pipe(csv({ separator: ',' }))
-        .on('data', (row) => {
-            const { "N° INSA": num_insa, "M/Mme": civilite, Prenom: prenom, NOM: nom, Année: annee, Langue: langue, mail: email, Groupe: groupe, "Decision Jury STPI1": decision_jury, Commentaire: commentaire } = row;
+    // Commencer une transaction pour les insertions
+    db.run('BEGIN TRANSACTION', (err) => {
+        if (err) {
+            console.error("Erreur lors du début de la transaction:", err.message);
+            return;
+        }
+
+        // Lecture du fichier CSV et insertion des données
+        fs.createReadStream('scripts/Sujet5_base.csv')
+            .pipe(csv({ separator: ',' }))
+            .on('data', (row) => {
+                console.log("Ligne lue du CSV:", row); // Affiche chaque ligne lue
+
+                const { "num_insa": num_insa, "M/Mme": civilite, Prenom: prenom, NOM: nom, Année: annee, Langue: langue, mail: email, Groupe: groupe, "Decision Jury STPI1": decision_jury, Commentaire: commentaire } = row;
+
+                // Vérifier si l'étudiant existe déjà dans la base de données
+                db.get('SELECT num_insa FROM students WHERE num_insa = ?', [num_insa], (err, existingRow) => {
+                    if (err) {
+                        console.error("Erreur lors de la vérification des doublons:", err.message);
+                        return;
+                    }
+
+                    if (!existingRow) {
+                        db.run(`INSERT INTO students (num_insa, civilite, prenom, nom, annee, langue, email, groupe, decision_jury, commentaire) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+                                [num_insa, civilite, prenom, nom, annee, langue, email, groupe, decision_jury, commentaire], (err) => {
+                                    if (err) {
+                                        console.error("Erreur lors de l'insertion des données:", err.message);
+                                    } else {
+                                        console.log(`Étudiant ${num_insa} inséré avec succès.`);
+                                    }
+                                });
+                    } else {
+                        console.log(`Étudiant ${num_insa} déjà présent, pas d'insertion.`);
+                    }
+                });
+            })
             
-            db.run(`INSERT INTO students (num_insa, civilite, prenom, nom, annee, langue, email, groupe, decision_jury, commentaire) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
-                    [num_insa, civilite, prenom, nom, annee, langue, email, groupe, decision_jury, commentaire]);
-        })
-        .on('end', () => {
-            console.log('CSV importé dans SQLite.');
-            db.close();
-        });
+            .on('end', () => {
+                // Valider la transaction après l'importation
+                db.run('COMMIT', (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la validation de la transaction:", err.message);
+                        return;
+                    }
+                    console.log("CSV importé et transaction validée.");
+                });
+                
+                // Mise à jour de la colonne 'an' avec les 4 premiers caractères de 'annee'
+                db.run('UPDATE students SET an = +SUBSTR(annee, 1, 4)', (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'an':", err.message);
+                    } else {
+                        console.log("Colonne 'an' mise à jour avec les 4 premiers caractères de 'annee'.");
+                    }
+                });
+
+                // Fermeture de la base de données après l'importation avec un délai
+                setTimeout(() => {
+                    db.close((err) => {
+                        if (err) {
+                            console.error("Erreur lors de la fermeture de la base de données:", err.message);
+                        } else {
+                            console.log("Base de données fermée.");
+                        }
+                    });
+                }, 1000); // Attends 1 seconde avant de fermer la base de données
+            })
+            .on('error', (err) => {
+                console.error("Erreur lors de la lecture du fichier CSV:", err.message);
+            });
+    });
 });
