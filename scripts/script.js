@@ -39,7 +39,8 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
         decision_jury TEXT,
         commentaire TEXT,
         an INTEGER,
-        redoublant BOOLEAN
+        redoublant INTEGER,
+        intégré BOOLEAN
     )`, (err) => {
         if (err) {
             console.error("Erreur lors de la création de la table:", err.message);
@@ -106,11 +107,20 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                 });
 
                 // Mise à jour de la colonne 'redoublant' si les élèves sont redoublants ou non
-                db.run(`UPDATE students SET redoublant = CASE WHEN SUBSTR(annee, 6, 3) = 'RED' THEN TRUE ELSE FALSE END`, (err) => {
+                db.run(`UPDATE students SET redoublant = CASE WHEN annee LIKE '%RED%' AND annee LIKE '%1A%' THEN 1 WHEN annee LIKE '%RED%' AND annee LIKE '%2A%' THEN 2 ELSE 0 END`, (err) => {
                     if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'an':", err.message);
+                        console.error("Erreur lors de la mise à jour de la colonne 'redoublant':", err.message);
                     } else {
-                        console.log("Colonne 'an' mise à jour avec les 4 premiers caractères de 'annee'.");
+                        console.log("Colonne 'redoublant' mise à jour avec les si ce sont des redoublants.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'intégré' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET intégré = CASE WHEN annee LIKE '%INT%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'intégré':", err.message);
+                    } else {
+                        console.log("Colonne 'intégré' mise à jour avec les si ce sont des intégrés.");
                     }
                 });
 
