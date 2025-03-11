@@ -2,5 +2,26 @@
   "dependencies": {
     "csv-parser": "^3.2.0",
     "sqlite3": "^5.1.7"
-  }
+  },
+  "name": "electron_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {
+    "electron": "^35.0.1"
+  },
+  "scripts": {
+    "start":"electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/radiat3ur/PSE---Aide-l-affectation-dans-de-nouveaux-groupes-STPI2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/radiat3ur/PSE---Aide-l-affectation-dans-de-nouveaux-groupes-STPI2/issues"
+  },
+  "homepage": "https://github.com/radiat3ur/PSE---Aide-l-affectation-dans-de-nouveaux-groupes-STPI2#readme"
 }
