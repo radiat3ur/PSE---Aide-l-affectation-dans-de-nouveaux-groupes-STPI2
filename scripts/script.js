@@ -40,7 +40,14 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
         commentaire TEXT,
         an INTEGER,
         redoublant INTEGER,
-        intégré BOOLEAN
+        intégré BOOLEAN,
+        Allemand BOOLEAN,
+        Espagnol BOOLEAN,
+        Français BOOLEAN,
+        Espagnol_debutant BOOLEAN,
+        Allemand_debutant BOOLEAN,
+        Espagnol_grand_debutant BOOLEAN,
+        Allemand_grand_debutant BOOLEAN
     )`, (err) => {
         if (err) {
             console.error("Erreur lors de la création de la table:", err.message);
@@ -120,7 +127,70 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                     if (err) {
                         console.error("Erreur lors de la mise à jour de la colonne 'intégré':", err.message);
                     } else {
-                        console.log("Colonne 'intégré' mise à jour avec les si ce sont des intégrés.");
+                        console.log("Colonne 'intégré' mise à jour avec si ils ce sont des intégrés.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'allemand' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET Allemand = CASE WHEN langue LIKE '%ALL%' AND langue NOT LIKE '%ALLD%' AND langue NOT LIKE '%ALLGD%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'allemand':", err.message);
+                    } else {
+                        console.log("Colonne 'allemand' mise à jour avec si ils suivent des cours d'allemand.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'espagnol' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET Espagnol = CASE WHEN langue LIKE '%ESP%' AND langue NOT LIKE '%ESPD%' AND langue NOT LIKE '%ESPGD%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'espagnol':", err.message);
+                    } else {
+                        console.log("Colonne 'espagnol' mise à jour avec si ils suivent des cours d'espagnol.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'français' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET Français = CASE WHEN langue LIKE '%FLE%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'français':", err.message);
+                    } else {
+                        console.log("Colonne 'français' mise à jour avec si ils suivent des cours de français.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'espagnol debutant' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET Espagnol_debutant = CASE WHEN langue LIKE '%ESPD%' AND langue NOT LIKE '%ESPGD%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'espagnol debutant':", err.message);
+                    } else {
+                        console.log("Colonne 'espagnol debutant' mise à jour avec si ils suivent des cours d'espagnol debutant.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'allemand debutant' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET Allemand_debutant = CASE WHEN langue LIKE '%ALLD%' AND langue NOT LIKE '%ALLGD%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'allemand debutant':", err.message);
+                    } else {
+                        console.log("Colonne 'allemand debutant' mise à jour avec si ils suivent des cours d'allemand debutant.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'allemand grand debutant' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET Allemand_grand_debutant = CASE WHEN langue LIKE '%ALLGD%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'allemand grand debutant':", err.message);
+                    } else {
+                        console.log("Colonne 'allemand grand debutant' mise à jour avec si ils suivent des cours d'allemand grand debutant.");
+                    }
+                });
+
+                // Mise à jour de la colonne 'espagnol grand debutant' si les élèves sont intégrés ou non
+                db.run(`UPDATE students SET Espagnol_grand_debutant = CASE WHEN langue LIKE '%ESPGD%' THEN TRUE ELSE FALSE END`, (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour de la colonne 'espagnol grand debutant':", err.message);
+                    } else {
+                        console.log("Colonne 'espagnol grand debutant' mise à jour avec si ils suivent des cours d'espagnol grand debutant.");
                     }
                 });
 
