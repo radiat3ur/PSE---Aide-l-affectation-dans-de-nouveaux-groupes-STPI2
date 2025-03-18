@@ -99,114 +99,80 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                 db.run('COMMIT', (err) => {
                     if (err) {
                         console.error("Erreur lors de la validation de la transaction:", err.message);
-                        return;
+                        return; 
                     }
                     console.log("CSV importé et transaction validée.");
                 });
                 
-                // Mise à jour de la colonne 'an' avec les 4 premiers caractères de 'annee'
-                db.run('UPDATE students SET an = +SUBSTR(annee, 1, 4)', (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'an':", err.message);
-                    } else {
-                        console.log("Colonne 'an' mise à jour avec les 4 premiers caractères de 'annee'.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'redoublant' si les élèves sont redoublants ou non
-                db.run(`UPDATE students SET redoublant = CASE WHEN annee LIKE '%RED%' AND annee LIKE '%1A%' THEN 1 WHEN annee LIKE '%RED%' AND annee LIKE '%2A%' THEN 2 ELSE 0 END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'redoublant':", err.message);
-                    } else {
-                        console.log("Colonne 'redoublant' mise à jour avec les si ce sont des redoublants.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'intégré' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET intégré = CASE WHEN annee LIKE '%INT%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'intégré':", err.message);
-                    } else {
-                        console.log("Colonne 'intégré' mise à jour avec si ils ce sont des intégrés.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'allemand' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET Allemand = CASE WHEN langue LIKE '%ALL%' AND langue NOT LIKE '%ALLD%' AND langue NOT LIKE '%ALLGD%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'allemand':", err.message);
-                    } else {
-                        console.log("Colonne 'allemand' mise à jour avec si ils suivent des cours d'allemand.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'espagnol' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET Espagnol = CASE WHEN langue LIKE '%ESP%' AND langue NOT LIKE '%ESPD%' AND langue NOT LIKE '%ESPGD%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'espagnol':", err.message);
-                    } else {
-                        console.log("Colonne 'espagnol' mise à jour avec si ils suivent des cours d'espagnol.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'français' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET Français = CASE WHEN langue LIKE '%FLE%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'français':", err.message);
-                    } else {
-                        console.log("Colonne 'français' mise à jour avec si ils suivent des cours de français.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'espagnol debutant' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET Espagnol_debutant = CASE WHEN langue LIKE '%ESPD%' AND langue NOT LIKE '%ESPGD%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'espagnol debutant':", err.message);
-                    } else {
-                        console.log("Colonne 'espagnol debutant' mise à jour avec si ils suivent des cours d'espagnol debutant.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'allemand debutant' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET Allemand_debutant = CASE WHEN langue LIKE '%ALLD%' AND langue NOT LIKE '%ALLGD%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'allemand debutant':", err.message);
-                    } else {
-                        console.log("Colonne 'allemand debutant' mise à jour avec si ils suivent des cours d'allemand debutant.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'allemand grand debutant' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET Allemand_grand_debutant = CASE WHEN langue LIKE '%ALLGD%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'allemand grand debutant':", err.message);
-                    } else {
-                        console.log("Colonne 'allemand grand debutant' mise à jour avec si ils suivent des cours d'allemand grand debutant.");
-                    }
-                });
-
-                // Mise à jour de la colonne 'espagnol grand debutant' si les élèves sont intégrés ou non
-                db.run(`UPDATE students SET Espagnol_grand_debutant = CASE WHEN langue LIKE '%ESPGD%' THEN TRUE ELSE FALSE END`, (err) => {
-                    if (err) {
-                        console.error("Erreur lors de la mise à jour de la colonne 'espagnol grand debutant':", err.message);
-                    } else {
-                        console.log("Colonne 'espagnol grand debutant' mise à jour avec si ils suivent des cours d'espagnol grand debutant.");
-                    }
-                });
-
-                // Fermeture de la base de données après l'importation avec un délai
                 setTimeout(() => {
-                    db.close((err) => {
-                        if (err) {
-                            console.error("Erreur lors de la fermeture de la base de données:", err.message);
-                        } else {
-                            console.log("Base de données fermée.");
-                        }
+                    console.log("Début des mises à jour...");
+                
+                    // Mise à jour de la colonne 'an'
+                    db.run('UPDATE students SET an = SUBSTR(annee, 1, 4)', (err) => {
+                        if (err) console.error("Erreur mise à jour 'an':", err.message);
                     });
-                }, 1000); // Attends 1 seconde avant de fermer la base de données
-            })
-            .on('error', (err) => {
-                console.error("Erreur lors de la lecture du fichier CSV:", err.message);
+                
+                    // Mise à jour des redoublants
+                    db.run(`UPDATE students SET redoublant = CASE 
+                        WHEN annee LIKE '%RED%' AND annee LIKE '%1A%' THEN 1 
+                        WHEN annee LIKE '%RED%' AND annee LIKE '%2A%' THEN 2 
+                        ELSE 0 END`, 
+                        (err) => {
+                            if (err) console.error("Erreur mise à jour 'redoublant':", err.message);
+                        }
+                    );
+                
+                    // Mise à jour des intégrés
+                    db.run(`UPDATE students SET intégré = CASE WHEN annee LIKE '%INT%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'intégré':", err.message);
+                    });
+                    
+                    // Mise à jour des allemands
+                    db.run(`UPDATE students SET Allemand = CASE WHEN langue LIKE '%ALL%' AND langue NOT LIKE '%ALLD%' AND langue NOT LIKE '%ALLGD%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Allemand':", err.message);
+                    });
+                
+                    // Mise à jour des espagnols
+                    db.run(`UPDATE students SET Espagnol = CASE WHEN langue LIKE '%ESP%' AND langue NOT LIKE '%ESPD%' AND langue NOT LIKE '%ESPGD%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Espagnol':", err.message);
+                    });
+                
+                    // Mise à jour des francais
+                    db.run(`UPDATE students SET Français = CASE WHEN langue LIKE '%FLE%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Français':", err.message);
+                    });
+                
+                    // Mise à jour des espagnols débutants
+                    db.run(`UPDATE students SET Espagnol_debutant = CASE WHEN langue LIKE '%ESPD%' AND langue NOT LIKE '%ESPGD%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Espagnol_debutant':", err.message);
+                    });
+                
+                    // Mise à jour des allemands débutants
+                    db.run(`UPDATE students SET Allemand_debutant = CASE WHEN langue LIKE '%ALLD%' AND langue NOT LIKE '%ALLGD%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Allemand_debutant':", err.message);
+                    });
+                
+                    // Mise à jour des allemands grands débutants
+                    db.run(`UPDATE students SET Allemand_grand_debutant = CASE WHEN langue LIKE '%ALLGD%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Allemand_grand_debutant':", err.message);
+                    });
+                
+                    // Mise à jour des espagnols grands débutants
+                    db.run(`UPDATE students SET Espagnol_grand_debutant = CASE WHEN langue LIKE '%ESPGD%' THEN 1 ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
+                    });
+                
+                    console.log("Toutes les mises à jour sont terminées.");
+                
+                    // Fermeture de la base de données après un petit délai
+                    setTimeout(() => {
+                        db.close((err) => {
+                            if (err) console.error("Erreur fermeture DB:", err.message);
+                            else console.log("Base de données fermée.");
+                        });
+                    }, 1000);
+                }, 3000); // Attends 3 secondes avant de lancer les mises à jour
             });
+        
     });
 });
