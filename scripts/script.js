@@ -93,7 +93,6 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                     }
                 });
             })
-            
             .on('end', () => {
                 // Valider la transaction après l'importation
                 db.run('COMMIT', (err) => {
@@ -102,9 +101,7 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                         return; 
                     }
                     console.log("CSV importé et transaction validée.");
-                });
                 
-                setTimeout(() => {
                     console.log("Début des mises à jour...");
                 
                     // Mise à jour de la colonne 'an'
@@ -164,14 +161,12 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                 
                     console.log("Toutes les mises à jour sont terminées.");
                 
-                    // Fermeture de la base de données après un petit délai
-                    setTimeout(() => {
-                        db.close((err) => {
-                            if (err) console.error("Erreur fermeture DB:", err.message);
-                            else console.log("Base de données fermée.");
-                        });
-                    }, 1000);
-                }, 3000); // Attends 3 secondes avant de lancer les mises à jour
+                    // Fermeture de la base de données 
+                    db.close((err) => {
+                        if (err) console.error("Erreur fermeture DB:", err.message);
+                        else console.log("Base de données fermée.");
+                    });
+                });
             });
         
     });
