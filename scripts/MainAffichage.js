@@ -15,7 +15,7 @@ app.whenReady().then(() => {
         }
     });
 
-    mainWindow.loadFile('index.html');
+    mainWindow.loadFile('pageTest.html');
 });
 
 ipcMain.handle('get-students', async () => {
