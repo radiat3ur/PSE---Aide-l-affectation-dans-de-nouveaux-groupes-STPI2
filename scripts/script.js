@@ -13,7 +13,7 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
     console.log("Base de données ouverte.");
 });
 
-const csvFilePath = path.resolve(__dirname, 'scripts/Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
+const csvFilePath = path.resolve(__dirname, 'Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
 
 // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
 db.run('PRAGMA journal_mode = WAL', (err) => {
@@ -47,8 +47,8 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
         Espagnol_debutant BOOLEAN,
         Allemand_debutant BOOLEAN,
         Espagnol_grand_debutant BOOLEAN,
-        Allemand_grand_debutant BOOLEAN
-        groupe_2A TEXT,
+        Allemand_grand_debutant BOOLEAN,
+        groupe_2A TEXT
     )`, (err) => {
         if (err) {
             console.error("Erreur lors de la création de la table:", err.message);
