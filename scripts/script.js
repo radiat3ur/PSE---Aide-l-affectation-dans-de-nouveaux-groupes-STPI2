@@ -164,6 +164,8 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                     });
                 
                     console.log("Toutes les mises à jour sont terminées.");
+
+                    nvGroupe(240002, 'A')
                 
                     // Fermeture de la base de données 
                     db.close((err) => {
