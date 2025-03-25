@@ -12,7 +12,18 @@ const createWindow = () => {
     })
     win.loadFile('pageTest.html')
 }
+ipcMain.handle('get-students', async () => {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database('./students.db');
 
+        db.all("SELECT * FROM students WHERE groupe = 'B'", [], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+            db.close();
+            
 app.whenReady().then(() => {
     createWindow()
   
