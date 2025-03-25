@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('node:path')
+const sqlite3 = require('sqlite3').verbose()
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -12,18 +13,23 @@ const createWindow = () => {
     })
     win.loadFile('pageTest.html')
 }
-ipcMain.handle('get-students', async () => {
-    return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('./students.db');
 
-        db.all("SELECT * FROM students WHERE groupe = 'B'", [], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-            db.close();
-            
+// n'a pas l'air de fonctionner pour l'instant
+// ipcMain.handle('get-students', async () => {
+//     return new Promise((resolve, reject) => {
+//         const db = new sqlite3.Database('./students.db');
+
+//         db.all("SELECT * FROM students WHERE groupe = 'B'", [], (err, rows) => {
+//             if (err) {
+//                 reject(err);
+//             } else {
+//                 resolve(rows);
+//             }
+//             db.close();
+//         });
+//     });
+// });
+
 app.whenReady().then(() => {
     createWindow()
   
@@ -34,4 +40,4 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
-})
+});
