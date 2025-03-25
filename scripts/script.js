@@ -1,11 +1,9 @@
-const fs = require('fs');; // permet de travailler avec des fichiers (lire, écrire, ...)
+const fs = require('fs'); // permet de travailler avec des fichiers (lire, écrire, ...)
 const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
 const path = require('path'); // module path pour gérer les chemins de manière robuste
 const sqlite3 = require('sqlite3').verbose(); // importe sqlite3 ; .verbose() permet d'afficher des messages d'erreur plus détaillés
 
-const dbPath = path.resolve(__dirname, './students.db'); // crée le fichier students.db dans le dossier PSE
-
-console.log(dbPath);
+const dbPath = path.resolve(__dirname, '../students.db'); // crée le fichier students.db dans le dossier PSE
 
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => { // crée le fichier dans le dossier PSE
     if (err) {
@@ -50,6 +48,7 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
         Allemand_debutant BOOLEAN,
         Espagnol_grand_debutant BOOLEAN,
         Allemand_grand_debutant BOOLEAN
+        groupe_2A TEXT,
     )`, (err) => {
         if (err) {
             console.error("Erreur lors de la création de la table:", err.message);
