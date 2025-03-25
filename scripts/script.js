@@ -13,7 +13,7 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
     console.log("Base de données ouverte.");
 });
 
-const csvFilePath = path.resolve(__dirname, 'scripts/Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
+const csvFilePath = path.resolve(__dirname, 'Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
 
 // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
 db.run('PRAGMA journal_mode = WAL', (err) => {
@@ -47,8 +47,8 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
         Espagnol_debutant BOOLEAN,
         Allemand_debutant BOOLEAN,
         Espagnol_grand_debutant BOOLEAN,
-        Allemand_grand_debutant BOOLEAN
-        groupe_2A TEXT,
+        Allemand_grand_debutant BOOLEAN,
+        Nouveau_groupe TEXT
     )`, (err) => {
         if (err) {
             console.error("Erreur lors de la création de la table:", err.message);
@@ -69,7 +69,7 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
             .pipe(csv({ separator: ',' }))
             .on('data', (row) => {
                 console.log("Ligne lue du CSV:", row); // Affiche chaque ligne lue
-                const { "num_insa": num_insa, "M/Mme": civilite, Prenom: prenom, NOM: nom, Annee: annee, Langue: langue, mail: email, Groupe: groupe, "Decision Jury STPI1": decision_jury, Commentaire: commentaire } = row;
+                const { "num_insa": num_insa, "M/Mme": civilite, Prenom: prenom, NOM: nom, Année: annee, Langue: langue, mail: email, Groupe: groupe, "Decision Jury STPI1": decision_jury, Commentaire: commentaire } = row;
                 // Vérifier si l'étudiant existe déjà dans la base de données
                 db.get('SELECT num_insa FROM students WHERE num_insa = ?', [num_insa], (err, existingRow) => {
                     if (err) {
@@ -175,3 +175,11 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
         
     });
 });
+
+function AffectationGroupe(identifiant,lettre_groupe) {
+db.run(`UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?`,
+        [lettre_groupe, identifiant], (err) => {
+    if (err) console.error("Erreur mise à jour d un groupe", err.message);
+}); };
+
+AffectationGroupe(240001,'B')
