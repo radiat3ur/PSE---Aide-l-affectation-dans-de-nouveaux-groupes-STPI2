@@ -3,8 +3,8 @@ const path = require('node:path')
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1900,
+        height: 1200,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -12,7 +12,18 @@ const createWindow = () => {
     })
     win.loadFile('pageTest.html')
 }
+ipcMain.handle('get-students', async () => {
+    return new Promise((resolve, reject) => {
+        const db = new sqlite3.Database('./students.db');
 
+        db.all("SELECT * FROM students WHERE groupe = 'B'", [], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+            db.close();
+            
 app.whenReady().then(() => {
     createWindow()
   
