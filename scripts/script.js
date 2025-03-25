@@ -1,9 +1,11 @@
-const fs = require('fs'); // permet de travailler avec des fichiers (lire, écrire, ...)
+const fs = require('fs');; // permet de travailler avec des fichiers (lire, écrire, ...)
 const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
 const path = require('path'); // module path pour gérer les chemins de manière robuste
 const sqlite3 = require('sqlite3').verbose(); // importe sqlite3 ; .verbose() permet d'afficher des messages d'erreur plus détaillés
 
-const dbPath = path.resolve(__dirname, '../students.db'); // crée le fichier students.db dans le dossier PSE
+const dbPath = path.resolve(__dirname, './students.db'); // crée le fichier students.db dans le dossier PSE
+
+console.log(dbPath);
 
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => { // crée le fichier dans le dossier PSE
     if (err) {
@@ -13,7 +15,7 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
     console.log("Base de données ouverte.");
 });
 
-const csvFilePath = path.resolve(__dirname, '../scripts/Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
+const csvFilePath = path.resolve(__dirname, 'scripts/Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
 
 // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
 db.run('PRAGMA journal_mode = WAL', (err) => {
@@ -68,9 +70,7 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
             .pipe(csv({ separator: ',' }))
             .on('data', (row) => {
                 console.log("Ligne lue du CSV:", row); // Affiche chaque ligne lue
-
-                const { "num_insa": num_insa, "M/Mme": civilite, Prenom: prenom, NOM: nom, Année: annee, Langue: langue, mail: email, Groupe: groupe, "Decision Jury STPI1": decision_jury, Commentaire: commentaire } = row;
-
+                const { "num_insa": num_insa, "M/Mme": civilite, Prenom: prenom, NOM: nom, Annee: annee, Langue: langue, mail: email, Groupe: groupe, "Decision Jury STPI1": decision_jury, Commentaire: commentaire } = row;
                 // Vérifier si l'étudiant existe déjà dans la base de données
                 db.get('SELECT num_insa FROM students WHERE num_insa = ?', [num_insa], (err, existingRow) => {
                     if (err) {
