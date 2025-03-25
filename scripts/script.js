@@ -157,6 +157,11 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
                     db.run(`UPDATE students SET Espagnol_grand_debutant = CASE WHEN langue LIKE '%ESPGD%' THEN 1 ELSE 0 END`, (err) => {
                         if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
                     });
+
+                    // Mise à jour de la section 
+                    db.run(`UPDATE students SET section = CASE WHEN (groupe LIKE '%A%' OR groupe LIKE '%B%' OR groupe LIKE '%C%' OR groupe LIKE '%D%') AND groupe NOT LIKE '%SA%' THEN 1 WHEN groupe LIKE '%E%' OR groupe LIKE '%F%' OR groupe LIKE '%G%' OR groupe LIKE '%H%' THEN 2 WHEN groupe LIKE '%I%' OR groupe LIKE '%J%' OR groupe LIKE '%K%' THEN 'SIB' ELSE 0 END`, (err) => {
+                        if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
+                    });
                 
                     console.log("Toutes les mises à jour sont terminées.");
                 
