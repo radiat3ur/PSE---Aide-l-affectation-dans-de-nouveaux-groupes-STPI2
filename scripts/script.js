@@ -48,7 +48,8 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
         Allemand_debutant BOOLEAN,
         Espagnol_grand_debutant BOOLEAN,
         Allemand_grand_debutant BOOLEAN,
-        Nouveau_groupe TEXT
+        Nouveau_groupe TEXT,
+        Nouvelle_section TEXT
     )`, (err) => {
         if (err) {
             console.error("Erreur lors de la création de la table:", err.message);
@@ -160,12 +161,10 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
 
                     // Mise à jour de la section 
                     db.run(`UPDATE students SET section = CASE WHEN (groupe LIKE '%A%' OR groupe LIKE '%B%' OR groupe LIKE '%C%' OR groupe LIKE '%D%') AND groupe NOT LIKE '%SA%' THEN 1 WHEN groupe LIKE '%E%' OR groupe LIKE '%F%' OR groupe LIKE '%G%' OR groupe LIKE '%H%' THEN 2 WHEN groupe LIKE '%I%' OR groupe LIKE '%J%' OR groupe LIKE '%K%' THEN 'SIB' ELSE 0 END`, (err) => {
-                        if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
+                        if (err) console.error("Erreur mise à jour 'Section':", err.message);
                     });
                 
                     console.log("Toutes les mises à jour sont terminées.");
-
-                    nvGroupe(240002, 'A')
                 
                     // Fermeture de la base de données 
                     db.close((err) => {
@@ -178,10 +177,23 @@ db.serialize(() => { // les requêtes sont exécutées dans l'ordre
     });
 });
 
-function AffectationGroupe(identifiant,lettre_groupe) {
-db.run(`UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?`,
-        [lettre_groupe, identifiant], (err) => {
-    if (err) console.error("Erreur mise à jour d un groupe", err.message);
-}); };
+function MiseAJourNouvelleSection(identifiant,lettre_groupe) {
+    db.run(`UPDATE students SET Nouvelle_section = CASE WHEN (? LIKE '%A%' OR ? LIKE '%B%' OR ? LIKE '%C%') AND ? NOT LIKE '%SA%' THEN 1 WHEN  ? LIKE '%D%' OR ? LIKE '%E%' OR ? LIKE '%F%' OR ? LIKE '%G%' THEN 2 WHEN ? LIKE '%H%' OR ? LIKE '%I%' OR ? LIKE '%J%' THEN 'SIB' ELSE 0 END WHERE num_insa = ?`,[lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,lettre_groupe,identifiant], (err) => {
+        if (err) console.error("Erreur mise à jour 'Nouvelle section':", err.message);
+    }); };
 
+function AffectationGroupe(identifiant,lettre_groupe) {
+    db.run(`UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?`,
+            [lettre_groupe, identifiant], (err) => {
+        if (err) console.error("Erreur mise à jour d un groupe", err.message);
+    });
+    MiseAJourNouvelleSection(identifiant,lettre_groupe) };
+
+function AjoutCommentaire(identifiant,texte_commentaire) {
+    db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`,
+            [texte_commentaire, identifiant], (err) => {
+        if (err) console.error("Erreur mise à jour d un groupe", err.message);
+    }); };
+ 
 AffectationGroupe(240001,'B')
+AjoutCommentaire(240001,'Très bonne année')
