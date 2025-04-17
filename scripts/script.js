@@ -192,8 +192,16 @@ function AffectationGroupe(identifiant,lettre_groupe) {
 function AjoutCommentaire(identifiant,texte_commentaire) {
     db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`,
             [texte_commentaire, identifiant], (err) => {
-        if (err) console.error("Erreur mise à jour d un groupe", err.message);
+        if (err) console.error("Erreur mise à jour d un commentaire", err.message);
     }); };
  
+function AjoutEtudiant(identifiant,text_civilite,text_prenom,text_nom,text_annee,text_langue,text_mail) {
+    db.run(`INSERT INTO students (num_insa,civilite,prenom,nom,annee,langue,email)
+        VALUES (?,?,?,?,?,?,?)`,
+            [identifiant,text_civilite,text_prenom,text_nom,text_annee,text_langue,text_mail], (err) => {
+        if (err) console.error("Erreur ajout d un etudiant", err.message);
+    }); };
+
 AffectationGroupe(240001,'B')
 AjoutCommentaire(240001,'Très bonne année')
+//AjoutEtudiant(260000,'M.','Bernard','Dupont','2025 - INT 2A','ESP','bernard.dupont@insa-rouen.fr')
