@@ -12,17 +12,17 @@ window.onload = (event) => {
         var id = document.getElementById('textId').value;
         var groupe = document.getElementById('textGroupe').value;
         nvGroupe(id, groupe);
-        document.getElementById('textId').value = '';
         document.getElementById('textGroupe').value = '';
     });
     document.getElementById("OK").addEventListener('click', () => {
         var id = document.getElementById('textId').value;
         var commentaire = document.getElementById('textCommentaire').value;
         nvCommentaire(id, commentaire);
+        document.getElementById('textId').value = '';
         document.getElementById('textCommentaire').value = '';
     });
     document.getElementById("OK2").addEventListener('click', () => {
-        var id = document.getElementById('textId2').value;
+        var id = document.getElementById('texteId').value;
         var civilite = document.getElementById('textCivilite').value;
         var prenom = document.getElementById('textPrenom').value;
         var nom = document.getElementById('textNom').value;
@@ -31,7 +31,7 @@ window.onload = (event) => {
         var mail = document.getElementById('textMail').value;
         nvEtudiant(id, civilite, prenom, nom, annee, langue, mail);
 
-        document.getElementById('textId2').value = '';
+        document.getElementById('texteId').value = '';
         document.getElementById('textCivilite').value = '';
         document.getElementById('textPrenom').value = '';
         document.getElementById('textNom').value = '';
