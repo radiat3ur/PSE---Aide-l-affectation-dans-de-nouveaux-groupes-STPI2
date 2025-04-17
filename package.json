@@ -7,7 +7,7 @@
   "name": "electron_project",
   "version": "1.0.0",
   "description": "",
-  "main": "scripts/mainBis.js",
+  "main": "scripts/main.js",
   "devDependencies": {
     "electron": "^35.0.1"
   },
