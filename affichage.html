@@ -14,7 +14,21 @@
             const list = document.getElementById('students-list');
             students.forEach(student => {
                 let li = document.createElement('li');
-                li.textContent = `${student.num_insa}--${student.civilite}--${student.prenom}--${student.nom}--${student.annee}--${student.langue}--${student.email}--${student.section}--${student.groupe}--${student.decision_jury}--${student.commentaire}--${student.an} `;
+                li.classList.add('student-item');
+                
+                let info = document.createElement('span');
+                info.textContent = `${student.num_insa}--${student.civilite}--${student.prenom}--`;
+                
+                let nameSpan = document.createElement('span');
+                nameSpan.classList.add('student-name');
+                nameSpan.textContent = student.nom;
+                
+                let rest = document.createElement('span');
+                rest.textContent = `--${student.annee}--${student.langue}--${student.email}--${student.section}--${student.groupe}--${student.decision_jury}--${student.commentaire}--${student.an}`;
+                
+                li.appendChild(info);
+                li.appendChild(nameSpan);
+                li.appendChild(rest);
                 list.appendChild(li);
             });
         }).catch(err => {

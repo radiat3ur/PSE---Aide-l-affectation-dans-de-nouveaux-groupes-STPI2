@@ -2,7 +2,7 @@ const fs = require('fs'); // permet de travailler avec des fichiers (lire, écri
 const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
 const path = require('path'); // module path pour gérer les chemins de manière robuste
 
-function init(db){
+function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
     db.run('PRAGMA journal_mode = WAL', (err) => {
         if (err) {
@@ -36,11 +36,11 @@ function init(db){
             Allemand_debutant BOOLEAN,
             Espagnol_grand_debutant BOOLEAN,
             Allemand_grand_debutant BOOLEAN,
-            Nouveau_groupe TEXT,
-            Nouvelle_section TEXT
+            Nouvelle_section TEXT,
+            Nouveau_groupe TEXT
         )`, (err) => {
             if (err) {
-                console.error("Erreur lors de la création de la table:", err.message);
+                console.error("Erreur lors de la creation de la table:", err.message);
                 return;
             }
             console.log("Table 'students' creee ou deja existante.");
@@ -151,7 +151,7 @@ function init(db){
                             if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
                         });
                     
-                        console.log("Toutes les mises à jour sont terminees.");
+                        console.log("Toutes les mises a jour sont terminees.");
                     });
                 });
             
@@ -159,38 +159,38 @@ function init(db){
     });
 }
 
-function miseAJourNouvelleSection(db,id,groupe) {
+function miseAJourNouvelleSection(db, id, groupe) {
     db.run(`UPDATE students SET Nouvelle_section = CASE 
-        WHEN ? LIKE '%A%' OR ? LIKE '%B%' OR ? LIKE '%C%' THEN 1 
+        WHEN (? LIKE '%A%' OR ? LIKE '%B%' OR ? LIKE '%C%') AND ? NOT LIKE '%SA%' THEN 1 
         WHEN ? LIKE '%D%' OR ? LIKE '%E%' OR ? LIKE '%F%' OR ? LIKE '%G%' THEN 2 
         WHEN ? LIKE '%H%' OR ? LIKE '%I%' OR ? LIKE '%J%' THEN 'SIB' 
         ELSE 0 END WHERE num_insa = ?`, 
-        [groupe, groupe, groupe, groupe, groupe, groupe, groupe, groupe, groupe, groupe, id], (err) => {
+        [groupe, groupe, groupe, groupe, groupe, groupe, groupe, groupe, groupe, groupe, groupe, id], (err) => {
         if (err) console.error("Erreur mise à jour 'Nouvelle section':", err.message);
     });
 }
 
-function affectationGroupe(db,id,groupe){
+function affectationGroupe(db, id, groupe) {
     db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
         if (err) {
             console.error("Erreur lors de la mise à jour du groupe:", err.message);
             return;
         }
     });
-    miseAJourNouvelleSection(db,id,groupe)
+    miseAJourNouvelleSection(db, id, groupe)
 }
 
-function ajoutCommentaire(db,id,commentaire){
+function ajoutCommentaire(db, id, commentaire) {
     db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`,
             [commentaire, id], (err) => {
         if (err) console.error("Erreur mise à jour d un commentaire", err.message);
     });
 }
 
-function ajoutEtudiant(db,id,civilite,prenom,nom,annee,langue,mail){
-    db.run(`INSERT INTO students (num_insa,civilite,prenom,nom,annee,langue,email)
+function ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail) {
+    db.run(`INSERT INTO students (num_insa, civilite, prenom, nom, annee, langue, email)
         VALUES (?,?,?,?,?,?,?)`,
-            [id,civilite,prenom,nom,annee,langue,mail], (err) => {
+            [id, civilite, prenom, nom, annee, langue, mail], (err) => {
         if (err) console.error("Erreur ajout d un etudiant", err.message);
     });
     db.run(`UPDATE students SET an = SUBSTR(annee, 1, 4) WHERE num_insa = ?`, [id], (err) => {
@@ -232,16 +232,18 @@ function ajoutEtudiant(db,id,civilite,prenom,nom,annee,langue,mail){
     
 }
 
-function getStudent(db,id){
+function recupererEtudiants(db) {
     return new Promise((resolve, reject) => {
-        db.get('SELECT * FROM students WHERE num_insa = ?', [id], (err, row) => {
+        db.all('SELECT num_insa, civilite, prenom, nom, annee, langue, email, section, groupe, decision_jury, commentaire, Nouveau_groupe, Nouvelle_section FROM students', [], (err, rows) => {
             if (err) {
-                console.error("Erreur lors de la récupération de l'étudiant:", err.message);
-                reject('Identifiant non existant.');
+                console.error("Erreur lors de la récupération des étudiants:", err.message);
+                reject(err);
+                return;
             }
-            resolve(row);
+            resolve(rows);
         });
     });
 }
 
-module.exports = { init,affectationGroupe,ajoutCommentaire,ajoutEtudiant,getStudent };
+// Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants };

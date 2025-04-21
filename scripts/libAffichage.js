@@ -1,27 +1,56 @@
-function exampleFunction(){
-    document.getElementById('Title').style.backgroundColor = "red";
-};
-
-function fonctionCouleur(){
-    document.getElementById('Text').style.backgroundColor = "blue";
+function nvGroupe(id, groupe) {
+    window.libDB.affectationGroupe(id, groupe);
 }
 
-function nvGroupe(id, groupe){
-    window.libDB.affectationGroupe(id,groupe);
+function nvCommentaire(id, commentaire) {
+    window.libDB.ajoutCommentaire(id, commentaire);
 }
 
-function nvCommentaire(id, commentaire){
-    window.libDB.ajoutCommentaire(id,commentaire);
+function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
+    window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
 }
 
-function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail){
-    window.libDB.ajoutEtudiant(id,civilite,prenom,nom,annee,langue,mail);
+async function recupererEtudiants() {
+    try {
+        const etudiants = await window.libDB.recupererEtudiants();
+        return etudiants;
+    } catch (err) {
+        console.error("Erreur lors de la récupération des étudiants :", err.message);
+        throw err;
+    }
 }
 
-function getStudent(id){
+function rafraichirEtudiants() {
     (async () => {
-        let result = await window.libDB.getStudent(id);
-        console.log(result);
-        return result;
+        const etudiants = await recupererEtudiants();
+        const tbody = document.querySelector("#tableauEtudiants tbody");
+        tbody.innerHTML = "";
+
+
+        let filtreEtudiants = etudiants;
+        if (window.filtreLangues && window.filtreLangues.length > 0) {
+            filtreEtudiants = etudiants.filter(etudiant => window.filtreLangues.includes(etudiant.langue));
+        }
+        if (window.filtreSections && window.filtreSections.length > 0) {
+            filtreEtudiants = etudiants.filter(etudiant => window.filtreSections.includes(etudiant.section));
+        }
+        if (window.filtreGroupes && window.filtreGroupes.length > 0) {
+            filtreEtudiants = filtreEtudiants.filter(etudiant => window.filtreGroupes.includes(etudiant.groupe));
+        }
+        if (window.filtreNouvellesSections && window.filtreNouvellesSections.length > 0) {
+            filtreEtudiants = filtreEtudiants.filter(etudiant => window.filtreNouvellesSections.includes(etudiant.Nouvelle_section));
+        }
+        if (window.filtreNouveauxGroupes && window.filtreNouveauxGroupes.length > 0) {
+            filtreEtudiants = filtreEtudiants.filter(etudiant => window.filtreNouveauxGroupes.includes(etudiant.Nouveau_groupe));
+        }
+
+        ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
+        filtreEtudiants.forEach(etudiant => {
+            const lig = tbody.insertRow();
+            ordreColonnes.forEach(col => {
+                const cell = lig.insertCell();
+                cell.textContent = etudiant[col];
+            });
+        });
     })();
 }

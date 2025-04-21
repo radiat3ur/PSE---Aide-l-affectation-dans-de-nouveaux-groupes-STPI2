@@ -1,41 +1,96 @@
-html {
-  font-size: 10px;
+body {
+  background-color: #f0f0f0;
   font-family: 'Open Sans', sans-serif;
 }
 
-
-h1 {
-  font-size: 60px;
-  text-align: center;
+.cache {
+  display: none;
 }
 
-p, li {
-  font-size: 16px;
-  line-height: 2;
-  letter-spacing: 1px;
-}
-
-
-html {
-  background-color: #00539F;
-}
-
-body {
-  width: 600px;
-  margin: 0 auto;
-  background-color: #FF9500;
-  padding: 0 20px 20px 20px;
-  border: 5px solid black;
-}
-
-h1 {
-  margin: 0;
-  padding: 20px 0;
-  color: #00539F;
-  text-shadow: 3px 3px 1px black;
-}
-
-img {
+.action {
   display: block;
-  margin: 0 auto;
+  background-color: #9d4bb4;
+  padding: 10px 20px;
+  border-radius: 7px;
+  border: none;
+  font-size: 20px;
+}
+
+header {
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+}
+
+#tableauEtudiants thead th {
+  position: sticky;
+  top: 70px;
+  background: #ae7bc3;
+  z-index: 1;
+}
+
+.barre-recherche {
+  display: none;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 8px;
+  z-index: 4;
+}
+
+.barre-recherche .fermer-recherche {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.surligner {
+  background-color: #948d968d;
+}
+
+.surligner.current {
+  background-color: #90639c;
+}
+
+.filtre-dropdown {
+  position: relative;
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.filtre-dropdown button {
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.langue-menu {
+  position: fixed;
+  background-color: #f0f0f0;
+  padding: 10px;
+  z-index: 3;
+}
+
+.section-menu {
+  position: fixed;
+  background-color: #f0f0f0;
+  padding: 10px;
+  z-index: 3;
+}
+
+.groupe-menu {
+  position: fixed;
+  background-color: #f0f0f0;
+  padding: 10px;
+  z-index: 3;
+}
+
+.fleche-bas {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 5px;
 }
