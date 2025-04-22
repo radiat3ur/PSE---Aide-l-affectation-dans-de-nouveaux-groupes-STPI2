@@ -16,6 +16,19 @@ const createWindow = () => {
     win.loadFile('pageTest.html')
 }
 
+const createSecondWindow = () => {
+    const secondWin = new BrowserWindow({
+        width: 1900, // Dimensions de la deuxième fenêtre
+        height: 1200,
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
+        },
+    });
+    secondWin.loadFile('page_2.html'); // Chargez une page HTML (peut être différente de la première)
+};
+
 const dbPath = path.resolve(__dirname, './students.db'); // cree le fichier students.db dans le dossier PSE
 
 let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => { // crée le fichier dans le dossier PSE
@@ -30,7 +43,7 @@ libDB.init(db);
 
 app.whenReady().then(() => {
     createWindow()
-  
+    createSecondWindow(); // Deuxième fenêtre
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
