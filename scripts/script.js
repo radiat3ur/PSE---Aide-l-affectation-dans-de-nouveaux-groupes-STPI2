@@ -20,6 +20,26 @@ window.onload = (event) => {
                     select.appendChild(option);
                 });
             });
+            Object.entries(LANGUES).forEach(([key, value]) => {
+                const div = document.createElement('div');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = value;
+                checkbox.id = 'langues-' + value;
+                const labelElement = document.createElement('label');
+                labelElement.htmlFor = checkbox.id; // lier le label au checkbox
+                labelElement.textContent = key;
+                div.appendChild(checkbox);
+                div.appendChild(labelElement);
+                menuLangue.appendChild(div);
+        
+                checkbox.addEventListener('change', () => {
+                    const selected = Array.from(menuLangue.querySelectorAll('input[type="checkbox"]:checked'))
+                                          .map(cb => cb.value);
+                    window.filtreLangues = selected; // c'est ici qu'on stocke les langues sélectionnés pour les donner à rafraichirEtudiants
+                    rafraichirEtudiants();
+                });
+            });
         });
     
     let CIVILITES = {};
@@ -39,6 +59,63 @@ window.onload = (event) => {
             });
         });
     
+    let SECTIONS = {};
+    fetch('./json/sections.json')
+        .then(reponse => reponse.json())
+        .then(data => {
+            SECTIONS = data;
+        })
+        .finally(() => {
+            document.querySelectorAll('.selectionnerSection').forEach(select => {
+                Object.entries(SECTIONS).forEach(([key, value]) => {
+                    var option = document.createElement('option');
+                    option.value = value;
+                    option.text = key;
+                    select.appendChild(option);
+                });
+            });
+            Object.entries(SECTIONS).forEach(([key, value]) => {
+                const div = document.createElement('div');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = value;
+                checkbox.id = 'sections-' + value;
+                const labelElement = document.createElement('label');
+                labelElement.htmlFor = checkbox.id;
+                labelElement.textContent = key;
+                div.appendChild(checkbox);
+                div.appendChild(labelElement);
+                menuSection.appendChild(div);
+        
+                checkbox.addEventListener('change', function(){
+                    const selected = Array.from(menuSection.querySelectorAll('input[type="checkbox"]:checked'))
+                                          .map(cb => cb.value);
+                    window.filtreSections = selected;
+                    rafraichirEtudiants();
+                });
+            });
+            Object.entries(SECTIONS).forEach(([key, value]) => {
+                const div = document.createElement('div');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = value;
+                checkbox.id = 'sections-' + value;
+                const labelElement = document.createElement('label');
+                labelElement.htmlFor = checkbox.id;
+                labelElement.textContent = key;
+                div.appendChild(checkbox);
+                div.appendChild(labelElement);
+                menuNouvelleSection.appendChild(div);
+        
+                checkbox.addEventListener('change', function(){
+                    const selected = Array.from(menuNouvelleSection.querySelectorAll('input[type="checkbox"]:checked'))
+                                            .map(cb => cb.value);
+                    window.filtreNouvellesSections = selected;
+                    rafraichirEtudiants();
+                });
+            });
+        });
+    
     let GROUPES = {};
     fetch('./json/groupes.json')
         .then(reponse => reponse.json())
@@ -54,8 +131,48 @@ window.onload = (event) => {
                     select.appendChild(option);
                 });
             });
-        });
+            Object.entries(GROUPES).forEach(([key, value]) => {
+                const div = document.createElement('div');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = value;
+                checkbox.id = 'groupes-' + value;
+                const labelElement = document.createElement('label');
+                labelElement.htmlFor = checkbox.id;
+                labelElement.textContent = key;
+                div.appendChild(checkbox);
+                div.appendChild(labelElement);
+                menuGroupe.appendChild(div);
 
+                checkbox.addEventListener('change', function(){
+                    const selected = Array.from(menuGroupe.querySelectorAll('input[type="checkbox"]:checked'))
+                                            .map(cb => cb.value);
+                    window.filtreGroupes = selected; 
+                    rafraichirEtudiants();
+                });
+            });
+            Object.entries(GROUPES).forEach(([key, value]) => {
+                const div = document.createElement('div');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = value;
+                checkbox.id = 'groupes-' + value;
+                const labelElement = document.createElement('label');
+                labelElement.htmlFor = checkbox.id;
+                labelElement.textContent = key;
+                div.appendChild(checkbox);
+                div.appendChild(labelElement);
+                menuNouveauGroupe.appendChild(div);
+        
+                checkbox.addEventListener('change', function(){
+        
+                    const selected = Array.from(menuNouveauGroupe.querySelectorAll('input[type="checkbox"]:checked'))
+                                            .map(cb => cb.value);
+                    window.filtreNouveauxGroupes = selected; 
+                    rafraichirEtudiants();
+                });
+            });
+        });
     // ____ 
     
     let FormSelectionne = document.getElementById("selectionAction").value;
@@ -118,7 +235,6 @@ window.onload = (event) => {
 
     document.addEventListener('keydown', (event) => {
         if (event.ctrlKey && event.code == 'KeyF') {
-            event.preventDefault();
             barreRecherche.style.display = 'block';
             const saisie = barreRecherche.querySelector('input');
             saisie.focus(); // met le curseur sur la saisie
@@ -180,33 +296,6 @@ window.onload = (event) => {
         menuLangue.style.left = rect.left;
     });
 
-    // Assisté par copilot
-    fetch('./json/langues.json')
-        .then(reponse => reponse.json())
-        .then(data => {
-            window.langues = data; // window rend les données accessibles de façon globale
-            Object.entries(window.langues).forEach(([key, value]) => {
-                const div = document.createElement('div');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = value;
-                checkbox.id = 'langues-' + value;
-                const labelElement = document.createElement('label');
-                labelElement.htmlFor = checkbox.id; // lier le label au checkbox
-                labelElement.textContent = key;
-                div.appendChild(checkbox);
-                div.appendChild(labelElement);
-                menuLangue.appendChild(div);
-
-                checkbox.addEventListener('change', () => {
-                    const selected = Array.from(menuLangue.querySelectorAll('input[type="checkbox"]:checked'))
-                                          .map(cb => cb.value);
-                    window.filtreLangues = selected; // c'est ici qu'on stocke les langues sélectionnés pour les donner à rafraichirEtudiants
-                    rafraichirEtudiants();
-                });
-            });
-        })
-
     const filtreSection = document.getElementById('filtreSection');
     const menuSection = document.getElementById('menuSection');
 
@@ -218,32 +307,6 @@ window.onload = (event) => {
         menuSection.style.left = rect.left;
     });
 
-    fetch('./json/sections.json')
-        .then(reponse => reponse.json())
-        .then(data => {
-            window.sections = data;
-            Object.entries(window.sections).forEach(([key, value]) => {
-                const div = document.createElement('div');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = value;
-                checkbox.id = 'sections-' + value;
-                const labelElement = document.createElement('label');
-                labelElement.htmlFor = checkbox.id;
-                labelElement.textContent = key;
-                div.appendChild(checkbox);
-                div.appendChild(labelElement);
-                menuSection.appendChild(div);
-
-                checkbox.addEventListener('change', function(){
-                    const selected = Array.from(menuSection.querySelectorAll('input[type="checkbox"]:checked'))
-                                          .map(cb => cb.value);
-                    window.filtreSections = selected;
-                    rafraichirEtudiants();
-                });
-            });
-        })
-
     const filtreGroupe = document.getElementById('filtreGroupe');
     const menuGroupe = document.getElementById('menuGroupe');
     
@@ -254,34 +317,6 @@ window.onload = (event) => {
         menuGroupe.style.top = rect.bottom;
         menuGroupe.style.left = rect.left;
     });
-    
-    fetch('./json/groupes.json')
-        .then(reponse => reponse.json())
-        .then(data => {
-            window.groupes = data; 
-            
-            Object.entries(window.groupes).forEach(([key, value]) => {
-                const div = document.createElement('div');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = value;
-                checkbox.id = 'groupes-' + value;
-                const labelElement = document.createElement('label');
-                labelElement.htmlFor = checkbox.id;
-                labelElement.textContent = key;
-                div.appendChild(checkbox);
-                div.appendChild(labelElement);
-                menuGroupe.appendChild(div);
-
-                checkbox.addEventListener('change', function(){
-    
-                    const selected = Array.from(menuGroupe.querySelectorAll('input[type="checkbox"]:checked'))
-                                            .map(cb => cb.value);
-                    window.filtreGroupes = selected; 
-                    rafraichirEtudiants();
-                });
-            });
-        })
 
     const filtreNouvelleSection = document.getElementById('filtreNouvelleSection');
     const menuNouvelleSection = document.getElementById('menuNouvelleSection');
@@ -292,32 +327,6 @@ window.onload = (event) => {
         menuNouvelleSection.style.top = rect.bottom;
         menuNouvelleSection.style.left = rect.left;
     });
-
-    fetch('./json/sections.json')
-        .then(reponse => reponse.json())
-        .then(data => {
-            window.nouvellesSections = data;
-            Object.entries(window.nouvellesSections).forEach(([key, value]) => {
-                const div = document.createElement('div');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = value;
-                checkbox.id = 'sections-' + value;
-                const labelElement = document.createElement('label');
-                labelElement.htmlFor = checkbox.id;
-                labelElement.textContent = key;
-                div.appendChild(checkbox);
-                div.appendChild(labelElement);
-                menuNouvelleSection.appendChild(div);
-
-                checkbox.addEventListener('change', function(){
-                    const selected = Array.from(menuNouvelleSection.querySelectorAll('input[type="checkbox"]:checked'))
-                                          .map(cb => cb.value);
-                    window.filtreNouvellesSections = selected;
-                    rafraichirEtudiants();
-                });
-            });
-        })
 
     const filtreNouveauGroupe = document.getElementById('filtreNouveauGroupe');
     const menuNouveauGroupe = document.getElementById('menuNouveauGroupe');
@@ -330,31 +339,4 @@ window.onload = (event) => {
         menuNouveauGroupe.style.left = rect.left;
     });
 
-    fetch('./json/groupes.json')
-        .then(reponse => reponse.json())
-        .then(data => {
-            window.nouveauxGroupes = data; 
-            
-            Object.entries(window.nouveauxGroupes).forEach(([key, value]) => {
-                const div = document.createElement('div');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = value;
-                checkbox.id = 'groupes-' + value;
-                const labelElement = document.createElement('label');
-                labelElement.htmlFor = checkbox.id;
-                labelElement.textContent = key;
-                div.appendChild(checkbox);
-                div.appendChild(labelElement);
-                menuNouveauGroupe.appendChild(div);
-
-                checkbox.addEventListener('change', function(){
-  
-                    const selected = Array.from(menuNouveauGroupe.querySelectorAll('input[type="checkbox"]:checked'))
-                                          .map(cb => cb.value);
-                    window.filtreNouveauxGroupes = selected; 
-                    rafraichirEtudiants();
-                });
-            });
-        })
 };

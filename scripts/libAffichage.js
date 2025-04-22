@@ -26,7 +26,6 @@ function rafraichirEtudiants() {
         const tbody = document.querySelector("#tableauEtudiants tbody");
         tbody.innerHTML = "";
 
-
         let filtreEtudiants = etudiants;
         if (window.filtreLangues && window.filtreLangues.length > 0) {
             filtreEtudiants = etudiants.filter(etudiant => window.filtreLangues.includes(etudiant.langue));
