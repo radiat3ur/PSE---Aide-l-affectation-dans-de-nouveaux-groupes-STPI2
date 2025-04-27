@@ -188,48 +188,62 @@ function ajoutCommentaire(db, id, commentaire) {
 }
 
 function ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail) {
-    db.run(`INSERT INTO students (num_insa, civilite, prenom, nom, annee, langue, email)
-        VALUES (?,?,?,?,?,?,?)`,
-            [id, civilite, prenom, nom, annee, langue, mail], (err) => {
-        if (err) console.error("Erreur ajout d un etudiant", err.message);
-    });
-    db.run(`UPDATE students SET an = SUBSTR(annee, 1, 4) WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'an':", err.message);
-    });
-    db.run(`UPDATE students SET redoublant = CASE 
-        WHEN annee LIKE '%RED%' AND annee LIKE '%1A%' THEN 1 
-        WHEN annee LIKE '%RED%' AND annee LIKE '%2A%' THEN 2 
-        ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'redoublant':", err.message);
-    });
-    db.run(`UPDATE students SET intégré = CASE WHEN annee LIKE '%INT%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'intégré':", err.message);
-    });
-    db.run(`UPDATE students SET Allemand = CASE WHEN langue LIKE '%ALL%' AND langue NOT LIKE '%ALLD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'Allemand':", err.message);
-    });
-    db.run(`UPDATE students SET Espagnol = CASE WHEN langue LIKE '%ESP%' AND langue NOT LIKE '%ESPD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'Espagnol':", err.message);
-    });
-    db.run(`UPDATE students SET Français = CASE WHEN langue LIKE '%FLE%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'Français':", err.message);
-    });
-    db.run(`UPDATE students SET Espagnol_debutant = CASE WHEN langue LIKE '%ESPD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'Espagnol_debutant':", err.message);
-    });
-    db.run(`UPDATE students SET Allemand_debutant = CASE WHEN langue LIKE '%ALLD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'Allemand_debutant':", err.message);
-    });
-    db.run(`UPDATE students SET Allemand_grand_debutant = CASE WHEN langue LIKE '%ALLGD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'Allemand_grand_debutant':", err.message);
-    });
-    db.run(`UPDATE students SET Espagnol_grand_debutant = CASE WHEN langue LIKE '%ESPGD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
-    });
-    db.run(`UPDATE students SET section = CASE WHEN (groupe LIKE '%A%' OR groupe LIKE '%B%' OR groupe LIKE '%C%' OR groupe LIKE '%D%') AND groupe NOT LIKE '%SA%' THEN 1 WHEN groupe LIKE '%E%' OR groupe LIKE '%F%' OR groupe LIKE '%G%' OR groupe LIKE '%H%' THEN 2 WHEN groupe LIKE '%I%' OR groupe LIKE '%J%' OR groupe LIKE '%K%' THEN 'SIB' ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
-        if (err) console.error("Erreur mise à jour 'section':", err.message);
-    });
-    
+    return new Promise((resolve, reject) => {
+        db.get(`SELECT num_insa FROM students WHERE num_insa = ? `,
+                [id], (err,eleve) => {
+            if (err) {console.error("Erreur ajout d un etudiant", err.message)
+                reject("Erreur DB")
+                return;}
+            if (eleve) {resolve("Identifiant déjà pris")
+                console.log("Déja on y  est")
+                return;}
+            
+            else {
+                db.run(`INSERT INTO students (num_insa, civilite, prenom, nom, annee, langue, email)
+                    VALUES (?,?,?,?,?,?,?)`,
+                        [id, civilite, prenom, nom, annee, langue, mail], (err) => {
+                    if (err) console.error("Erreur ajout d un etudiant", err.message);
+                });
+                db.run(`UPDATE students SET an = SUBSTR(annee, 1, 4) WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'an':", err.message);
+                });
+                db.run(`UPDATE students SET redoublant = CASE 
+                    WHEN annee LIKE '%RED%' AND annee LIKE '%1A%' THEN 1 
+                    WHEN annee LIKE '%RED%' AND annee LIKE '%2A%' THEN 2 
+                    ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'redoublant':", err.message);
+                });
+                db.run(`UPDATE students SET intégré = CASE WHEN annee LIKE '%INT%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'intégré':", err.message);
+                });
+                db.run(`UPDATE students SET Allemand = CASE WHEN langue LIKE '%ALL%' AND langue NOT LIKE '%ALLD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'Allemand':", err.message);
+                });
+                db.run(`UPDATE students SET Espagnol = CASE WHEN langue LIKE '%ESP%' AND langue NOT LIKE '%ESPD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'Espagnol':", err.message);
+                });
+                db.run(`UPDATE students SET Français = CASE WHEN langue LIKE '%FLE%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'Français':", err.message);
+                });
+                db.run(`UPDATE students SET Espagnol_debutant = CASE WHEN langue LIKE '%ESPD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'Espagnol_debutant':", err.message);
+                });
+                db.run(`UPDATE students SET Allemand_debutant = CASE WHEN langue LIKE '%ALLD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'Allemand_debutant':", err.message);
+                });
+                db.run(`UPDATE students SET Allemand_grand_debutant = CASE WHEN langue LIKE '%ALLGD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'Allemand_grand_debutant':", err.message);
+                });
+                db.run(`UPDATE students SET Espagnol_grand_debutant = CASE WHEN langue LIKE '%ESPGD%' THEN 1 ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
+                });
+                db.run(`UPDATE students SET section = CASE WHEN (groupe LIKE '%A%' OR groupe LIKE '%B%' OR groupe LIKE '%C%' OR groupe LIKE '%D%') AND groupe NOT LIKE '%SA%' THEN 1 WHEN groupe LIKE '%E%' OR groupe LIKE '%F%' OR groupe LIKE '%G%' OR groupe LIKE '%H%' THEN 2 WHEN groupe LIKE '%I%' OR groupe LIKE '%J%' OR groupe LIKE '%K%' THEN 'SIB' ELSE 0 END WHERE num_insa = ?`, [id], (err) => {
+                    if (err) console.error("Erreur mise à jour 'section':", err.message);
+                });
+                resolve("Etudiant ajouté");
+            }
+        });
+    })
 }
 
 function recupererEtudiants(db) {

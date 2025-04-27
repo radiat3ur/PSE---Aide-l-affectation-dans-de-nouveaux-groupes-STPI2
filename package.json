@@ -9,7 +9,7 @@
   "description": "",
   "main": "scripts/main.js",
   "devDependencies": {
-    "electron": "^35.0.1"
+    "electron": "^35.2.0"
   },
   "scripts": {
     "start": "electron .",
