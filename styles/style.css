@@ -94,3 +94,9 @@ header {
     font-size: 16px;
     margin-left: 5px;
 }
+
+.active{
+  background-color: #0000008d;
+  color: white;
+  border : 1px solid #FFF;
+}

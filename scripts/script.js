@@ -370,4 +370,24 @@ window.onload = (event) => {
             this.innerText = 'Plus d\'informations';
         }
     });
+
+    document.getElementById('onglet1').addEventListener('click', function () {
+        // Masquer contenu l'onglet 2
+        document.getElementById('contenuOnglet2').classList.add('cache');
+        // Afficher contenu onglet 1
+        document.getElementById('tableauEtudiants').classList.remove('cache');
+        //met à jour style boutons
+        document.getElementById('onglet1').classList.add('active');
+        document.getElementById('onglet2').classList.remove('active');
+    });
+    
+    document.getElementById('onglet2').addEventListener('click', function () {
+        // Masquer contenu onglet 1
+        document.getElementById('tableauEtudiants').classList.add('cache');
+        // Afficher contenu onglet 2
+        document.getElementById('contenuOnglet2').classList.remove('cache');
+        //met à jour style boutons  
+        document.getElementById('onglet2').classList.add('active');
+        document.getElementById('onglet1').classList.remove('active')
+    });
 }
