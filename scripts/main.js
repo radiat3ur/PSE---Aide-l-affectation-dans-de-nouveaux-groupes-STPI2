@@ -58,17 +58,9 @@ ipcMain.handle('ajoutCommentaire', async (event, id, commentaire) => {
 
 ipcMain.handle('ajoutEtudiant', async (event, id, civilite, prenom, nom, annee, langue, mail) => {
     console.log("Tentative d'ajout de l'étudiant avec ID:", id);
-    libDB.ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail).then((resultat) => {
-        console.log("Résultat de la promesse :", resultat);
-        if (resultat === "Identifiant déjà pris") {
-            console.log("Déjà existant")
-            //window.webContents.send('alert-message', 'Erreur : Identifiant déjà utilisé !');
-            //alert("Erreur : Identifiant déjà utilisé !")
-        } else if (resultat === "Etudiant ajouté") {
-            console.log("Ajout réussi !")
-            //alert("L'étudiant a été ajouté avec succès.")
-        }
-    });
+    const resultat = await libDB.ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail)
+    console.log(resultat)
+    return resultat
 });
 
 ipcMain.handle('recupererEtudiants', async (event) => {
