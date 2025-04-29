@@ -43,21 +43,26 @@
         <input name="mail" type="text" placeholder="Entrez le mail"/>
         <input type="submit" value="OK"/>
       </form>
-    
+      
+      <button id="submitGroupeChanges">Mettre à jour tous les groupes</button>
+      <button id="changerInfo">Moins d'informations</button>
     </header>
     <table border="1" id="tableauEtudiants">
       <thead>
         <tr>
             <th>Identifiant</th>
+            <!-- <th class="cache">Civilité</th> -->
             <th>Civilité</th>
             <th>Prénom</th>
             <th>Nom</th>
+            <!-- <th class="cache">Année</th> -->
             <th>Année</th>
             <th>
               Langue 
               <button id="filtreLangue" class="fleche-bas">▼</button>
               <div id="menuLangue" class="langue-menu cache"></div>
             </th>
+            <!-- <th class="cache">Mail</th> -->
             <th>Mail</th>
             <th>
               Section
@@ -69,6 +74,8 @@
               <button id="filtreGroupe" class="fleche-bas">▼</button>
               <div id="menuGroupe" class="groupe-menu cache"></div>
             </th>
+            <!-- <th class="cache">Décision Jury STPI1</th> -->
+            <!-- <th class="cache">Commentaire</th> -->
             <th>Décision Jury STPI1</th>
             <th>Commentaire</th>
             <th>
