@@ -260,5 +260,12 @@ function recupererEtudiants(db) {
     });
 }
 
+function lectureCommentaire(db, id) {
+    db.get(`SELECT commentaire FROM students WHERE num_insa = ?`,
+            [id], (err) => {
+        if (err) console.error("Erreur lecture d un commentaire", err.message);
+    });
+}
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire };

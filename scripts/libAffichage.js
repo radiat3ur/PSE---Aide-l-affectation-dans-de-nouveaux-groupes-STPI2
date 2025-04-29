@@ -9,7 +9,7 @@ function nvCommentaire(id, commentaire) {
 async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
     const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
     if (alerte === "Identifiant déjà pris") {
-        alert("Erreur : Identifiant déjà utilisé !")
+        alert(alerte)
         console.log("presque")
         return}
 }
