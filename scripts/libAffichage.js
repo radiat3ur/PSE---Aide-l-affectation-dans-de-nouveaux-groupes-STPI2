@@ -6,8 +6,12 @@ function nvCommentaire(id, commentaire) {
     window.libDB.ajoutCommentaire(id, commentaire);
 }
 
-function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
-    window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
+async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
+    const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
+    if (alerte === "Identifiant déjà pris") {
+        alert("Erreur : Identifiant déjà utilisé !")
+        console.log("presque")
+        return}
 }
 
 async function recupererEtudiants() {

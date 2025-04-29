@@ -1,6 +1,7 @@
 const fs = require('fs'); // permet de travailler avec des fichiers (lire, écrire, ...)
 const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
 const path = require('path'); // module path pour gérer les chemins de manière robuste
+const nom_fichier = './Sujet5_base.csv';
 
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
@@ -52,7 +53,7 @@ function init(db) {
                 console.error("Erreur lors du début de la transaction:", err.message);
                 return;
             }
-            const csvFilePath = path.resolve(__dirname, './Sujet5_base.csv'); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
+            const csvFilePath = path.resolve(__dirname, nom_fichier); // cherche le fichier CSV dans le dossier scripts à partir du dossier PSE
             // Lecture du fichier CSV et insertion des données
             fs.createReadStream(csvFilePath)
                 .pipe(csv({ separator: ',' }))
