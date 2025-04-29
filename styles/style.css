@@ -1,6 +1,6 @@
 body {
-  background-color: #f0f0f0;
-  font-family: 'Open Sans', sans-serif;
+  background-color: #ffffff;
+  font-family: 'Poppins', sans-serif;
 }
 
 .cache {
@@ -9,11 +9,13 @@ body {
 
 .action {
   display: block;
-  background-color: #9d4bb4;
+  background-color: #eb1f1f;
   padding: 10px 20px;
   border-radius: 7px;
   border: none;
   font-size: 20px;
+  top: 70px;  
+  z-index: 1;
 }
 
 header {
@@ -22,12 +24,6 @@ header {
   z-index: 2;
 }
 
-#tableauEtudiants thead th {
-  position: sticky;
-  top: 75px;
-  background: #ae7bc3;
-  z-index: 1;
-}
 
 .barre-recherche {
   display: none;
@@ -46,14 +42,6 @@ header {
   margin-left: 5px;
 }
 
-.surligner {
-  background-color: #948d968d;
-}
-
-.surligner.current {
-  background-color: #90639c;
-}
-
 .filtre-dropdown {
   position: relative;
   display: inline-block;
@@ -67,25 +55,47 @@ header {
 }
 
 .langue-menu {
-  position: fixed;
+  position: sticky;
   background-color: #f0f0f0;
+  color: rgb(17, 17, 17);
   padding: 10px;
   z-index: 3;
+  padding: 10px 20px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
 }
 
 .section-menu {
-  position: fixed;
+  position: sticky;
   background-color: #f0f0f0;
+  color: rgb(17, 17, 17);
   padding: 10px;
   z-index: 3;
+  padding: 10px 20px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
 }
 
 .groupe-menu {
-  position: fixed;
+  position: sticky;
   background-color: #f0f0f0;
-  padding: 10px;
+  color: rgb(17, 17, 17);
+  padding: 10px 20px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
   z-index: 3;
 }
+
+.menu-sticky {
+  position: sticky;
+  background-color: #f0f0f0;
+  color: #111;
+  padding: 10px 20px;
+  border-radius: 7px;
+  z-index: 3;
+  border: 1px solid #ccc;
+}
+
 
 .fleche-bas {
     background: none;
@@ -94,3 +104,68 @@ header {
     font-size: 16px;
     margin-left: 5px;
 }
+
+ #recherche {
+  border-radius: 20px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+}
+
+button {
+  cursor : pointer }
+
+h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 20px;
+  color: red;
+  text-align: right;
+}
+input[type="text"],
+input[type="number"],
+select,
+button {
+  border-radius: 12px;       
+  padding: 10px 14px;        
+  border: 1px solid #141010;  
+  background-color: rgb(225, 214, 214);    
+}
+
+
+#tableauEtudiants {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+  border-radius: 12px; 
+}
+
+
+#tableauEtudiants thead th {
+  background-color: #696969;
+  color: white;
+  text-align: left;
+  padding: 12px 8px;
+  position: sticky;
+  top: 130px;
+  z-index: 1;
+}
+
+#tableauEtudiants tbody td {
+  padding: 10px 8px;
+  border-top: 1px solid #ccc;
+}
+
+#tableauEtudiants th button {
+  margin-left: 4px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
