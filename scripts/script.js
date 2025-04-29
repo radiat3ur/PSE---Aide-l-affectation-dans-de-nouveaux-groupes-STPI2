@@ -339,4 +339,35 @@ window.onload = (event) => {
         menuNouveauGroupe.style.left = rect.left;
     });
 
-};
+    // const colonnesInfoSup = ['Civilité', 'Année', 'Mail', 'Décision Jury STPI1', 'Commentaire'];
+    // document.querySelectorAll('#tableauEtudiants th').forEach((titre, index) => {
+    //     if (colonnesInfoSup.includes(titre.textContent)) {
+    //         document.querySelectorAll('#tableauEtudiants tbody tr').forEach(lig => {
+    //             const cells = lig.querySelectorAll('td');
+    //             if (cells[index]) {
+    //                 cells[index].classList.add('cache');
+    //             }
+    //         });
+    //     }
+    // });
+
+    document.getElementById('changerInfo').addEventListener('click', function() {
+        document.querySelectorAll('#tableauEtudiants th').forEach((titre, index) => {
+            if (titre.innerText === 'Civilité' || titre.innerText === 'Année' || titre.innerText === 'Mail' || titre.innerText === 'Décision Jury STPI1' || titre.innerText=== 'Commentaire') {
+                titre.classList.toggle('cache');
+                document.querySelectorAll('#tableauEtudiants tbody tr').forEach(lig => {
+                    const cells = lig.querySelectorAll('td');
+                    if (cells[index]) {
+                        cells[index].classList.toggle('cache');
+                    }
+                });
+            }
+        });
+        if (this.innerText == 'Plus d\'informations') {
+            this.innerText = 'Moins d\'informations';
+        }
+        else {
+            this.innerText = 'Plus d\'informations';
+        }
+    });
+}
