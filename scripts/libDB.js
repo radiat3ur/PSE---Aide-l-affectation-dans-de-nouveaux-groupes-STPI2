@@ -2,6 +2,15 @@ const fs = require('fs'); // permet de travailler avec des fichiers (lire, écri
 const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
 const path = require('path'); // module path pour gérer les chemins de manière robuste
 const nom_fichier = './Sujet5_base.csv';
+const groupes_all = ["Mercredi 15h	D I J K","Vendredi 13h15	E"];
+const groupes_esp = ["Lundi 16h45	 I K","Mercredi 8h	F","Mercredi 9h45	G","Mercredi 11h30	C","Mercredi 15h	D J","Mercredi 16h45	A","Jeudi 9h45	B"];
+const groupes_fle = 'I-J-K';
+const groupes_alld = ["Mercredi 18h30"];
+const groupes_espd = ["Mercredi 15h	D I J K","Mercredi  16h45	A G"];
+
+
+
+
 
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
@@ -172,20 +181,38 @@ function miseAJourNouvelleSection(db, id, groupe) {
 }
 
 function affectationGroupe(db, id, groupe) {
-    db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
-        if (err) {
-            console.error("Erreur lors de la mise à jour du groupe:", err.message);
-            return;
-        }
-    });
-    miseAJourNouvelleSection(db, id, groupe)
+    return new Promise((resolve, reject) => {
+        db.get('SELECT langue FROM students WHERE num_insa = ?',[id], (err,lv2) => {
+            if (lv2.langue === 'ESP') {
+                console.log('presque')
+                if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                    resolve("Ce groupe ne contiens pas d'espagnols")
+                    console.log('proche')
+                    return;
+                  };
+            }
+            else {
+                console.log('pourquoi')
+                db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                    if (err) {
+                        console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                        reject("Erreur DB");
+                        return;
+                    }
+                });
+                miseAJourNouvelleSection(db, id, groupe)
+                resolve("Etudiant rajouté dans le groupe")
+                return}
+            }
+        );
+    })
 }
 
 function ajoutCommentaire(db, id, commentaire) {
-    db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`,
-            [commentaire, id], (err) => {
-        if (err) console.error("Erreur mise à jour d un commentaire", err.message);
-    });
+        db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`,
+                [commentaire, id], (err) => {
+            if (err) console.error("Erreur mise à jour d un commentaire", err.message);
+        });
 }
 
 function ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail) {
