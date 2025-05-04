@@ -47,9 +47,7 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.handle('affectationGroupe', async (event, id, groupe) => {
-    console.log("Tentative de changement de groupe de l'étudiant avec ID:", id," dans le groupe:",groupe);
     const resultat = await libDB.affectationGroupe(db,id,groupe)
-    console.log(resultat)
     return resultat
 });
 
@@ -59,9 +57,7 @@ ipcMain.handle('ajoutCommentaire', async (event, id, commentaire) => {
 });
 
 ipcMain.handle('ajoutEtudiant', async (event, id, civilite, prenom, nom, annee, langue, mail) => {
-    console.log("Tentative d'ajout de l'étudiant avec ID:", id);
     const resultat = await libDB.ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail)
-    console.log(resultat)
     return resultat
 });
 

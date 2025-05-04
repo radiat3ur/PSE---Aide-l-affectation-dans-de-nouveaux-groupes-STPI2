@@ -1,7 +1,6 @@
 async function nvGroupe(id, groupe) {
     window.libDB.affectationGroupe(id, groupe);
     const alerte = await window.libDB.affectationGroupe(id, groupe);
-    console.log(alerte);
     if (alerte !== "Etudiant rajouté dans le groupe") {
         alert(alerte)
         return}
