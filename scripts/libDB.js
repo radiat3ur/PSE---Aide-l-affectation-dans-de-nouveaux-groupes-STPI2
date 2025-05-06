@@ -345,10 +345,22 @@ function recupererEtudiants(db) {
     });
 }
 
+function ajoutCommentaire(db, id, commentaire) {
+    db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`, [commentaire, id], (err) => {
+        if (err) console.error("Erreur mise à jour d un commentaire", err.message);
+    });
+}
+
 function lectureCommentaire(db, id) {
-    db.get(`SELECT commentaire FROM students WHERE num_insa = ?`,
-            [id], (err) => {
-        if (err) console.error("Erreur lecture d un commentaire", err.message);
+    return new Promise((resolve, reject) => {
+        db.get(`SELECT commentaire FROM students WHERE num_insa = ?`, [id], (err, row) => {
+            if (err) {
+                console.error("Erreur lecture d'un commentaire", err.message);
+                reject(err);
+                return;
+            }
+            resolve(row ? row.commentaire : '');
+        });
     });
 }
 

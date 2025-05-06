@@ -6,9 +6,15 @@ async function nvGroupe(id, groupe) {
     }
 }
 
-function nvCommentaire(id, commentaire) {
-    window.libDB.ajoutCommentaire(id, commentaire);
+async function nvCommentaire(id, commentaire) {
+    try {
+        await window.libDB.ajoutCommentaire(id, commentaire);
+    } catch (err) {
+        console.error("Erreur ajout commentaire :", err);
+    }
 }
+
+
 
 async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
     const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);

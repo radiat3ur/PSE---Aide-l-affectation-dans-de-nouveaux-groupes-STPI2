@@ -51,10 +51,6 @@ ipcMain.handle('affectationGroupe', async (event, id, groupe) => {
     return resultat
 });
 
-ipcMain.handle('ajoutCommentaire', async (event, id, commentaire) => {
-    libDB.ajoutCommentaire(db,id,commentaire);
-    return null;
-});
 
 ipcMain.handle('ajoutEtudiant', async (event, id, civilite, prenom, nom, annee, langue, mail) => {
     const resultat = await libDB.ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail)
@@ -70,3 +66,15 @@ ipcMain.handle('recupererEtudiants', async (event) => {
         throw err;
     }
 });
+
+ipcMain.handle('lectureCommentaire', async (event, id) => {
+    const commentaire = await libDB.lectureCommentaire(db, id);
+    return commentaire;
+});
+
+
+ipcMain.handle('ajoutCommentaire', async (event, id, nouveauCommentaire) => {
+    const commentaireFinal = nouveauCommentaire.trim();
+    db.prepare('UPDATE students SET commentaire = ? WHERE num_insa = ?').run(commentaireFinal, id);
+});
+
