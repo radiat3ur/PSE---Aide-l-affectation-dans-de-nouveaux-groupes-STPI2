@@ -21,6 +21,7 @@ body {
 header {
   position: sticky;
   top: 0px;
+  background-color: #ffffff;
   z-index: 2;
 }
 
@@ -42,6 +43,15 @@ header {
   margin-left: 5px;
 }
 
+/* .surligner et .surligner.current à ne pas enlever ! (tu peux changer les couleurs par contre) */
+.surligner {
+  background-color: #948d968d;
+}
+
+.surligner.current {
+  background-color: #90639c;
+}
+
 .filtre-dropdown {
   position: relative;
   display: inline-block;
@@ -55,7 +65,7 @@ header {
 }
 
 .langue-menu {
-  position: sticky;
+  position: absolute;
   background-color: #f0f0f0;
   color: rgb(17, 17, 17);
   padding: 10px;
@@ -63,10 +73,12 @@ header {
   padding: 10px 20px;
   border-radius: 7px;
   border: 1px solid #ccc;
+  z-index: 5;
+  
 }
 
 .section-menu {
-  position: sticky;
+  position: absolute;
   background-color: #f0f0f0;
   color: rgb(17, 17, 17);
   padding: 10px;
@@ -74,16 +86,17 @@ header {
   padding: 10px 20px;
   border-radius: 7px;
   border: 1px solid #ccc;
+  z-index: 5;
 }
 
 .groupe-menu {
-  position: sticky;
+  position: absolute;
   background-color: #f0f0f0;
   color: rgb(17, 17, 17);
   padding: 10px 20px;
   border-radius: 7px;
   border: 1px solid #ccc;
-  z-index: 3;
+  z-index: 5;
 }
 
 .menu-sticky {
@@ -92,7 +105,7 @@ header {
   color: #111;
   padding: 10px 20px;
   border-radius: 7px;
-  z-index: 3;
+  z-index: 4;
   border: 1px solid #ccc;
 }
 
