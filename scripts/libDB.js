@@ -182,42 +182,87 @@ function miseAJourNouvelleSection(db, id, groupe) {
 
 function affectationGroupe(db, id, groupe) {
     return new Promise((resolve, reject) => {
-        db.get('SELECT langue FROM students WHERE num_insa = ?',[id], (err,lv2) => {
-            if (lv2.langue === 'ESP') {
-                if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                    resolve("Ce groupe ne contiens pas d'espagnols")
-                    return;
-                  };
-            }
-            else {
-                if (lv2.langue === 'ALL') {
-                    if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                        resolve("Ce groupe ne contiens pas d'allemands")
-                        return;
-                      };
-                }
-                else {
-                    if (lv2.langue === 'ESPD') {
-                        if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                            resolve("Ce groupe ne contiens pas d'espagnols debutants")
+        db.get("SELECT 1 FROM students WHERE identifiant = ? LIMIT 1", [id], (err, row) => {
+            if (err) {
+                resolve("Cet identifiant n'existe pas")
+            } else {
+                db.get('SELECT langue FROM students WHERE num_insa = ?',[id], (err,lv2) => {
+                    if (lv2.langue === 'ESP') {
+                        if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                            resolve("Ce groupe ne contient pas d'espagnols")
                             return;
-                          };
+                        }
+                        else {
+                            console.log('presque')
+                            db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                                if (err) {
+                                    console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                                    reject("Erreur DB");
+                                    return;
+                                }
+                            });
+                            miseAJourNouvelleSection(db, id, groupe)
+                            resolve("Etudiant rajouté dans le groupe")
+                            return
+                        }
                     }
                     else {
-                        db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
-                            if (err) {
-                                console.error("Erreur lors de la mise à jour du groupe:", err.message);
-                                reject("Erreur DB");
+                        if (lv2.langue === 'ALL') {
+                            if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                                resolve("Ce groupe ne contient pas d'allemands")
                                 return;
                             }
-                        });
-                        miseAJourNouvelleSection(db, id, groupe)
-                        resolve("Etudiant rajouté dans le groupe")
-                        return
+                            else {
+                                console.log('presque')
+                                db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                                    if (err) {
+                                        console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                                        reject("Erreur DB");
+                                        return;
+                                    }
+                                });
+                                miseAJourNouvelleSection(db, id, groupe)
+                                resolve("Etudiant rajouté dans le groupe")
+                                return
+                            }
+                        }
+                        else {
+                            if (lv2.langue === 'ESPD') {
+                                if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                                    resolve("Ce groupe ne contient pas d'espagnols debutants")
+                                    return;
+                                }
+                                else {
+                                    console.log('presque')
+                                    db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                                        if (err) {
+                                            console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                                            reject("Erreur DB");
+                                            return;
+                                        }
+                                    });
+                                    miseAJourNouvelleSection(db, id, groupe)
+                                    resolve("Etudiant rajouté dans le groupe")
+                                    return
+                                }
+                            }
+                            else {
+                                console.log('presque')
+                                db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                                    if (err) {
+                                        console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                                        reject("Erreur DB");
+                                        return;
+                                    }
+                                });
+                                miseAJourNouvelleSection(db, id, groupe)
+                                resolve("Etudiant rajouté dans le groupe")
+                                return
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
+        }});
     })
 }
 

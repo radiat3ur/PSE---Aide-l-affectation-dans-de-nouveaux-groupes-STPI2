@@ -3,7 +3,7 @@ async function nvGroupe(id, groupe) {
     const alerte = await window.libDB.affectationGroupe(id, groupe);
     if (alerte !== "Etudiant rajouté dans le groupe") {
         alert(alerte)
-        return}
+    }
 }
 
 function nvCommentaire(id, commentaire) {
@@ -14,7 +14,7 @@ async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
     const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
     if (alerte !== "Etudiant ajouté") {
         alert(alerte)
-        return}
+        }
 }
 
 async function recupererEtudiants() {
