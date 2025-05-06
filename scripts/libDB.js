@@ -182,10 +182,9 @@ function miseAJourNouvelleSection(db, id, groupe) {
 
 function affectationGroupe(db, id, groupe) {
     return new Promise((resolve, reject) => {
-        db.get("SELECT 1 FROM students WHERE identifiant = ? LIMIT 1", [id], (err, row) => {
-            if (err) {
-                resolve("Cet identifiant n'existe pas")
-            } else {
+        db.get("SELECT num_insa FROM students WHERE num_insa = ? ", [id], (err, row) => {
+            if (err) console.error("Erreur mise à jour d un Groupe", err.message);
+            if (row) {
                 db.get('SELECT langue FROM students WHERE num_insa = ?',[id], (err,lv2) => {
                     if (lv2.langue === 'ESP') {
                         if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
@@ -262,6 +261,9 @@ function affectationGroupe(db, id, groupe) {
                         }
                     }
                 });
+
+            } else {
+                resolve("Cet identifiant n'existe pas")
         }});
     })
 }
