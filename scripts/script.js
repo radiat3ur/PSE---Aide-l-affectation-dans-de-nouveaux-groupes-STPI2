@@ -208,11 +208,29 @@ window.onload = (event) => {
         const id = formData.get('identifiant');
         const commentaire = formData.get('commentaire');
 
-        nvCommentaire(id, commentaire);
+        window.libDB.ajoutCommentaire(id, commentaire);
+
 
         this.reset();
         rafraichirEtudiants();
     });
+
+    async function chargerCommentaire(id) { // Fonction asynchrone
+        const commentaire = await window.libDB.lectureCommentaire(id); //
+        const champCommentaire = document.querySelector('#formModificationCommentaire textarea[name="commentaire"]'); // Select le textarea
+        if (champCommentaire) {
+            champCommentaire.value = commentaire || '';  // Vérifie qu'il y a bien qqc dans le commentaire
+        }
+    } 
+    
+    const champIdCommentaire = document.querySelector('#formModificationCommentaire input[name="identifiant"]');
+    champIdCommentaire.addEventListener('change', () => {
+        const id = champIdCommentaire.value.trim();
+        if (id !== '') {
+            chargerCommentaire(id);
+        }
+    });
+    
 
     document.getElementById("formAjoutEtudiant").addEventListener('submit', function(event) {
         event.preventDefault();

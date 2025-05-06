@@ -5,5 +5,5 @@ contextBridge.exposeInMainWorld('libDB', {
     ajoutCommentaire: (id, commentaire) => ipcRenderer.invoke('ajoutCommentaire',id, commentaire),
     ajoutEtudiant: (id, civilite, prenom, nom, annee, langue, mail) => ipcRenderer.invoke('ajoutEtudiant',id, civilite, prenom, nom, annee, langue, mail),
     recupererEtudiants: () => ipcRenderer.invoke('recupererEtudiants'),
-    lectureCommentaire: (commentaire) => ipcRenderer.invoke('lectureCommentaire',db, id)
+    lectureCommentaire: (id) => ipcRenderer.invoke('lectureCommentaire', id)
 });
