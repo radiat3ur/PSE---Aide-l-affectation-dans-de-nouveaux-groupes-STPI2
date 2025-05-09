@@ -26,7 +26,7 @@ async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
     const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
     if (alerte !== "Etudiant ajouté") {
         alert(alerte)
-        return}
+        }
 }
 
 async function recupererEtudiants() {

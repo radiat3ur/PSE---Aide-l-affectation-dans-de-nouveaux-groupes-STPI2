@@ -197,13 +197,13 @@ window.onload = (event) => {
         };
     });
 
-    document.getElementById("formModificationGroupe").addEventListener('submit', function(event) {
+    document.getElementById("formModificationGroupe").addEventListener('submit',async function(event) {
         event.preventDefault();
         const formData = new FormData(this);
         const id = formData.get('identifiant');
         const groupe = formData.get('groupe');
 
-        nvGroupe(id, groupe);
+        await nvGroupe(id, groupe);
 
         this.reset();
         rafraichirEtudiants();
@@ -238,7 +238,7 @@ window.onload = (event) => {
     });
     
 
-    document.getElementById("formAjoutEtudiant").addEventListener('submit', function(event) {
+    document.getElementById("formAjoutEtudiant").addEventListener('submit', async function(event) {
         event.preventDefault();
         const formData = new FormData(this);
         const id = formData.get('identifiant');
@@ -249,7 +249,7 @@ window.onload = (event) => {
         const langue = formData.get('langue');
         const mail = formData.get('mail');
 
-        nvEtudiant(id, civilite, prenom, nom, annee, langue, mail);
+        await nvEtudiant(id, civilite, prenom, nom, annee, langue, mail);
 
         this.reset();
         rafraichirEtudiants();
