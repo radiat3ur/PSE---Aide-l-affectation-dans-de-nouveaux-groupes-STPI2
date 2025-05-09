@@ -1,9 +1,17 @@
 async function nvGroupe(id, groupe) {
-    window.libDB.affectationGroupe(id, groupe);
     const alerte = await window.libDB.affectationGroupe(id, groupe);
     if (alerte !== "Etudiant rajouté dans le groupe") {
-        alert(alerte)
-        return}
+        const dialog = document.querySelector("dialog");
+        const texte = document.getElementById("texte");
+        const buttonFermer = document.getElementById("fermer");
+
+        texte.textContent = alerte;
+        dialog.showModal();
+
+        buttonFermer.addEventListener("click", () => {
+            dialog.close();
+        });
+    }
 }
 
 async function nvCommentaire(id, commentaire) {
@@ -13,8 +21,6 @@ async function nvCommentaire(id, commentaire) {
         console.error("Erreur ajout commentaire :", err);
     }
 }
-
-
 
 async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
     const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
@@ -30,6 +36,18 @@ async function recupererEtudiants() {
     } catch (err) {
         console.error("Erreur lors de la récupération des étudiants :", err.message);
         throw err;
+    }
+}
+
+let etudiantsCliques = [];
+
+function clicEtudiants(ligne, id) {
+    if (etudiantsCliques.includes(id)) {
+        etudiantsCliques = etudiantsCliques.filter(studentId => studentId !== id);
+        ligne.classList.remove('surligner');
+    } else {
+        etudiantsCliques.push(id);
+        ligne.classList.add('surligner');
     }
 }
 
@@ -62,6 +80,9 @@ function rafraichirEtudiants() {
             ordreColonnes.forEach(col => {
                 const cell = lig.insertCell();
                 cell.textContent = etudiant[col];
+            });
+            lig.addEventListener('click', () => {
+                clicEtudiants(lig, etudiant.num_insa)
             });
         });
     })();

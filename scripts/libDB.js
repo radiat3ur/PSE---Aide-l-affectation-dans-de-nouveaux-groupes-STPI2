@@ -8,10 +8,6 @@ const groupes_fle = 'I-J-K';
 const groupes_alld = ["Mercredi 18h30"];
 const groupes_espd = ["Mercredi 15h	D I J K","Mercredi  16h45	A G"];
 
-
-
-
-
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
     db.run('PRAGMA journal_mode = WAL', (err) => {
@@ -185,21 +181,19 @@ function affectationGroupe(db, id, groupe) {
         db.get('SELECT langue FROM students WHERE num_insa = ?',[id], (err,lv2) => {
             if (lv2.langue === 'ESP') {
                 if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                    resolve("Ce groupe ne contiens pas d'espagnols")
+                    resolve("Ce groupe ne contient pas d'espagnols")
                     return;
                   };
             }
-            else {
                 if (lv2.langue === 'ALL') {
                     if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                        resolve("Ce groupe ne contiens pas d'allemands")
+                    resolve("Ce groupe ne contient pas d'allemands")
                         return;
                       };
                 }
-                else {
                     if (lv2.langue === 'ESPD') {
                         if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                            resolve("Ce groupe ne contiens pas d'espagnols debutants")
+                    resolve("Ce groupe ne contient pas d'espagnols debutants")
                             return;
                           };
                     }
@@ -213,11 +207,8 @@ function affectationGroupe(db, id, groupe) {
                         });
                         miseAJourNouvelleSection(db, id, groupe)
                         resolve("Etudiant rajouté dans le groupe")
-                        return
-                    }
-                }
             }
-        });
+        })
     })
 }
 

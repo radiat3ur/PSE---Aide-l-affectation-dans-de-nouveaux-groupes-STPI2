@@ -172,6 +172,13 @@ window.onload = (event) => {
                     rafraichirEtudiants();
                 });
             });
+            const selectionnerGroupe = document.getElementById('selectionnerGroupe');
+            Object.entries(GROUPES).forEach(([key, value]) => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.text = key;
+                selectionnerGroupe.appendChild(option);
+            });
         });
     // ____ 
     
@@ -209,7 +216,6 @@ window.onload = (event) => {
         const commentaire = formData.get('commentaire');
 
         window.libDB.ajoutCommentaire(id, commentaire);
-
 
         this.reset();
         rafraichirEtudiants();
@@ -407,5 +413,14 @@ window.onload = (event) => {
         //met à jour style boutons  
         document.getElementById('onglet2').classList.add('active');
         document.getElementById('onglet1').classList.remove('active')
+    });
+
+    document.getElementById('submit').addEventListener('click', () => {
+        const groupe = document.getElementById('selectionnerGroupe').value;
+        etudiantsCliques.forEach(id => {
+            nvGroupe(id, groupe);
+        });
+        etudiantsCliques = [];
+        rafraichirEtudiants();
     });
 }
