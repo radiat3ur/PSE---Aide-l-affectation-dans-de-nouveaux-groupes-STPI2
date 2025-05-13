@@ -1,0 +1,30 @@
+***************
+*** 62,79 ****
+        <button id="submitGroupeChanges">Mettre ?? jour tous les groupes</button>
+        <button id="changerInfo">Moins d'informations</button>
+            
+-       <table border="1" id="contenuOnglet2" class="cache">
+-         <thead>
+-             <tr>
+-                 <th>Groupe</th>
+-                 <th>Nombre d'??tudiants anciens groupes</th>
+-                 <th> Nombre d'??tudiant nouveaux groupes</th>
+-             </tr>
+-         </thead>
+-         <tbody>
+-       
+-         </tbody>
+-     </table>
+      </header>
+      <table border="1" id="tableauEtudiants">
+        <thead>
+--- 62,70 ----
+        <button id="submitGroupeChanges">Mettre ?? jour tous les groupes</button>
+        <button id="changerInfo">Moins d'informations</button>
+            
++     <div id="contenuOnglet2" class="cache">
++         <p>Contenu de l'onglet 2</p>
++     </div>
+      </header>
+      <table border="1" id="tableauEtudiants">
+        <thead>
