@@ -27,7 +27,7 @@ header {
 
 /* .surligner et .surligner.current à ne pas enlever ! (tu peux changer les couleurs par contre) */
 .surligner {
-  background-color: #948d968d;
+  background-color: #948d968d !important;
 }
 
 .surligner.current {
@@ -55,6 +55,7 @@ header {
   position: relative;
   display: inline-block;
   margin-left: 20px;
+  z-index: 15;
 }
 
 .filtre-dropdown button {
@@ -63,38 +64,6 @@ header {
   cursor: pointer;
 }
 
-/*.langue-menu {
-  position: sticky;
-  background-color: #f0f0f0;
-  color: rgb(17, 17, 17);
-  padding: 10px;
-  z-index: 3;
-  padding: 10px 20px;
-  border-radius: 7px;
-  border: 1px solid #ccc;
-}
-
-.section-menu {
-  position: sticky;
-  background-color: #f0f0f0;
-  color: rgb(17, 17, 17);
-  padding: 10px;
-  z-index: 3;
-  padding: 10px 20px;
-  border-radius: 7px;
-  border: 1px solid #ccc;
-}
-
-.groupe-menu {
-  position: sticky ;
-  background-color: #f0f0f0;
-  color: rgb(17, 17, 17);
-  padding: 10px 20px;
-  border-radius: 7px;
-  border: 1px solid #ccc;
-  z-index: 3;
-}
-*/
 
 
 .menu-absolute {
@@ -103,7 +72,7 @@ header {
   color: #000000;
   padding: 10px 20px;
   border-radius: 7px;
-  z-index: 1;
+  z-index: 20;
   border: 1px solid #ccc;
 }
 
@@ -131,6 +100,7 @@ h1 {
   color: red;
   text-align: right;
 }
+
 input[type="text"],
 input[type="number"],
 select,
@@ -156,7 +126,8 @@ select:hover {
   color : #FFF;
 }
 
-#tableauEtudiants {
+#tableauEtudiants,
+#contenuOnglet2 {
   width: 100%;
   border-collapse: collapse;
   font-family: sans-serif;
@@ -169,7 +140,8 @@ select:hover {
 }
 
 
-#tableauEtudiants thead th {
+#tableauEtudiants thead th,
+#contenuOnglet2 thead th {
   background-color: #696969;
   color: white;
   text-align: left;
@@ -182,21 +154,24 @@ select:hover {
   border-right: none;
 }
 
-#tableauEtudiants thead th:first-child {
+#tableauEtudiants thead th:first-child,
+#contenuOnglet2 thead th:first-child {
   border-top-left-radius: 12px;
 }
 
-#tableauEtudiants thead th:last-child {
+#tableauEtudiants thead th:last-child,
+#contenuOnglet2 thead th:last-child{
   border-top-right-radius: 12px;
 }
 
-#tableauEtudiants tbody td {
+#tableauEtudiants tbody td,
+#contenuOnglet2 tbody td {
   padding: 10px 8px;
-  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   z-index: 5;
 }
 
-#tableauEtudiants th button {
+#tableauEtudiants th button, {
   margin-left: 4px;
   background-color: red;
   color: white;
@@ -208,18 +183,21 @@ select:hover {
 }
 
 
-#tableauEtudiants tr:nth-child(odd) {
+#tableauEtudiants tr:nth-child(odd),
+#contenuOnglet2 tr:nth-child(odd) {
   background-color: #f9f9f9;
+  z-index: 5;
 }
 
-#tableauEtudiants tr:hover {
+#tableauEtudiants tr:hover,
+#contenuOnglet2 tr:hover {
   background-color: #f1f1f1;
 }
 
 
 
 .active{
-  background-color: #0000008d;
+  background-color: #0000008d ;
   color: white;
   border : 1px solid #fff;
 }
