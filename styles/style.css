@@ -149,6 +149,13 @@ button:hover {
   transform: scale(1.03);
   color : #FFF;
 }
+
+select:hover {
+  background-color: #d81b1b;
+  transform: scale(1.03);
+  color : #FFF;
+}
+
 #tableauEtudiants {
   width: 100%;
   border-collapse: collapse;
