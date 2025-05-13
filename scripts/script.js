@@ -142,7 +142,7 @@ window.onload = (event) => {
                 labelElement.textContent = key;
                 div.appendChild(checkbox);
                 div.appendChild(labelElement);
-                menuGroupe.appendChild(div);
+                document.getElementById('menuGroupe').appendChild(div);
 
                 checkbox.addEventListener('change', function(){
                     const selected = Array.from(menuGroupe.querySelectorAll('input[type="checkbox"]:checked'))
@@ -162,7 +162,7 @@ window.onload = (event) => {
                 labelElement.textContent = key;
                 div.appendChild(checkbox);
                 div.appendChild(labelElement);
-                menuNouveauGroupe.appendChild(div);
+                document.getElementById('menuNouveauGroupe').appendChild(div);
         
                 checkbox.addEventListener('change', function(){
         
@@ -172,14 +172,6 @@ window.onload = (event) => {
                     rafraichirEtudiants();
                 });
             });
-            const selectionnerGroupe = document.getElementById('selectionnerGroupe');
-            Object.entries(GROUPES).forEach(([key, value]) => {
-                const option = document.createElement('option');
-                option.value = value;
-                option.text = key;
-                selectionnerGroupe.appendChild(option);
-            });
-        });
     // ____ 
     
     let FormSelectionne = document.getElementById("selectionAction").value;
@@ -415,12 +407,12 @@ window.onload = (event) => {
         document.getElementById('onglet1').classList.remove('active')
     });
 
-    document.getElementById('submit').addEventListener('click', () => {
-        const groupe = document.getElementById('selectionnerGroupe').value;
-        etudiantsCliques.forEach(id => {
-            nvGroupe(id, groupe);
+    document.getElementById('submit').addEventListener('click', async () => {
+        etudiantsCliques.forEach(async (id) => {
+            await nvGroupe(id, document.getElementById('groupe').value);
         });
         etudiantsCliques = [];
         rafraichirEtudiants();
     });
+})
 }
