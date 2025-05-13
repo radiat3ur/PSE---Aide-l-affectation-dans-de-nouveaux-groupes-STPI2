@@ -1,16 +1,19 @@
+function popup(message){
+    const dialog = document.querySelector("dialog");
+    const texte = document.getElementById("texte");
+    const buttonFermer = document.getElementById("fermer");
+
+    texte.textContent = message;
+    dialog.showModal();
+    buttonFermer.addEventListener("click", () => {
+        dialog.close();
+    });
+}
+
 async function nvGroupe(id, groupe) {
     const alerte = await window.libDB.affectationGroupe(id, groupe);
     if (alerte !== "Etudiant rajouté dans le groupe") {
-        const dialog = document.querySelector("dialog");
-        const texte = document.getElementById("texte");
-        const buttonFermer = document.getElementById("fermer");
-
-        texte.textContent = alerte;
-        dialog.showModal();
-
-        buttonFermer.addEventListener("click", () => {
-            dialog.close();
-        });
+        popup(alerte)
     }
 }
 
@@ -25,7 +28,7 @@ async function nvCommentaire(id, commentaire) {
 async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
     const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
     if (alerte !== "Etudiant ajouté") {
-        alert(alerte)
+        popup(alerte)
         }
 }
 

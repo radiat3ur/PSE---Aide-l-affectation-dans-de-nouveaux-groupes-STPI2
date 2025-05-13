@@ -97,3 +97,13 @@ ipcMain.handle('recupererNouveauGroupesEtValeurs', async (event) => {
         throw err;
     }
 });
+
+ipcMain.handle('recupererLangueParGroupe', async (event) => {
+    try {
+        const groupes = await libDB.compterEtudiantsParLangue(db); // Appelle la fonction dans libDB.js
+        return groupes;
+    } catch (err) {
+        console.error("Erreur lors de la récupération des langues par groupe :", err.message);
+        throw err;
+    }
+})

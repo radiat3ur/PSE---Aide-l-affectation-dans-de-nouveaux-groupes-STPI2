@@ -2,11 +2,11 @@ const fs = require('fs'); // permet de travailler avec des fichiers (lire, écri
 const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
 const path = require('path'); // module path pour gérer les chemins de manière robuste
 const nom_fichier = './Sujet5_base.csv';
-const groupes_all = ["Mercredi 15h	D I J K","Vendredi 13h15	E"];
-const groupes_esp = ["Lundi 16h45	 I K","Mercredi 8h	F","Mercredi 9h45	G","Mercredi 11h30	C","Mercredi 15h	D J","Mercredi 16h45	A","Jeudi 9h45	B"];
-const groupes_fle = 'I-J-K';
+const groupes_all = [["Mercredi 15h",["D","I","J","K"]],["Vendredi 13h15",["E"]]];
+const groupes_esp = [["Lundi 16h45",["I","K"]],["Mercredi 8h",["F"]],["Mercredi 9h45",["G"]],["Mercredi 11h30",["C"]],["Mercredi 15h",["D","J"]],["Mercredi 16h45",["A"]],["Jeudi 9h45",["B"]]];
+const groupes_fle = ["I","J","K"];
 const groupes_alld = ["Mercredi 18h30"];
-const groupes_espd = ["Mercredi 15h	D I J K","Mercredi  16h45	A G"];
+const groupes_espd = [["Mercredi 15h",["D","I","J","K"]],["Mercredi  16h45",["A","G"]]];
 
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
@@ -181,11 +181,9 @@ function affectationGroupe(db, id, groupe) {
         db.get("SELECT num_insa FROM students WHERE num_insa = ? ", [id], (err, row) => {
             if (err) console.error("Erreur mise à jour d un Groupe", err.message);
             if (row) {
-                console.log("il existe")
                 db.get('SELECT langue FROM students WHERE num_insa = ?',[id], (err,lv2) => {
                     if (lv2.langue === 'ESP') {
-                        console.log(" espagnol")
-                        if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                        if (! (groupes_esp.some(lettre_groupe => lettre_groupe[1].includes(groupe)))) {
                             resolve("Ce groupe ne contient pas d'espagnols")
                             return;
                         }
@@ -204,7 +202,7 @@ function affectationGroupe(db, id, groupe) {
                     }
                     else {
                         if (lv2.langue === 'ALL') {
-                            if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                            if (! (groupes_all.some(lettre_groupe => lettre_groupe[1].includes(groupe)))) {
                                 resolve("Ce groupe ne contient pas d'allemands")
                                 return;
                             }
@@ -223,7 +221,7 @@ function affectationGroupe(db, id, groupe) {
                         }
                         else {
                             if (lv2.langue === 'ESPD') {
-                                if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                                if (! (groupes_all.some(lettre_groupe => lettre_groupe[1].includes(groupe)))) {
                                     resolve("Ce groupe ne contient pas d'espagnols debutants")
                                     return;
                                 }
@@ -241,17 +239,37 @@ function affectationGroupe(db, id, groupe) {
                                 }
                             }
                             else {
-                                console.log('presque')
-                                db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
-                                    if (err) {
-                                        console.error("Erreur lors de la mise à jour du groupe:", err.message);
-                                        reject("Erreur DB");
+                                if (lv2.langue === 'FLE') {
+                                    if (! (groupes_fle.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
+                                        resolve("Ce groupe ne contient pas de français")
                                         return;
                                     }
-                                });
-                                miseAJourNouvelleSection(db, id, groupe)
-                                resolve("Etudiant rajouté dans le groupe")
-                                return
+                                    else {
+                                        db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                                            if (err) {
+                                                console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                                                reject("Erreur DB");
+                                                return;
+                                            }
+                                        });
+                                        miseAJourNouvelleSection(db, id, groupe)
+                                        resolve("Etudiant rajouté dans le groupe")
+                                        return
+                                    }
+                                }
+                                else {
+                                    console.log('presque')
+                                    db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                                        if (err) {
+                                            console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                                            reject("Erreur DB");
+                                            return;
+                                        }
+                                    });
+                                    miseAJourNouvelleSection(db, id, groupe)
+                                    resolve("Etudiant rajouté dans le groupe")
+                                    return
+                                }
                             }
                         }
                     }
@@ -374,7 +392,7 @@ function compterEtudiantsParGroupe(db) {
     });
 }
 
-function compterEtudiantsParNouveauGroupe(db){
+function compterEtudiantsParNouveauGroupe(db) {
     return new Promise((resolve, reject)=> {
         db.all('SELECT Nouveau_groupe, COUNT(*) AS nombre_etudiants_nouveau_groupe FROM students GROUP BY Nouveau_groupe', [], (err, rows) => {
             if (err) {
@@ -388,5 +406,29 @@ function compterEtudiantsParNouveauGroupe(db){
     })
 }
 
+// fonction pour compter les étudiants par langue dans chaque groupe
+function compterEtudiantsParLangue(db) {
+    return new Promise((resolve, reject) => {
+        db.all(`
+            SELECT 
+                CASE 
+                    WHEN Nouveau_groupe IS NULL OR Nouveau_groupe = '' THEN 'Non attribué'
+                    ELSE Nouveau_groupe
+                END AS Nouveau_groupe,
+                langue,
+                COUNT(*) AS nombre_etudiants_langue_nouveau_groupe
+            FROM students
+            GROUP BY Nouveau_groupe, langue
+        `, [], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors du comptage des étudiants par langue :", err.message);
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue };
