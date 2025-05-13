@@ -78,3 +78,22 @@ ipcMain.handle('ajoutCommentaire', async (event, id, nouveauCommentaire) => {
     db.prepare('UPDATE students SET commentaire = ? WHERE num_insa = ?').run(commentaireFinal, id);
 });
 
+ipcMain.handle('recupererGroupesEtValeurs', async (event) => {
+    try {
+        const groupes = await libDB.compterEtudiantsParGroupe(db); // Appelle la fonction dans libDB.js
+        return groupes;
+    } catch (err) {
+        console.error("Erreur lors de la récupération des groupes et valeurs :", err.message);
+        throw err;
+    }
+});
+
+ipcMain.handle('recupererNouveauGroupesEtValeurs', async (event) => {
+    try {
+        const groupes = await libDB.compterEtudiantsParNouveauGroupe(db); // Appelle la fonction dans libDB.js
+        return groupes;
+    } catch (err) {
+        console.error("Erreur lors de la récupération des nouveaux groupes et valeurs :", err.message);
+        throw err;
+    }
+});

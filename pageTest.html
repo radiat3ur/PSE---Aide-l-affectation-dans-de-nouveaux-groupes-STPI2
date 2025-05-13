@@ -14,6 +14,14 @@
   </head>
   <body>
     <header>
+      <dialog>
+        <p id="texte">Problème !</p>
+        <button id="fermer">X</button>
+      </dialog>
+
+      <button id="submit">OK</button>
+      <select class="selectionnerGroupe" id="groupe"></select>
+
       <div class="barre-recherche">
         <input type="text" id="recherche" placeholder="Rechercher...">
         <button class="fermer-recherche">&times;</button>
@@ -54,9 +62,22 @@
       <button id="submitGroupeChanges">Mettre à jour tous les groupes</button>
       <button id="changerInfo">Moins d'informations</button>
           
-    <div id="contenuOnglet2" class="cache">
+      <div id="contenuOnglet2" class="cache">
         <p>Contenu de l'onglet 2</p>
-    </div>
+      </div>
+
+      <table border="1" id="contenuOnglet2" class="cache">
+        <thead>
+            <tr>
+                <th>Groupe</th>
+                <th>Nombre d'étudiants anciens groupes</th>
+                <th> Nombre d'étudiant nouveaux groupes</th>
+            </tr>
+        </thead>
+        <tbody>
+      
+        </tbody>
+    </table>
     </header>
     <table border="1" id="tableauEtudiants">
       <thead>

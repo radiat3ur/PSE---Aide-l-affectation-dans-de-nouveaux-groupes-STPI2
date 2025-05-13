@@ -186,7 +186,7 @@ function affectationGroupe(db, id, groupe) {
                     if (lv2.langue === 'ESP') {
                         console.log(" espagnol")
                         if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                            resolve("Ce groupe ne contiens pas d'espagnols")
+                            resolve("Ce groupe ne contient pas d'espagnols")
                             return;
                         }
                         else {
@@ -205,7 +205,7 @@ function affectationGroupe(db, id, groupe) {
                     else {
                         if (lv2.langue === 'ALL') {
                             if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                                resolve("Ce groupe ne contiens pas d'allemands")
+                                resolve("Ce groupe ne contient pas d'allemands")
                                 return;
                             }
                             else {
@@ -224,7 +224,7 @@ function affectationGroupe(db, id, groupe) {
                         else {
                             if (lv2.langue === 'ESPD') {
                                 if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                                    resolve("Ce groupe ne contiens pas d'espagnols debutants")
+                                    resolve("Ce groupe ne contient pas d'espagnols debutants")
                                     return;
                                 }
                                 else {
@@ -241,6 +241,7 @@ function affectationGroupe(db, id, groupe) {
                                 }
                             }
                             else {
+                                console.log('presque')
                                 db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
                                     if (err) {
                                         console.error("Erreur lors de la mise à jour du groupe:", err.message);
@@ -255,6 +256,7 @@ function affectationGroupe(db, id, groupe) {
                         }
                     }
                 });
+
             } else {
                 resolve("Cet identifiant n'existe pas")
         }});
@@ -359,5 +361,32 @@ function lectureCommentaire(db, id) {
     });
 }
 
+function compterEtudiantsParGroupe(db) {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT groupe, COUNT(*) AS nombre_etudiants FROM students GROUP BY groupe', [], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors du comptage des étudiants par groupe :", err.message);
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
+function compterEtudiantsParNouveauGroupe(db){
+    return new Promise((resolve, reject)=> {
+        db.all('SELECT Nouveau_groupe, COUNT(*) AS nombre_etudiants_nouveau_groupe FROM students GROUP BY Nouveau_groupe', [], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors du comptage des étudiants par nouveau groupe :", err.message);
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+
+    })
+}
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe };
