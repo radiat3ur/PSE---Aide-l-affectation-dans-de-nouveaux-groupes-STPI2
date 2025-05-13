@@ -409,9 +409,9 @@ window.onload = (event) => {
         afficherGroupesEtValeurs();
     });
 
-    document.getElementById('submit').addEventListener('click', async () => {
-        etudiantsCliques.forEach(async (id) => {
-            await nvGroupe(id, document.getElementById('groupe').value);
+    document.getElementById('submit').addEventListener('click',  function(event) {
+        etudiantsCliques.forEach( (id) => {
+             nvGroupe(id, document.getElementById('groupe').value);
         });
         etudiantsCliques = [];
         rafraichirEtudiants();
