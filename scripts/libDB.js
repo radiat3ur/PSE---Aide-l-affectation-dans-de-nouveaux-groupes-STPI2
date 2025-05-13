@@ -321,5 +321,32 @@ function lectureCommentaire(db, id) {
     });
 }
 
+function compterEtudiantsParGroupe(db) {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT groupe, COUNT(*) AS nombre_etudiants FROM students GROUP BY groupe', [], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors du comptage des étudiants par groupe :", err.message);
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
+function compterEtudiantsParNouveauGroupe(db){
+    return new Promise((resolve, reject)=> {
+        db.all('SELECT Nouveau_groupe, COUNT(*) AS nombre_etudiants_nouveau_groupe FROM students GROUP BY Nouveau_groupe', [], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors du comptage des étudiants par nouveau groupe :", err.message);
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+
+    })
+}
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe };

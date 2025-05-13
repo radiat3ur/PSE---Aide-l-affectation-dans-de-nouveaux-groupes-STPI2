@@ -412,7 +412,9 @@ window.onload = (event) => {
         document.getElementById('contenuOnglet2').classList.remove('cache');
         //met à jour style boutons  
         document.getElementById('onglet2').classList.add('active');
-        document.getElementById('onglet1').classList.remove('active')
+        document.getElementById('onglet1').classList.remove('active');
+         // Charger les données pour l'onglet 2
+        afficherGroupesEtValeurs();
     });
 
     document.getElementById('submit').addEventListener('click', () => {
@@ -423,4 +425,37 @@ window.onload = (event) => {
         etudiantsCliques = [];
         rafraichirEtudiants();
     });
+
+    async function afficherGroupesEtValeurs() {
+        try {
+            // Récupérer les données des groupes depuis le backend
+            const groupes = await window.libDB.compterEtudiantsParGroupe();
+            const nouveauxGroupes = await window.libDB.compterEtudiantsParNouveauGroupe();
+            console.log("Données des groupes :", groupes);
+            console.log("Données des nouveaux groupes :", nouveauxGroupes);
+    
+            // Sélectionner le tableau de l'onglet 2
+            const tableau = document.getElementById('contenuOnglet2');
+            const tbody = tableau.querySelector('tbody') || document.createElement('tbody');
+            tableau.appendChild(tbody);
+    
+            // Vider le tableau avant de le remplir
+            tbody.innerHTML = '';
+    
+            // Ajouter les données au tableau
+            groupes.forEach((groupe) => {
+                const ligne = document.createElement('tr');
+                // récupère nouveau groupe correspondant
+                const nouveauGroupe = nouveauxGroupes.find(nouveau => nouveau.Nouveau_groupe === groupe.groupe) || { nombre_etudiants_nouveau_groupe: 0 };
+                ligne.innerHTML = `
+                    <td>${groupe.groupe}</td>
+                    <td>${groupe.nombre_etudiants}</td>
+                    <td>${nouveauGroupe.nombre_etudiants_nouveau_groupe}</td>
+                `;
+                tbody.appendChild(ligne);
+            });
+        } catch (err) {
+            console.error("Erreur lors de l'affichage des groupes et valeurs :", err.message);
+        }
+    }
 }
