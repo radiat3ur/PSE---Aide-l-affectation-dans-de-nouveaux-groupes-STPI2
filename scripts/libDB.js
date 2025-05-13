@@ -184,21 +184,21 @@ function affectationGroupe(db, id, groupe) {
                 db.get('SELECT langue FROM students WHERE num_insa = ?',[id], (err,lv2) => {
                     if (lv2.langue === 'ESP') {
                         if (! (groupes_esp.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                            resolve("Ce groupe ne contiens pas d'espagnols")
+                            resolve("Ce groupe ne peut pas contenir d'espagnols")
                             return;
                         };
                     }
                     else {
                         if (lv2.langue === 'ALL') {
                             if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                                resolve("Ce groupe ne contiens pas d'allemands")
+                                resolve("Ce groupe ne peut pas contenir d'allemands")
                                 return;
                             };
                         }
                         else {
                             if (lv2.langue === 'ESPD') {
                                 if (! (groupes_all.some(lettre_groupe => lettre_groupe.includes(groupe)))) {
-                                    resolve("Ce groupe ne contiens pas d'espagnols debutants")
+                                    resolve("Ce groupe ne peut pas contenir d'espagnols debutants")
                                     return;
                                 };
                             }

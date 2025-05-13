@@ -449,4 +449,5 @@ window.onload = (event) => {
             console.error("Erreur lors de l'affichage des groupes et valeurs :", err.message);
         }
     }
+})
 }
