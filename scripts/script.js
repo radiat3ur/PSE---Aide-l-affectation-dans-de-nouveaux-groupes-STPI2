@@ -419,29 +419,55 @@ window.onload = (event) => {
 
     async function afficherGroupesEtValeurs() {
         try {
-            // Récupérer les données des groupes depuis le backend
+            // Récupérer les données des groupes, nouveaux groupes et langues depuis le backend
             const groupes = await window.libDB.compterEtudiantsParGroupe();
             const nouveauxGroupes = await window.libDB.compterEtudiantsParNouveauGroupe();
+            const langues = await window.libDB.compterEtudiantsParLangue();
+    
             console.log("Données des groupes :", groupes);
             console.log("Données des nouveaux groupes :", nouveauxGroupes);
+            console.log("Données des langues :", langues);
     
             // Sélectionner le tableau de l'onglet 2
             const tableau = document.getElementById('contenuOnglet2');
+            const thead = tableau.querySelector('thead');
             const tbody = tableau.querySelector('tbody') || document.createElement('tbody');
             tableau.appendChild(tbody);
     
             // Vider le tableau avant de le remplir
+            thead.innerHTML = '';
             tbody.innerHTML = '';
+    
+            // Obtenir la liste unique des langues
+            const languesUniques = [...new Set(langues.map(langue => langue.langue))];
+    
+            // Créer l'en-tête du tableau
+            const ligneEnTete = document.createElement('tr');
+            ligneEnTete.innerHTML = `
+                <th>Groupe</th>
+                ${languesUniques.map(langue => `<th>${langue}</th>`).join('')}
+                <th>Total</th>
+            `;
+            thead.appendChild(ligneEnTete);
     
             // Ajouter les données au tableau
             groupes.forEach((groupe) => {
                 const ligne = document.createElement('tr');
-                // récupère nouveau groupe correspondant
-                const nouveauGroupe = nouveauxGroupes.find(nouveau => nouveau.Nouveau_groupe === groupe.groupe) || { nombre_etudiants_nouveau_groupe: 0 };
+    
+                // Calculer les données pour chaque langue
+                const colonnesLangues = languesUniques.map(langue => {
+                    const langueData = langues.find(l => l.Nouveau_groupe === groupe.groupe && l.langue === langue);
+                    return langueData ? langueData.nombre_etudiants_langue_nouveau_groupe : 0;
+                });
+    
+                // Calculer le total des étudiants pour le groupe
+                const totalEtudiants = colonnesLangues.reduce((acc, val) => acc + val, 0);
+    
+                // Remplir la ligne du tableau
                 ligne.innerHTML = `
                     <td>${groupe.groupe}</td>
-                    <td>${groupe.nombre_etudiants}</td>
-                    <td>${nouveauGroupe.nombre_etudiants_nouveau_groupe}</td>
+                    ${colonnesLangues.map(nombre => `<td>${nombre}</td>`).join('')}
+                    <td>${totalEtudiants}</td>
                 `;
                 tbody.appendChild(ligne);
             });
@@ -449,5 +475,5 @@ window.onload = (event) => {
             console.error("Erreur lors de l'affichage des groupes et valeurs :", err.message);
         }
     }
-})
-}
+        })
+    }

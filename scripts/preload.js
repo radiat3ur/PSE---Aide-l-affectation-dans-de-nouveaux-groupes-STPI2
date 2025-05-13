@@ -8,4 +8,5 @@ contextBridge.exposeInMainWorld('libDB', {
     lectureCommentaire: (id) => ipcRenderer.invoke('lectureCommentaire', id),
     compterEtudiantsParGroupe: () => ipcRenderer.invoke('recupererGroupesEtValeurs'),
     compterEtudiantsParNouveauGroupe: () => ipcRenderer.invoke('recupererNouveauGroupesEtValeurs'),
+    compterEtudiantsParLangue: () => ipcRenderer.invoke('recupererLangueParGroupe'),
 });

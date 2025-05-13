@@ -374,7 +374,7 @@ function compterEtudiantsParGroupe(db) {
     });
 }
 
-function compterEtudiantsParNouveauGroupe(db){
+function compterEtudiantsParNouveauGroupe(db) {
     return new Promise((resolve, reject)=> {
         db.all('SELECT Nouveau_groupe, COUNT(*) AS nombre_etudiants_nouveau_groupe FROM students GROUP BY Nouveau_groupe', [], (err, rows) => {
             if (err) {
@@ -388,5 +388,29 @@ function compterEtudiantsParNouveauGroupe(db){
     })
 }
 
+// fonction pour compter les étudiants par langue dans chaque groupe
+function compterEtudiantsParLangue(db) {
+    return new Promise((resolve, reject) => {
+        db.all(`
+            SELECT 
+                CASE 
+                    WHEN Nouveau_groupe IS NULL OR Nouveau_groupe = '' THEN 'Non attribué'
+                    ELSE Nouveau_groupe
+                END AS Nouveau_groupe,
+                langue,
+                COUNT(*) AS nombre_etudiants_langue_nouveau_groupe
+            FROM students
+            GROUP BY Nouveau_groupe, langue
+        `, [], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors du comptage des étudiants par langue :", err.message);
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue };
