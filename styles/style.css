@@ -129,6 +129,7 @@ select:hover {
 }
 
 #tableauEtudiants,
+#petitTableauOnglet2,
 #contenuOnglet2 {
   width: 100%;
   border-collapse: collapse;
@@ -143,6 +144,7 @@ select:hover {
 
 
 #tableauEtudiants th,
+#petitTableauOnglet2 th,
 #contenuOnglet2 th {
   background-color: #696969;
   color: white;
@@ -157,17 +159,21 @@ select:hover {
 }
 
 #tableauEtudiants th:first-child,
+#petitTableauOnglet2 th:first-child,
 #contenuOnglet2 th:first-child {
   border-top-left-radius: 12px;
 }
 
 #tableauEtudiants th:last-child,
+#petitTableauOnglet2 th:last-child,
 #contenuOnglet2 th:last-child{
   border-top-right-radius: 12px;
 }
 
+
 #tableauEtudiants td,
-#contenuOnglet2 td {
+#contenuOnglet2 td,
+#petitTableauOnglet2 td {
   padding: 10px 8px;
   border-bottom: 1px solid #ccc;
 }
@@ -188,13 +194,15 @@ select:hover {
 }
 
 #tableauEtudiants tr:nth-child(odd),
-#contenuOnglet2 tr:nth-child(odd) {
+#contenuOnglet2 tr:nth-child(odd),
+#petitTableauOnglet2 tr:nth-child(odd) {
   background-color: #f9f9f9;
   z-index: 5;
 }
 
 #tableauEtudiants tr:hover,
-#contenuOnglet2 tr:hover {
+#contenuOnglet2 tr:hover,
+#petitTableauOnglet2 tr:hover {
   background-color: #f1f1f1;
 }
 
