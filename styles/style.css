@@ -93,15 +93,6 @@ header {
   border: 1px solid #ccc;
 }
 
-h1 {
-  font-size: 2rem;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  margin-bottom: 20px;
-  color: red;
-  text-align: right;
-}
-
 input[type="text"],
 input[type="number"],
 textarea,
@@ -129,7 +120,7 @@ select:hover {
 }
 
 #tableauEtudiants,
-#petitTableauOnglet2,
+#TableauCreneaux,
 #contenuOnglet2 {
   width: 100%;
   border-collapse: collapse;
@@ -144,7 +135,7 @@ select:hover {
 
 
 #tableauEtudiants th,
-#petitTableauOnglet2 th,
+#TableauCreneaux th,
 #contenuOnglet2 th {
   background-color: #696969;
   color: white;
@@ -158,22 +149,26 @@ select:hover {
   border-right: none;
 }
 
+#contenuOnglet2 th {
+   position: static !important;
+  }
+
 #tableauEtudiants th:first-child,
-#petitTableauOnglet2 th:first-child,
+#TableauCreneaux th:first-child,
 #contenuOnglet2 th:first-child {
   border-top-left-radius: 12px;
 }
 
 #tableauEtudiants th:last-child,
-#petitTableauOnglet2 th:last-child,
-#contenuOnglet2 th:last-child{
+#TableauCreneaux th:last-child,
+#contenuOnglet2 th:last-child {
   border-top-right-radius: 12px;
 }
 
 
 #tableauEtudiants td,
 #contenuOnglet2 td,
-#petitTableauOnglet2 td {
+#TableauCreneaux td {
   padding: 10px 8px;
   border-bottom: 1px solid #ccc;
 }
@@ -195,18 +190,21 @@ select:hover {
 
 #tableauEtudiants tr:nth-child(odd),
 #contenuOnglet2 tr:nth-child(odd),
-#petitTableauOnglet2 tr:nth-child(odd) {
+#TableauCreneaux tr:nth-child(odd) {
   background-color: #f9f9f9;
   z-index: 5;
 }
 
 #tableauEtudiants tr:hover,
 #contenuOnglet2 tr:hover,
-#petitTableauOnglet2 tr:hover {
+#TableauCreneaux tr:hover {
   background-color: #f1f1f1;
 }
 
-
+#contenuOnglet2 tr:last-child {
+  background-color: #d5d4d4;
+  z-index: 5;
+}
 
 .active{
   background-color: #0000008d ;
@@ -216,6 +214,20 @@ select:hover {
 
 .carre {
   width: 1500px;
-  height: 150px;
+  height: 137px;
   background-color: rgb(255, 255, 255); 
+}
+ .bouttonvalide
+ {border-radius: 12px;       
+  padding: 10px 14px;        
+  border: 1px solid #141010;  
+  background-color: rgb(225, 214, 214); 
+  z-index: 5;
+  transition: background-color 0.3s, transform 0.2s;
+  cursor : pointer; }
+
+  .buttonvalide :hover {
+  background-color: #46a012;
+  transform: scale(1.03);
+  color : #ffffff;
 }
