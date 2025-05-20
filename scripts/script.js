@@ -173,45 +173,6 @@ window.onload = (event) => {
                 });
             });
     // ____ 
-    
-    let FormSelectionne = document.getElementById("selectionAction").value;
-    document.getElementById(FormSelectionne).classList.remove('cache');
-    document.getElementById(FormSelectionne).classList.add('action');
-    document.getElementById("selectionAction").addEventListener('change', function() {
-        if (FormSelectionne) {
-            document.getElementById(FormSelectionne).classList.remove('action');
-            document.getElementById(FormSelectionne).classList.add('cache');
-        };
-        FormSelectionne = this.value;
-        if (FormSelectionne) {
-            document.getElementById(FormSelectionne).classList.remove('cache');
-            document.getElementById(FormSelectionne).classList.add('action');
-        };
-    });
-
-    document.getElementById("formModificationGroupe").addEventListener('submit',async function(event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        const id = formData.get('identifiant');
-        const groupe = formData.get('groupe');
-
-        await nvGroupe(id, groupe);
-
-        this.reset();
-        rafraichirEtudiants();
-    });
-
-    document.getElementById("formModificationCommentaire").addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        const id = formData.get('identifiant');
-        const commentaire = formData.get('commentaire');
-
-        window.libDB.ajoutCommentaire(id, commentaire);
-
-        this.reset();
-        rafraichirEtudiants();
-    });
 
     async function chargerCommentaire(id) { // Fonction asynchrone
         const commentaire = await window.libDB.lectureCommentaire(id); //
@@ -230,7 +191,7 @@ window.onload = (event) => {
     });
     
 
-    document.getElementById("formAjoutEtudiant").addEventListener('submit', async function(event) {
+    document.getElementById("AjoutEtudiant").addEventListener('submit', async function(event) {
         event.preventDefault();
         const formData = new FormData(this);
         const id = formData.get('identifiant');

@@ -80,9 +80,36 @@ function rafraichirEtudiants() {
         ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
         filtreEtudiants.forEach(etudiant => {
             const lig = tbody.insertRow();
-            ordreColonnes.forEach(col => {
+            ordreColonnes.forEach((col) => {
                 const cell = lig.insertCell();
-                cell.textContent = etudiant[col];
+                if (col === "commentaire") {
+                    cell.textContent = etudiant[col] || "";
+                    cell.addEventListener("dblclick", () => {
+                        const texteExistant = cell.textContent;
+                        const zoneDeTexte = document.createElement("textarea");
+                        zoneDeTexte.value = texteExistant;
+                        cell.textContent = "";
+                        cell.appendChild(zoneDeTexte);
+                        zoneDeTexte.focus();
+                        zoneDeTexte.addEventListener("blur", () => {
+                            const ajoutTexte = zoneDeTexte.value.trim();
+                            if (ajoutTexte !== texteExistant) {
+                                window.libDB.ajoutCommentaire(etudiant.num_insa, ajoutTexte);
+                                cell.textContent = ajoutTexte;
+                            } else {
+                                cell.textContent = texteExistant;
+                            }
+                        });
+                        zoneDeTexte.addEventListener("keydown", (event) => {
+                            if (event.key === "Enter" && !event.shiftKey) {
+                                event.preventDefault();
+                                zoneDeTexte.blur();
+                            }
+                        });
+                    });
+                } else {
+                    cell.textContent = etudiant[col];
+                }
             });
             lig.addEventListener('click', () => {
                 clicEtudiants(lig, etudiant.num_insa)
