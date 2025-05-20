@@ -18,6 +18,7 @@ body {
   z-index: 1;
 }
 
+
 header {
   position: sticky;
   top: 0px;
@@ -68,7 +69,7 @@ header {
 
 .menu-absolute {
   position: absolute ;
-  background-color: #f0f0f0;
+  background-color: #f0f0f0 ;
   color: #000000;
   padding: 10px 20px;
   border-radius: 7px;
@@ -103,6 +104,7 @@ h1 {
 
 input[type="text"],
 input[type="number"],
+textarea,
 select,
 button {
   border-radius: 12px;       
@@ -140,8 +142,8 @@ select:hover {
 }
 
 
-#tableauEtudiants thead th,
-#contenuOnglet2 thead th {
+#tableauEtudiants th,
+#contenuOnglet2 th {
   background-color: #696969;
   color: white;
   text-align: left;
@@ -154,24 +156,23 @@ select:hover {
   border-right: none;
 }
 
-#tableauEtudiants thead th:first-child,
-#contenuOnglet2 thead th:first-child {
+#tableauEtudiants th:first-child,
+#contenuOnglet2 th:first-child {
   border-top-left-radius: 12px;
 }
 
-#tableauEtudiants thead th:last-child,
-#contenuOnglet2 thead th:last-child{
+#tableauEtudiants th:last-child,
+#contenuOnglet2 th:last-child{
   border-top-right-radius: 12px;
 }
 
-#tableauEtudiants tbody td,
-#contenuOnglet2 tbody td {
+#tableauEtudiants td,
+#contenuOnglet2 td {
   padding: 10px 8px;
   border-bottom: 1px solid #ccc;
-  z-index: 5;
 }
 
-#tableauEtudiants th button, {
+#tableauEtudiants button {
   margin-left: 4px;
   background-color: red;
   color: white;
@@ -179,9 +180,12 @@ select:hover {
   padding: 2px 4px;
   border-radius: 4px;
   cursor: pointer;
-  z-index: 5;
 }
-
+#tableauEtudiants button:hover {
+  background-color: #d81b1b;
+  transform: scale(1.03);
+  color : #FFF;
+}
 
 #tableauEtudiants tr:nth-child(odd),
 #contenuOnglet2 tr:nth-child(odd) {
