@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
+const { groupes_esp, groupes_fle, groupes_espd, groupes_alld } = require('./libDB');
 const libDB = require(path.join(__dirname,'libDB.js'));
 const sqlite3 = require('sqlite3').verbose(); // importe sqlite3 ; .verbose() permet d'afficher des messages d'erreur plus detailles
 
@@ -106,4 +107,15 @@ ipcMain.handle('recupererLangueParGroupe', async (event) => {
         console.error("Erreur lors de la récupération des langues par groupe :", err.message);
         throw err;
     }
-})
+});
+
+ipcMain.handle('recupererCreneauxParGroupes',async () => {
+    try {
+        const creneaux = await libDB.recupererCreneauxParGroupes();
+        return creneaux;
+    } catch (err) {
+        console.error("Erreur lors de la récupération des créneaux par groupes :", err.message);
+        throw err;
+    }
+
+});

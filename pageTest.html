@@ -20,71 +20,54 @@
         <button id="ouvrir">V</button>
       </dialog>
       <div class="carre">
-      <button id="submit">OK</button>
-      <select class="selectionnerGroupe" id="groupe"></select>
+        <button id="changerInfo">Moins d'informations</button>
+        <select class="selectionnerGroupe" id="groupe"></select>
+        <button id="submit">Mettre à jour le groupe</button>
 
-      <div class="barre-recherche">
-        <input type="text" id="recherche" placeholder="Rechercher...">
-        <button class="fermer-recherche">&times;</button>
-      </div>
-    
-      <select class="selectionAction" id="selectionAction">
-        <option value="formModificationGroupe">Modification Groupe</option>
-        <option value="formModificationCommentaire">Modification Commentaire</option>
-        <option value="formAjoutEtudiant">Ajout Étudiant</option>
-      </select>
-    
-      <form class="cache" id="formModificationGroupe">
-        <input name="identifiant" type="number" placeholder="Entrez l'identifiant"/>
-        <select class="selectionnerGroupe" name="groupe"></select>
-        <input type="submit" value="OK"/>
-      </form>
-    
-      <form class="cache" id="formModificationCommentaire">
-        <input name="identifiant" type="number" placeholder="Entrez l'identifiant"/>
-        <textarea name="commentaire" placeholder="Entrez un commentaire" rows="4" cols="40"></textarea>
-        <input type="submit" value="OK"/>
-      </form>
-      
-      <form class="cache" id="formAjoutEtudiant">
-        <input name="identifiant" type="number" placeholder="Entrez l'identifiant"/>
-        <select class="selectionnerCivilite" name="civilite"></select>
-        <input name="prenom" type="text" placeholder="Entrez le prénom"/>
-        <input name="nom" type="text" placeholder="Entrez le nom"/>
-        <input name="annee" type="number" placeholder="Entrez l'année"/>
-        <select class="selectionnerLangue" name="langue"></select>
-        <input name="mail" type="text" placeholder="Entrez le mail"/>
-        <input type="submit" value="OK"/>
-      </form>
+        <div class="barre-recherche">
+          <input type="text" id="recherche" placeholder="Rechercher...">
+          <button class="fermer-recherche">&times;</button>
+        </div>
+        
+        <form id="AjoutEtudiant">
+          <input name="identifiant" type="number" placeholder="Entrez l'identifiant"/>
+          <select class="selectionnerCivilite" name="civilite"></select>
+          <input name="prenom" type="text" placeholder="Entrez le prénom"/>
+          <input name="nom" type="text" placeholder="Entrez le nom"/>
+          <input name="annee" type="number" placeholder="Entrez l'année"/>
+          <select class="selectionnerLangue" name="langue"></select>
+          <input name="mail" type="text" placeholder="Entrez le mail"/>
+          <input type="submit" value="OK"/>
+        </form>
 
-      <button class="active" id="onglet1">Onglet 1</button>
-      <button id="onglet2">Onglet 2</button>
+        <button class="active" id="onglet1">Onglet 1</button>
+        <button id="onglet2">Onglet 2</button>
+      </div>         
+      <table border="1" id="petitTableauOnglet2" class="cache" style="margin-top: 20px; width: 300px;">
+        <thead>
+          <tr>
+            <th>Langue</th>
+            <th>Groupes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Espagnol</td>
+            <td>A,B,C,D,G</td>
+          </tr>
+          <tr>
+            <td>Allemand</td>
+            <td>E,F,H</td>
+          </tr>
+          <tr>
+            <td>FLE</td>
+            <td>I,J,K</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-      <button id="submitGroupeChanges">Mettre à jour tous les groupes</button>
-      <button id="changerInfo">Moins d'informations</button>
          
-       <table border="1" id="petitTableauOnglet2" class="cache" style="margin-top: 20px; width: 300px;">
-  <thead>
-    <tr>
-      <th>Langue</th>
-      <th>Groupes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Espagnol</td>
-      <td>A,B,C,D,G</td>
-    </tr>
-    <tr>
-      <td>Allemand</td>
-      <td>E,F,H</td>
-    </tr>
-    <tr>
-      <td>FLE</td>
-      <td>I,J,K</td>
-    </tr>
-  </tbody>
-</table>
+       <table border="1" id="TableauCreneaux" class="cache" style="margin-top: 20px; width: 300px;"> </table>
 
       <table border="1" id="contenuOnglet2" class="cache">
         <thead>
@@ -96,49 +79,47 @@
       </table>
     </header>
 
-
-
     <table border="1" id="tableauEtudiants">
       <thead>
         <tr>
-            <th>Identifiant</th>
-            <!-- <th class="cache">Civilité</th> -->
-            <th>Civilité</th>
-            <th>Prénom</th>
-            <th>Nom</th>
-            <!-- <th class="cache">Année</th> -->
-            <th>Année</th>
-            <th>
-              Langue 
-              <button id="filtreLangue" class="fleche-bas">▼</button>
-              <div id="menuLangue" class="menu-absolute cache"></div>
-            </th>
-            <!-- <th class="cache">Mail</th> -->
-            <th>Mail</th>
-            <th>
-              Section
-              <button id="filtreSection" class="fleche-bas">▼</button>
-              <div id="menuSection" class="menu-absolute cache"></div>
-            </th>
-            <th>
-              Groupe
-              <button id="filtreGroupe" class="fleche-bas">▼</button>
-              <div id="menuGroupe" class="menu-absolute cache"></div>
-            </th>
-            <!-- <th class="cache">Décision Jury STPI1</th> -->
-            <!-- <th class="cache">Commentaire</th> -->
-            <th>Décision Jury STPI1</th>
-            <th>Commentaire</th>
-            <th>
-              Nouvelle section
-              <button id="filtreNouvelleSection" class="fleche-bas">▼</button>
-              <div id="menuNouvelleSection" class="menu-absolute cache"></div>
-            </th>
-            <th>
-              Nouveau groupe
-              <button id="filtreNouveauGroupe" class="fleche-bas">▼</button>
-              <div id="menuNouveauGroupe" class="menu-absolute cache"></div>
-            </th>
+          <th>Identifiant</th>
+          <!-- <th class="cache">Civilité</th> -->
+          <th>Civilité</th>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <!-- <th class="cache">Année</th> -->
+          <th>Année</th>
+          <th>
+            Langue 
+            <button id="filtreLangue" class="fleche-bas">▼</button>
+            <div id="menuLangue" class="menu-absolute cache"></div>
+          </th>
+          <!-- <th class="cache">Mail</th> -->
+          <th>Mail</th>
+          <th>
+            Section
+            <button id="filtreSection" class="fleche-bas">▼</button>
+            <div id="menuSection" class="menu-absolute cache"></div>
+          </th>
+          <th>
+            Groupe
+            <button id="filtreGroupe" class="fleche-bas">▼</button>
+            <div id="menuGroupe" class="menu-absolute cache"></div>
+          </th>
+          <!-- <th class="cache">Décision Jury STPI1</th> -->
+          <!-- <th class="cache">Commentaire</th> -->
+          <th>Décision Jury STPI1</th>
+          <th>Commentaire</th>
+          <th>
+            Nouvelle section
+            <button id="filtreNouvelleSection" class="fleche-bas">▼</button>
+            <div id="menuNouvelleSection" class="menu-absolute cache"></div>
+          </th>
+          <th>
+            Nouveau groupe
+            <button id="filtreNouveauGroupe" class="fleche-bas">▼</button>
+            <div id="menuNouveauGroupe" class="menu-absolute cache"></div>
+          </th>
         </tr>
       </thead>
       <tbody></tbody>
