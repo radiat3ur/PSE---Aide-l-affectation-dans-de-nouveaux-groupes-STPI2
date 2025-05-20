@@ -10,6 +10,27 @@ function popup(message){
     });
 }
 
+async function Message_verification(message){
+    return new Promise((resolve) => {
+        const dialog = document.querySelector("dialog");
+        const texte = document.getElementById("texte");
+        const buttonFermer = document.getElementById("fermer");
+        const buttonValider = document.getElementById("ouvrir");
+
+        texte.textContent = message;
+
+        dialog.showModal();
+        buttonFermer.addEventListener("click", () => {
+            dialog.close();
+            resolve("annuler");
+        });
+        buttonValider.addEventListener("click", () => {
+            dialog.close();
+            resolve("valider");
+        });
+    })
+}
+
 async function nvGroupe(id, groupe) {
     const alerte = await window.libDB.affectationGroupe(id, groupe);
     if (alerte !== "Etudiant rajouté dans le groupe") {

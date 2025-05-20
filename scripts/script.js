@@ -416,11 +416,15 @@ window.onload = (event) => {
     });
 
     document.getElementById('submit').addEventListener('click',async function(event) {
-        for (const id of etudiantsCliques) {
-            await nvGroupe(id, document.getElementById('groupe').value);
+        const verification = await Message_verification(`Etes-vous sûr de vouloir faire cette modification pour le groupe : ${document.getElementById('groupe').value} ?`);
+
+        if (verification == "valider") {
+            for (const id of etudiantsCliques) {
+                await nvGroupe(id, document.getElementById('groupe').value);
+            }
+            etudiantsCliques = [];
+            rafraichirEtudiants();
         }
-        etudiantsCliques = [];
-        rafraichirEtudiants();
     });
 
     async function afficherGroupesEtValeurs() {
