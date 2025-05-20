@@ -351,7 +351,7 @@ window.onload = (event) => {
     document.getElementById('onglet1').addEventListener('click', function () {
         // Masquer contenu l'onglet 2
         document.getElementById('contenuOnglet2').classList.add('cache');
-        document.getElementById('petitTableauOnglet2').classList.add('cache');
+        document.getElementById('TableauCreneaux').classList.add('cache');
         // Afficher contenu onglet 1
         document.getElementById('tableauEtudiants').classList.remove('cache');
         document.getElementById('changerInfo').classList.remove('cache');
@@ -368,11 +368,12 @@ window.onload = (event) => {
         document.getElementById('submitGroupeChanges').classList.add('cache');
         // Afficher contenu onglet 2
         document.getElementById('contenuOnglet2').classList.remove('cache');
-        document.getElementById('petitTableauOnglet2').classList.remove('cache');
+        document.getElementById('TableauCreneaux').classList.remove('cache');
         //met à jour style boutons  
         document.getElementById('onglet2').classList.add('active');
         document.getElementById('onglet1').classList.remove('active');
          // Charger les données pour l'onglet 2
+        afficherCreneaux();
         afficherGroupesEtValeurs();
     });
 
@@ -416,6 +417,10 @@ window.onload = (event) => {
                 <th>Total</th>
             `;
             thead.appendChild(ligneEnTete);
+
+            //totaux
+             const totauxParLangue = {};
+             languesUniques.forEach(langue => totauxParLangue[langue] = 0);
     
             // Ajouter les données au tableau
             groupes.forEach((groupe) => {
@@ -424,13 +429,15 @@ window.onload = (event) => {
                 // Calculer les données pour chaque langue
                 const colonnesLangues = languesUniques.map(langue => {
                     const langueData = langues.find(l => l.Nouveau_groupe === groupe.groupe && l.langue === langue);
-                    return langueData ? langueData.nombre_etudiants_langue_nouveau_groupe : 0;
+                    const nb= langueData ? langueData.nombre_etudiants_langue_nouveau_groupe : 0;
+                    totauxParLangue[langue] += nb; // Maj total
+                    return nb;
                 });
     
-                // Calculer le total des étudiants pour le groupe
+                // total des étudiants pour le groupe
                 const totalEtudiants = colonnesLangues.reduce((acc, val) => acc + val, 0);
     
-                // Remplir la ligne du tableau
+                // remplir ligne tableau
                 ligne.innerHTML = `
                     <td>${groupe.groupe}</td>
                     ${colonnesLangues.map(nombre => `<td>${nombre}</td>`).join('')}
@@ -438,9 +445,40 @@ window.onload = (event) => {
                 `;
                 tbody.appendChild(ligne);
             });
+            
+             // total général
+        const totalGeneral = Object.values(totauxParLangue).reduce((a, b) => a + b, 0);
+
+        // ligne de total
+        const ligneTotal = document.createElement('tr');
+        ligneTotal.innerHTML = `
+            <td><b>Total</b></td>
+            ${languesUniques.map(langue => `<td><b>${totauxParLangue[langue]}</b></td>`).join('')}
+            <td><b>${totalGeneral}</b></td>
+        `;
+        tbody.appendChild(ligneTotal);
+
         } catch (err) {
             console.error("Erreur lors de l'affichage des groupes et valeurs :", err.message);
         }
     }
-        })
+        
+
+    async function afficherCreneaux() {
+        const infos =await window.libDB.recupererCreneauxParGroupes();
+        const tableau = document.getElementById('TableauCreneaux');
+        console.log("afficherCreneaux appelé");
+        console.log("infos récupérées :", infos);
+        tableau.innerHTML = `
+         <tr><th>Nom</th><th>Valeur</th></tr>
+        <tr><td>groupes_all</td><td>${JSON.stringify(infos.groupes_all)}</td></tr>
+        <tr><td>groupes_esp</td><td>${JSON.stringify(infos.groupes_esp)}</td></tr>
+        <tr><td>groupes_fle</td><td>${JSON.stringify(infos.groupes_fle)}</td></tr>
+        <tr><td>groupes_alld</td><td>${JSON.stringify(infos.groupes_alld)}</td></tr>
+        <tr><td>groupes_espd</td><td>${JSON.stringify(infos.groupes_espd)}</td></tr>
+        `;
     }
+})
+
+}
+
