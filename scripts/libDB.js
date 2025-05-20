@@ -437,5 +437,16 @@ function compterEtudiantsParLangue(db) {
     });
 }
 
+function recupererCreneauxParGroupes() {
+    return {
+            groupes_all:libDB.groupes_all,
+            groupes_esp:libDB.groupes_esp,
+            groupes_fle:libDB.groupes_fle,
+            groupes_espd:libDB.groupes_espd,
+            groupes_alld:libDB.groupes_alld,
+    
+        };
+}
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes };
