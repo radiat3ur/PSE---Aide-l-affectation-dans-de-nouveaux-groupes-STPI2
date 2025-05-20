@@ -47,7 +47,7 @@ app.on('window-all-closed', () => {
     }
 });
 
-ipcMain.handle('affectationGroupe', async (event, id, groupe) => {
+ipcMain.handle('affectationGroupe', async (event, id, groupe, tousValides) => {
     const resultat = await libDB.affectationGroupe(db,id,groupe)
     return resultat
 });

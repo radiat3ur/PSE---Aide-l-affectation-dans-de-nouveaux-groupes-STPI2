@@ -176,7 +176,7 @@ function miseAJourNouvelleSection(db, id, groupe) {
     });
 }
 
-function affectationGroupe(db, id, groupe) {
+function affectationGroupe(db, id, groupe, tousValides) {
     return new Promise((resolve, reject) => {
         db.get("SELECT num_insa FROM students WHERE num_insa = ? ", [id], (err, row) => {
             if (err) console.error("Erreur mise à jour d un Groupe", err.message);

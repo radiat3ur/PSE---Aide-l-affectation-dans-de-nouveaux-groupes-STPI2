@@ -1,9 +1,9 @@
 function popup(message){
-    const dialog = document.querySelector("dialog");
-    const texte = document.getElementById("texte");
+    const dialog = document.getElementById("alerte");
+    const texteAlerte = document.getElementById("texteAlerte");
     const buttonFermer = document.getElementById("fermer");
 
-    texte.textContent = message;
+    texteAlerte.textContent = message;
     dialog.showModal();
     buttonFermer.addEventListener("click", () => {
         dialog.close();
@@ -12,15 +12,15 @@ function popup(message){
 
 async function Message_verification(message){
     return new Promise((resolve) => {
-        const dialog = document.querySelector("dialog");
-        const texte = document.getElementById("texte");
-        const buttonFermer = document.getElementById("fermer");
-        const buttonValider = document.getElementById("ouvrir");
+        const dialog = document.getElementById("verification");
+        const texteVerification = document.getElementById("texteVerification");
+        const buttonRefuser = document.getElementById("refuser");
+        const buttonValider = document.getElementById("accepter");
 
-        texte.textContent = message;
+        texteVerification.textContent = message;
 
         dialog.showModal();
-        buttonFermer.addEventListener("click", () => {
+        buttonRefuser.addEventListener("click", () => {
             dialog.close();
             resolve("annuler");
         });
@@ -31,10 +31,16 @@ async function Message_verification(message){
     })
 }
 
-async function nvGroupe(id, groupe) {
-    const alerte = await window.libDB.affectationGroupe(id, groupe);
+async function nvGroupe(id, groupe, tousValides) {
+    const alerte = await window.libDB.affectationGroupe(id, groupe, tousValides);
     if (alerte !== "Etudiant rajouté dans le groupe") {
-        popup(alerte)
+        popup(alerte);
+        tousValides = false;
+        // Surligner en rouge la ligne de l'étudiant problématique
+        const ligne = document.querySelector(`#tableauEtudiants tr[data-id='${id}']`);
+        if (ligne) {
+            ligne.classList.add('surligner-rouge');
+        }
     }
 }
 
@@ -67,8 +73,9 @@ let etudiantsCliques = [];
 
 function clicEtudiants(ligne, id) {
     if (etudiantsCliques.includes(id)) {
-        etudiantsCliques = etudiantsCliques.filter(studentId => studentId !== id);
+        etudiantsCliques = etudiantsCliques.filter(idEtudiant => idEtudiant !== id);
         ligne.classList.remove('surligner');
+        ligne.classList.remove('surligner-rouge');
     } else {
         etudiantsCliques.push(id);
         ligne.classList.add('surligner');
@@ -101,6 +108,7 @@ function rafraichirEtudiants() {
         ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
         filtreEtudiants.forEach(etudiant => {
             const lig = tbody.insertRow();
+            lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id
             ordreColonnes.forEach((col) => {
                 const cell = lig.insertCell();
                 if (col === "commentaire") {
@@ -132,6 +140,9 @@ function rafraichirEtudiants() {
                     cell.textContent = etudiant[col];
                 }
             });
+            if (etudiantsCliques.includes(etudiant.num_insa)) {
+                lig.classList.add('surligner');
+            }
             lig.addEventListener('click', () => {
                 clicEtudiants(lig, etudiant.num_insa)
             });

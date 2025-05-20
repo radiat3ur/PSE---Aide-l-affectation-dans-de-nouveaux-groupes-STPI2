@@ -32,7 +32,11 @@ header {
 }
 
 .surligner.current {
-  background-color: #b31b1b;
+    background-color: #b31b1b !important;
+}
+
+.surligner-rouge { /* ne sait pas pourquoi, en utilisant surligner-current, ça ne marche pas */
+  background-color: #b31b1b !important;
 }
 
 .barre-recherche {
@@ -144,7 +148,7 @@ select:hover {
   position: sticky;
   top: 135px;
   z-index: 10;
-  border-radius background: 12px; 
+  border-radius: 12px; 
   border-left: none;
   border-right: none;
 }

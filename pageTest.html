@@ -14,11 +14,17 @@
   </head>
   <body>
     <header>
-      <dialog>
-        <p id="texte">Problème !</p>
+      <dialog id="alerte">
+        <p id="texteAlerte">Problème !</p>
         <button id="fermer">X</button>
-        <button id="ouvrir">V</button>
       </dialog>
+
+      <dialog id="verification">
+        <p id="texteVerification">Sûr ?</p>
+        <button id="refuser">X</button>
+        <button id="accepter">V</button>
+      </dialog>
+
       <div class="carre">
         <button id="changerInfo">Moins d'informations</button>
         <select class="selectionnerGroupe" id="groupe"></select>

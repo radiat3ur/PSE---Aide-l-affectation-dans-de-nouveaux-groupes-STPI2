@@ -356,15 +356,40 @@ window.onload = (event) => {
         afficherGroupesEtValeurs();
     });
 
-    document.getElementById('submit').addEventListener('click',async function(event) {
+    document.getElementById('submit').addEventListener('click', async function(event) {
         const verification = await Message_verification(`Etes-vous sûr de vouloir faire cette modification pour le groupe : ${document.getElementById('groupe').value} ?`);
 
         if (verification == "valider") {
+            let tousValides = true;
+            const groupe = document.getElementById('groupe').value;
             for (const id of etudiantsCliques) {
-                await nvGroupe(id, document.getElementById('groupe').value);
+                await nvGroupe(id, groupe, tousValides);
             }
-            etudiantsCliques = [];
-            rafraichirEtudiants();
+
+            // Récupérer la liste à jour des étudiants
+            const etudiants = await recupererEtudiants();
+
+            const tousDansLeBonGroupe = etudiantsCliques.every(id => {
+                const etudiant = etudiants.find(e => e.num_insa == id);
+                return etudiant && etudiant.Nouveau_groupe === groupe;
+            });
+
+            if (tousDansLeBonGroupe) {
+                etudiantsCliques = [];
+                rafraichirEtudiants();
+            } else {
+                etudiantsCliques.forEach(id => {
+                    const ligne = document.querySelector(`#tableauEtudiants tr[data-id='${id}']`);
+                    if (ligne) {
+                        const etu = etudiants.find(e => e.num_insa == id);
+                        if (etu && etu.Nouveau_groupe !== groupeCible) {
+                            ligne.classList.add('surligner-rouge');
+                        } else {
+                            ligne.classList.add('surligner');
+                        }
+                    }
+                });;
+            }
         }
     });
 
