@@ -172,64 +172,9 @@ window.onload = (event) => {
                     rafraichirEtudiants();
                 });
             });
-    
-    let FormSelectionne = document.getElementById("selectionAction").value;
-    document.getElementById(FormSelectionne).classList.remove('cache');
-    document.getElementById(FormSelectionne).classList.add('action');
-    document.getElementById("selectionAction").addEventListener('change', function() {
-        if (FormSelectionne) {
-            document.getElementById(FormSelectionne).classList.remove('action');
-            document.getElementById(FormSelectionne).classList.add('cache');
-        };
-        FormSelectionne = this.value;
-        if (FormSelectionne) {
-            document.getElementById(FormSelectionne).classList.remove('cache');
-            document.getElementById(FormSelectionne).classList.add('action');
-        };
-    });
+    // ____     
 
-    document.getElementById("formModificationGroupe").addEventListener('submit',async function(event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        const id = formData.get('identifiant');
-        const groupe = formData.get('groupe');
-
-        await nvGroupe(id, groupe);
-
-        this.reset();
-        rafraichirEtudiants();
-    });
-
-    document.getElementById("formModificationCommentaire").addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        const id = formData.get('identifiant');
-        const commentaire = formData.get('commentaire');
-
-        window.libDB.ajoutCommentaire(id, commentaire);
-
-        this.reset();
-        rafraichirEtudiants();
-    });
-
-    async function chargerCommentaire(id) { // Fonction asynchrone
-        const commentaire = await window.libDB.lectureCommentaire(id); //
-        const champCommentaire = document.querySelector('#formModificationCommentaire textarea[name="commentaire"]'); // Select le textarea
-        if (champCommentaire) {
-            champCommentaire.value = commentaire || '';  // Vérifie qu'il y a bien qqc dans le commentaire
-        }
-    } 
-    
-    const champIdCommentaire = document.querySelector('#formModificationCommentaire input[name="identifiant"]');
-    champIdCommentaire.addEventListener('change', () => {
-        const id = champIdCommentaire.value.trim();
-        if (id !== '') {
-            chargerCommentaire(id);
-        }
-    });
-    
-
-    document.getElementById("formAjoutEtudiant").addEventListener('submit', async function(event) {
+    document.getElementById("AjoutEtudiant").addEventListener('submit', async function(event) {
         event.preventDefault();
         const formData = new FormData(this);
         const id = formData.get('identifiant');
@@ -392,8 +337,6 @@ window.onload = (event) => {
         document.getElementById('TableauCreneaux').classList.add('cache');
         // Afficher contenu onglet 1
         document.getElementById('tableauEtudiants').classList.remove('cache');
-        document.getElementById('changerInfo').classList.remove('cache');
-        document.getElementById('submitGroupeChanges').classList.remove('cache');
         //met à jour style boutons
         document.getElementById('onglet1').classList.add('active');
         document.getElementById('onglet2').classList.remove('active');
@@ -402,8 +345,6 @@ window.onload = (event) => {
     document.getElementById('onglet2').addEventListener('click', function () {
         // Masquer contenu onglet 1
         document.getElementById('tableauEtudiants').classList.add('cache');
-        document.getElementById('changerInfo').classList.add('cache');
-        document.getElementById('submitGroupeChanges').classList.add('cache');
         // Afficher contenu onglet 2
         document.getElementById('contenuOnglet2').classList.remove('cache');
         document.getElementById('TableauCreneaux').classList.remove('cache');
