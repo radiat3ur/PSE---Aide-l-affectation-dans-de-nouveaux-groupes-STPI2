@@ -448,5 +448,18 @@ function recupererCreneauxParGroupes() {
         };
 }
 
+function Supprimer_etudiant(db,id) {
+    return new Promise((resolve, reject) => {
+        db.run('DELETE FROM students WHERE num_insa = ?', [id], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors de la récupération des étudiants:", err.message);
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+    });
+}
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,Supprimer_etudiant };
