@@ -472,20 +472,60 @@ window.onload = (event) => {
     }
         
 
-    async function afficherCreneaux() {
-        const infos =await window.libDB.recupererCreneauxParGroupes();
-        const tableau = document.getElementById('TableauCreneaux');
-        console.log("afficherCreneaux appelé");
-        console.log("infos récupérées :", infos);
-        tableau.innerHTML = `
-         <tr><th>Nom</th><th>Valeur</th></tr>
-        <tr><td>groupes_all</td><td>${JSON.stringify(infos.groupes_all)}</td></tr>
-        <tr><td>groupes_esp</td><td>${JSON.stringify(infos.groupes_esp)}</td></tr>
-        <tr><td>groupes_fle</td><td>${JSON.stringify(infos.groupes_fle)}</td></tr>
-        <tr><td>groupes_alld</td><td>${JSON.stringify(infos.groupes_alld)}</td></tr>
-        <tr><td>groupes_espd</td><td>${JSON.stringify(infos.groupes_espd)}</td></tr>
-        `;
+      async function afficherCreneaux() {
+    const infos = await window.libDB.recupererCreneauxParGroupes();
+    const tableau = document.getElementById('TableauCreneaux');
+    console.log("afficherCreneaux appelé");
+    console.log("infos récupérées :", infos);
+
+    let html = `<tr><th>Groupe Langue</th><th>Créneau</th><th>Groupe(s)</th></tr>`;
+    let previousNom = null;
+    let currentRow = null;
+    let rows = [];
+
+    for (const [nom, valeur] of Object.entries(infos)) {
+        if (Array.isArray(valeur)) {
+            for (const item of valeur) {
+                if (Array.isArray(item) && item.length === 2) {
+                    if (previousNom === nom && currentRow) {
+                        // Ajoute un retour chariot dans la même cellule
+                        currentRow.creneau += `<br>${item[0]}`;
+                        currentRow.groupes += `<br>${Array.isArray(item[1]) ? item[1].join(', ') : item[1]}`;
+                    } else {
+                        // Nouvelle ligne
+                        currentRow = {
+                            nom: nom,
+                            creneau: item[0],
+                            groupes: Array.isArray(item[1]) ? item[1].join(', ') : item[1]
+                        };
+                        rows.push(currentRow);
+                        previousNom = nom;
+                    }
+                } else {
+                    // Cas particulier, on traite comme une nouvelle ligne
+                    currentRow = {
+                        nom: nom,
+                        creneau: JSON.stringify(item),
+                        groupes: ''
+                    };
+                    rows.push(currentRow);
+                    previousNom = nom;
+                }
+            }
+        } 
     }
+
+    // Génère le HTML final
+    for (const row of rows) {
+        html += `<tr>
+            <td>${row.nom}</td>
+            <td>${row.creneau}</td>
+            <td>${row.groupes}</td>
+        </tr>`;
+    }
+
+    tableau.innerHTML = html;
+}
 })
 
 }
