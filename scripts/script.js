@@ -334,12 +334,14 @@ window.onload = (event) => {
     document.getElementById('onglet1').addEventListener('click', function () {
         // Masquer contenu l'onglet 2
         document.getElementById('contenuOnglet2').classList.add('cache');
+        // Masquer contenu l'onglet 3
         document.getElementById('TableauCreneaux').classList.add('cache');
         // Afficher contenu onglet 1
         document.getElementById('tableauEtudiants').classList.remove('cache');
         //met à jour style boutons
         document.getElementById('onglet1').classList.add('active');
         document.getElementById('onglet2').classList.remove('active');
+        document.getElementById('onglet3').classList.remove('active');
     });
     
     document.getElementById('onglet2').addEventListener('click', function () {
@@ -347,14 +349,30 @@ window.onload = (event) => {
         document.getElementById('tableauEtudiants').classList.add('cache');
         // Afficher contenu onglet 2
         document.getElementById('contenuOnglet2').classList.remove('cache');
-        document.getElementById('TableauCreneaux').classList.remove('cache');
+        //Masquer contenu onglet 3
+        document.getElementById('TableauCreneaux').classList.add('cache');
         //met à jour style boutons  
         document.getElementById('onglet2').classList.add('active');
         document.getElementById('onglet1').classList.remove('active');
+        document.getElementById('onglet3').classList.remove('active');
          // Charger les données pour l'onglet 2
-        afficherCreneaux();
         afficherGroupesEtValeurs();
     });
+
+    document.getElementById('onglet3').addEventListener('click', function () {
+        // Masquer contenu onglet 1
+        document.getElementById('tableauEtudiants').classList.add('cache');
+        // Masquer contenu onglet 2
+        document.getElementById('contenuOnglet2').classList.add('cache');
+        // Afficher contenu onglet 3
+        document.getElementById('TableauCreneaux').classList.remove('cache');
+        // Charger les créneaux pour l'onglet 3
+        afficherCreneaux();
+        //met à jour style boutons  
+        document.getElementById('onglet3').classList.add('active');
+        document.getElementById('onglet1').classList.remove('active');
+        document.getElementById('onglet2').classList.remove('active');
+    })
 
     document.getElementById('submit').addEventListener('click', async function(event) {
         const verification = await Message_verification(`Etes-vous sûr de vouloir faire cette modification pour le groupe : ${document.getElementById('groupe').value} ?`);
