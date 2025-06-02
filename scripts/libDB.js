@@ -4,9 +4,11 @@ const path = require('path'); // module path pour gérer les chemins de manière
 const nom_fichier = './Sujet5_base.csv';
 const groupes_all = [["Mercredi 15h",["D","I","J","K"]],["Vendredi 13h15",["E"]]];
 const groupes_esp = [["Lundi 16h45",["I","K"]],["Mercredi 8h",["F"]],["Mercredi 9h45",["G"]],["Mercredi 11h30",["C"]],["Mercredi 15h",["D","J"]],["Mercredi 16h45",["A"]],["Jeudi 9h45",["B"]]];
-const groupes_fle = ["I","J","K"];
-const groupes_alld = ["Mercredi 18h30"];
+const groupes_fle =[["Mardi 18h30",["I","J","K"]]];
+const groupes_alld = [["Mercredi 18h30",["ALLD"]]];
 const groupes_espd = [["Mercredi 15h",["D","I","J","K"]],["Mercredi  16h45",["A","G"]]];
+const libDB = require('./libDB');
+
 
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
@@ -438,12 +440,13 @@ function compterEtudiantsParLangue(db) {
 }
 
 function recupererCreneauxParGroupes() {
+    console.log(groupes_all)
     return {
-            groupes_all:libDB.groupes_all,
-            groupes_esp:libDB.groupes_esp,
-            groupes_fle:libDB.groupes_fle,
-            groupes_espd:libDB.groupes_espd,
-            groupes_alld:libDB.groupes_alld,
+            groupes_all:groupes_all,
+            groupes_esp:groupes_esp,
+            groupes_fle:groupes_fle,
+            groupes_espd:groupes_espd,
+            groupes_alld:groupes_alld,
     
         };
 }

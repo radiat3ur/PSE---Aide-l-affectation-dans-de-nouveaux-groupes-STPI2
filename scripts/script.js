@@ -336,12 +336,14 @@ window.onload = (event) => {
     document.getElementById('onglet1').addEventListener('click', function () {
         // Masquer contenu l'onglet 2
         document.getElementById('contenuOnglet2').classList.add('cache');
+        // Masquer contenu l'onglet 3
         document.getElementById('TableauCreneaux').classList.add('cache');
         // Afficher contenu onglet 1
         document.getElementById('tableauEtudiants').classList.remove('cache');
         //met à jour style boutons
         document.getElementById('onglet1').classList.add('active');
         document.getElementById('onglet2').classList.remove('active');
+        document.getElementById('onglet3').classList.remove('active');
     });
     
     document.getElementById('onglet2').addEventListener('click', function () {
@@ -349,14 +351,30 @@ window.onload = (event) => {
         document.getElementById('tableauEtudiants').classList.add('cache');
         // Afficher contenu onglet 2
         document.getElementById('contenuOnglet2').classList.remove('cache');
-        document.getElementById('TableauCreneaux').classList.remove('cache');
+        //Masquer contenu onglet 3
+        document.getElementById('TableauCreneaux').classList.add('cache');
         //met à jour style boutons  
         document.getElementById('onglet2').classList.add('active');
         document.getElementById('onglet1').classList.remove('active');
+        document.getElementById('onglet3').classList.remove('active');
          // Charger les données pour l'onglet 2
-        afficherCreneaux();
         afficherGroupesEtValeurs();
     });
+
+    document.getElementById('onglet3').addEventListener('click', function () {
+        // Masquer contenu onglet 1
+        document.getElementById('tableauEtudiants').classList.add('cache');
+        // Masquer contenu onglet 2
+        document.getElementById('contenuOnglet2').classList.add('cache');
+        // Afficher contenu onglet 3
+        document.getElementById('TableauCreneaux').classList.remove('cache');
+        // Charger les créneaux pour l'onglet 3
+        afficherCreneaux();
+        //met à jour style boutons  
+        document.getElementById('onglet3').classList.add('active');
+        document.getElementById('onglet1').classList.remove('active');
+        document.getElementById('onglet2').classList.remove('active');
+    })
 
     document.getElementById('submit').addEventListener('click', async function(event) {
         const verification = await Message_verification(`Etes-vous sûr de vouloir faire cette modification pour le groupe : ${document.getElementById('groupe').value} ?`);
@@ -474,20 +492,60 @@ window.onload = (event) => {
     }
         
 
-    async function afficherCreneaux() {
-        const infos =await window.libDB.recupererCreneauxParGroupes();
-        const tableau = document.getElementById('TableauCreneaux');
-        console.log("afficherCreneaux appelé");
-        console.log("infos récupérées :", infos);
-        tableau.innerHTML = `
-         <tr><th>Nom</th><th>Valeur</th></tr>
-        <tr><td>groupes_all</td><td>${JSON.stringify(infos.groupes_all)}</td></tr>
-        <tr><td>groupes_esp</td><td>${JSON.stringify(infos.groupes_esp)}</td></tr>
-        <tr><td>groupes_fle</td><td>${JSON.stringify(infos.groupes_fle)}</td></tr>
-        <tr><td>groupes_alld</td><td>${JSON.stringify(infos.groupes_alld)}</td></tr>
-        <tr><td>groupes_espd</td><td>${JSON.stringify(infos.groupes_espd)}</td></tr>
-        `;
+      async function afficherCreneaux() {
+    const infos = await window.libDB.recupererCreneauxParGroupes();
+    const tableau = document.getElementById('TableauCreneaux');
+    console.log("afficherCreneaux appelé");
+    console.log("infos récupérées :", infos);
+
+    let html = `<tr><th>Groupe Langue</th><th>Créneau</th><th>Groupe(s)</th></tr>`;
+    let previousNom = null;
+    let currentRow = null;
+    let rows = [];
+
+    for (const [nom, valeur] of Object.entries(infos)) {
+        if (Array.isArray(valeur)) {
+            for (const item of valeur) {
+                if (Array.isArray(item) && item.length === 2) {
+                    if (previousNom === nom && currentRow) {
+                        // Ajoute un retour chariot dans la même cellule
+                        currentRow.creneau += `<br>${item[0]}`;
+                        currentRow.groupes += `<br>${Array.isArray(item[1]) ? item[1].join(', ') : item[1]}`;
+                    } else {
+                        // Nouvelle ligne
+                        currentRow = {
+                            nom: nom,
+                            creneau: item[0],
+                            groupes: Array.isArray(item[1]) ? item[1].join(', ') : item[1]
+                        };
+                        rows.push(currentRow);
+                        previousNom = nom;
+                    }
+                } else {
+                    // Cas particulier, on traite comme une nouvelle ligne
+                    currentRow = {
+                        nom: nom,
+                        creneau: JSON.stringify(item),
+                        groupes: ''
+                    };
+                    rows.push(currentRow);
+                    previousNom = nom;
+                }
+            }
+        } 
     }
+
+    // Génère le HTML final
+    for (const row of rows) {
+        html += `<tr>
+            <td>${row.nom}</td>
+            <td>${row.creneau}</td>
+            <td>${row.groupes}</td>
+        </tr>`;
+    }
+
+    tableau.innerHTML = html;
+}
 })
 
 }
