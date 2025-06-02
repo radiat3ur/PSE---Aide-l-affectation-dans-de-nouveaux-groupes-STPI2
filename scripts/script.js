@@ -184,9 +184,11 @@ window.onload = (event) => {
         const annee = formData.get('annee');
         const langue = formData.get('langue');
         const mail = formData.get('mail');
+        const verification = await Message_verification(`Etes-vous sûr de vouloir ajouter l'étudiant : ${prenom} ${nom} ?`);
 
-        await nvEtudiant(id, civilite, prenom, nom, annee, langue, mail);
-
+        if (verification == "valider") {
+            await nvEtudiant(id, civilite, prenom, nom, annee, langue, mail);
+        }
         this.reset();
         rafraichirEtudiants();
     });
