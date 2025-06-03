@@ -333,10 +333,6 @@ window.onload = (event) => {
         }
     });
 
-    document.getElementById('.boutonSupprimer').addEventListener('click', function() {
-        suppressionEtudiant(this.getAttribute('data-id'));
-    });
-
     document.getElementById('onglet1').addEventListener('click', function () {
         // Masquer contenu l'onglet 2
         document.getElementById('contenuOnglet2').classList.add('cache');
@@ -493,64 +489,67 @@ window.onload = (event) => {
         } catch (err) {
             console.error("Erreur lors de l'affichage des groupes et valeurs :", err.message);
         }
-    }
-        
+    } 
 
-      async function afficherCreneaux() {
-    const infos = await window.libDB.recupererCreneauxParGroupes();
-    const tableau = document.getElementById('TableauCreneaux');
-    console.log("afficherCreneaux appelé");
-    console.log("infos récupérées :", infos);
+    async function afficherCreneaux() {
+        const infos = await window.libDB.recupererCreneauxParGroupes();
+        const tableau = document.getElementById('TableauCreneaux');
+        console.log("afficherCreneaux appelé");
+        console.log("infos récupérées :", infos);
 
-    let html = `<tr><th>Groupe Langue</th><th>Créneau</th><th>Groupe(s)</th></tr>`;
-    let previousNom = null;
-    let currentRow = null;
-    let rows = [];
+        let html = `<tr><th>Groupe Langue</th><th>Créneau</th><th>Groupe(s)</th></tr>`;
+        let previousNom = null;
+        let currentRow = null;
+        let rows = [];
 
-    for (const [nom, valeur] of Object.entries(infos)) {
-        if (Array.isArray(valeur)) {
-            for (const item of valeur) {
-                if (Array.isArray(item) && item.length === 2) {
-                    if (previousNom === nom && currentRow) {
-                        // Ajoute un retour chariot dans la même cellule
-                        currentRow.creneau += `<br>${item[0]}`;
-                        currentRow.groupes += `<br>${Array.isArray(item[1]) ? item[1].join(', ') : item[1]}`;
+        for (const [nom, valeur] of Object.entries(infos)) {
+            if (Array.isArray(valeur)) {
+                for (const item of valeur) {
+                    if (Array.isArray(item) && item.length === 2) {
+                        if (previousNom === nom && currentRow) {
+                            // Ajoute un retour chariot dans la même cellule
+                            currentRow.creneau += `<br>${item[0]}`;
+                            currentRow.groupes += `<br>${Array.isArray(item[1]) ? item[1].join(', ') : item[1]}`;
+                        } else {
+                            // Nouvelle ligne
+                            currentRow = {
+                                nom: nom,
+                                creneau: item[0],
+                                groupes: Array.isArray(item[1]) ? item[1].join(', ') : item[1]
+                            };
+                            rows.push(currentRow);
+                            previousNom = nom;
+                        }
                     } else {
-                        // Nouvelle ligne
+                        // Cas particulier, on traite comme une nouvelle ligne
                         currentRow = {
                             nom: nom,
-                            creneau: item[0],
-                            groupes: Array.isArray(item[1]) ? item[1].join(', ') : item[1]
+                            creneau: JSON.stringify(item),
+                            groupes: ''
                         };
                         rows.push(currentRow);
                         previousNom = nom;
                     }
-                } else {
-                    // Cas particulier, on traite comme une nouvelle ligne
-                    currentRow = {
-                        nom: nom,
-                        creneau: JSON.stringify(item),
-                        groupes: ''
-                    };
-                    rows.push(currentRow);
-                    previousNom = nom;
                 }
-            }
-        } 
+            } 
+        }
+
+        // Génère le HTML final
+        for (const row of rows) {
+            html += `<tr>
+                <td>${row.nom}</td>
+                <td>${row.creneau}</td>
+                <td>${row.groupes}</td>
+            </tr>`;
+        }
+
+        tableau.innerHTML = html;
     }
 
-    // Génère le HTML final
-    for (const row of rows) {
-        html += `<tr>
-            <td>${row.nom}</td>
-            <td>${row.creneau}</td>
-            <td>${row.groupes}</td>
-        </tr>`;
-    }
-
-    tableau.innerHTML = html;
-}
-})
-
+    document.getElementById('.boutonSupprimer').addEventListener('click', function() {
+        suppressionEtudiant(this.getAttribute('data-id'));
+        
+    });
+});
 }
 
