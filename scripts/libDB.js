@@ -10,6 +10,22 @@ const groupes_espd = [["Mercredi 15h",["D","I","J","K"]],["Mercredi  16h45",["A"
 const libDB = require('./libDB');
 
 
+function init_groupe(db) {
+    return new Promise((resolve, reject)=> {
+        console.log("presque");
+        db.run(`UPDATE students SET Nouveau_groupe = '0' WHERE Nouveau_groupe IS NULL`, [], (err, rows) => {
+            if (err) {
+                console.error("Erreur lors de l'initialisation des nouveaux groupes :", err.message);
+                console.log("il y a un problème");
+                reject(err);
+                return;
+            }
+            resolve(rows);
+        });
+
+    })
+}
+
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
     db.run('PRAGMA journal_mode = WAL', (err) => {
@@ -53,7 +69,8 @@ function init(db) {
             }
             console.log("Table 'students' creee ou deja existante.");
         });
-
+        console.log("Initialisation des nouveaux groupes");
+        //init_groupe(db);
         // Commencer une transaction pour les insertions
         db.run('BEGIN TRANSACTION', (err) => {
             if (err) {
@@ -465,4 +482,4 @@ function Supprimer_etudiant(db,id) {
 }
 
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,Supprimer_etudiant };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,Supprimer_etudiant,init_groupe };
