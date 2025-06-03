@@ -82,6 +82,15 @@ function clicEtudiants(ligne, id) {
     }
 }
 
+function suppressionEtudiant(id) {
+    Message_verification("Êtes-vous sûr de vouloir supprimer cet étudiant ?").then(async (result) => {
+        if (result === "valider") {
+            await window.libDB.supprimerEtudiant(id);
+            rafraichirEtudiants();
+        }
+    });
+}
+
 function rafraichirEtudiants() {
     (async () => {
         const etudiants = await recupererEtudiants();
