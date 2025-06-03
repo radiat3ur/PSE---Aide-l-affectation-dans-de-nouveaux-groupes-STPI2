@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('libDB', {
     compterEtudiantsParNouveauGroupe: () => ipcRenderer.invoke('recupererNouveauGroupesEtValeurs'),
     compterEtudiantsParLangue: () => ipcRenderer.invoke('recupererLangueParGroupe'),
     recupererCreneauxParGroupes:() => ipcRenderer.invoke('recupererCreneauxParGroupes'),
+    supprimerEtudiant: (id) => ipcRenderer.invoke('supprimerEtudiant', id),
 });

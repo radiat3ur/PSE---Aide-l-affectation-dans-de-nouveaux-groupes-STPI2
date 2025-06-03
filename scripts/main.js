@@ -119,3 +119,12 @@ ipcMain.handle('recupererCreneauxParGroupes',async () => {
     }
 
 });
+
+ipcMain.handle('supprimerEtudiant', async (event, id) => {
+    try {
+        await libDB.supprimerEtudiant(db, id);
+    } catch (err) {
+        console.error("Erreur lors de la suppression de l'étudiant:", err.message);
+        throw err;
+    }
+});
