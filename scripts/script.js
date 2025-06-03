@@ -387,32 +387,24 @@ window.onload = (event) => {
         }
     });
 
-    document.getElementById('onglet1').addEventListener('click', function () {
-        // Masquer contenu l'onglet 2
-        document.getElementById('contenuOnglet2').classList.add('cache');
-        document.getElementById('petitTableauOnglet2').classList.add('cache');
-        // Afficher contenu onglet 1
-        document.getElementById('tableauEtudiants').classList.remove('cache');
-        document.getElementById('changerInfo').classList.remove('cache');
-        document.getElementById('submitGroupeChanges').classList.remove('cache');
-        //met à jour style boutons
-        document.getElementById('onglet1').classList.add('active');
-        document.getElementById('onglet2').classList.remove('active');
-    });
-    
-    document.getElementById('onglet2').addEventListener('click', function () {
-        // Masquer contenu onglet 1
-        document.getElementById('tableauEtudiants').classList.add('cache');
-        document.getElementById('changerInfo').classList.add('cache');
-        document.getElementById('submitGroupeChanges').classList.add('cache');
-        // Afficher contenu onglet 2
-        document.getElementById('contenuOnglet2').classList.remove('cache');
-        document.getElementById('petitTableauOnglet2').classList.remove('cache');
-        //met à jour style boutons  
-        document.getElementById('onglet2').classList.add('active');
-        document.getElementById('onglet1').classList.remove('active');
-         // Charger les données pour l'onglet 2
-        afficherGroupesEtValeurs();
+document.getElementById("triNomDesc").addEventListener("click", () => {
+document.querySelectorAll('#tableauEtudiants th').forEach((titre, index) => {
+            if (titre.innerText === 'Civilité' || titre.innerText === 'Année' || titre.innerText === 'Mail' || titre.innerText === 'Décision Jury STPI1' || titre.innerText=== 'Commentaire') {
+                titre.classList.toggle('cache');
+                document.querySelectorAll('#tableauEtudiants tbody tr').forEach(lig => {
+                    const cells = lig.querySelectorAll('td');
+                    if (cells[index]) {
+                        cells[index].classList.toggle('cache');
+                    }
+                });
+            }
+        });
+        if (this.innerText == 'Plus d\'informations') {
+            this.innerText = 'Moins d\'informations';
+        }
+        else {
+            this.innerText = 'Plus d\'informations';
+        }
     });
 
     document.getElementById('submit').addEventListener('click',async function(event) {

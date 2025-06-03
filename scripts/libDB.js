@@ -356,7 +356,7 @@ function ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail) {
 
 function recupererEtudiants(db) {
     return new Promise((resolve, reject) => {
-        db.all('SELECT num_insa, civilite, prenom, nom, annee, langue, email, section, groupe, decision_jury, commentaire, Nouveau_groupe, Nouvelle_section FROM students', [], (err, rows) => {
+        db.all('SELECT num_insa, civilite, prenom, nom, annee, langue, email, section, groupe, decision_jury, commentaire, Nouveau_groupe, Nouvelle_section FROM students ORDER BY nom ASC', [], (err, rows) => {
             if (err) {
                 console.error("Erreur lors de la récupération des étudiants:", err.message);
                 reject(err);
