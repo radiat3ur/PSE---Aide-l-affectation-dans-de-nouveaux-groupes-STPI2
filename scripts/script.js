@@ -340,27 +340,27 @@ window.onload = (event) => {
     document.getElementById('onglet1').addEventListener('click', function () {
         // Masquer contenu l'onglet 2
         document.getElementById('contenuOnglet2').classList.add('cache');
-        // Masquer contenu l'onglet 3
-        document.getElementById('TableauCreneaux').classList.add('cache');
+        document.getElementById('petitTableauOnglet2').classList.add('cache');
         // Afficher contenu onglet 1
         document.getElementById('tableauEtudiants').classList.remove('cache');
+        document.getElementById('changerInfo').classList.remove('cache');
+        document.getElementById('submitGroupeChanges').classList.remove('cache');
         //met à jour style boutons
         document.getElementById('onglet1').classList.add('active');
         document.getElementById('onglet2').classList.remove('active');
-        document.getElementById('onglet3').classList.remove('active');
     });
     
     document.getElementById('onglet2').addEventListener('click', function () {
         // Masquer contenu onglet 1
         document.getElementById('tableauEtudiants').classList.add('cache');
+        document.getElementById('changerInfo').classList.add('cache');
+        document.getElementById('submitGroupeChanges').classList.add('cache');
         // Afficher contenu onglet 2
         document.getElementById('contenuOnglet2').classList.remove('cache');
-        //Masquer contenu onglet 3
-        document.getElementById('TableauCreneaux').classList.add('cache');
+        document.getElementById('petitTableauOnglet2').classList.remove('cache');
         //met à jour style boutons  
         document.getElementById('onglet2').classList.add('active');
         document.getElementById('onglet1').classList.remove('active');
-        document.getElementById('onglet3').classList.remove('active');
          // Charger les données pour l'onglet 2
         afficherGroupesEtValeurs();
     });
