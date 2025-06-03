@@ -468,7 +468,7 @@ function recupererCreneauxParGroupes() {
         };
 }
 
-function supprimerEtudiant(db,id) {
+function Supprimer_etudiant(db,id) {
     return new Promise((resolve, reject) => {
         db.run('DELETE FROM students WHERE num_insa = ?', [id], (err, rows) => {
             if (err) {
