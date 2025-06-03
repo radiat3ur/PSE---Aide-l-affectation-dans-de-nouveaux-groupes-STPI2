@@ -82,6 +82,15 @@ function clicEtudiants(ligne, id) {
     }
 }
 
+function suppressionEtudiant(id) {
+    Message_verification("Êtes-vous sûr de vouloir supprimer cet étudiant ?").then(async (result) => {
+        if (result === "valider") {
+            await window.libDB.supprimerEtudiant(id);
+            rafraichirEtudiants();
+        }
+    });
+}
+
 function rafraichirEtudiants() {
     (async () => {
         const etudiants = await recupererEtudiants();
@@ -105,7 +114,7 @@ function rafraichirEtudiants() {
             filtreEtudiants = filtreEtudiants.filter(etudiant => window.filtreNouveauxGroupes.includes(etudiant.Nouveau_groupe));
         }
 
-        ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
+        ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
         filtreEtudiants.forEach(etudiant => {
             const lig = tbody.insertRow();
             lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id
@@ -136,6 +145,20 @@ function rafraichirEtudiants() {
                             }
                         });
                     });
+                } else if (col === "") {
+                    const boutondeSuppression = document.createElement("button");
+                    boutondeSuppression.classList.add("boutonSupprimer");
+                    const img = document.createElement("img");
+                    img.src = "images/supprimer.png";
+                    img.alt = "Supprimer";
+                    img.style.width = "20px";
+                    img.style.height = "20px";
+                    boutondeSuppression.appendChild(img);
+                    boutondeSuppression.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        suppressionEtudiant(etudiant.num_insa);
+                    });
+                    cell.appendChild(boutondeSuppression);
                 } else {
                     cell.textContent = etudiant[col];
                 }

@@ -7,7 +7,7 @@ body {
   display: none;
 }
 
-.action {
+.carre-rouge {
   display: block;
   background-color: #eb1f1f;
   padding: 10px 20px;
@@ -108,7 +108,8 @@ button {
   background-color: rgb(225, 214, 214); 
   z-index: 5;
   transition: background-color 0.3s, transform 0.2s;
-  cursor : pointer
+  cursor : pointer;
+  margin-top: 0.2rem
 }
 
 button:hover {
@@ -146,9 +147,8 @@ select:hover {
   text-align: left;
   padding: 12px 8px;
   position: sticky;
-  top: 135px;
-  z-index: 10;
-  border-radius: 12px; 
+  top: 140px;
+  z-index: 10; 
   border-left: none;
   border-right: none;
 }
@@ -199,24 +199,26 @@ select:hover {
   z-index: 5;
 }
 
-#TableauCreneaux td:nth-child(2), #TableauCreneaux th:nth-child(2) {
-    min-width: 180px;
-    white-space: pre-line;
-}
-
 #tableauEtudiants tr:hover,
 #contenuOnglet2 tr:hover,
 #TableauCreneaux tr:hover {
   background-color: #f1f1f1;
 }
 
+
 #contenuOnglet2 tr:last-child {
   background-color: #d5d4d4;
   z-index: 5;
 }
 
+#TableauCreneaux td:nth-child(2), #TableauCreneaux th:nth-child(2) {
+    min-width: 180px;
+    white-space: pre-line;
+}
+
+
 .active{
-  background-color: #0000008d ;
+  background-color: #0000008d !important ;
   color: white;
   border : 1px solid #fff;
 }
@@ -226,16 +228,26 @@ select:hover {
   height: 137px;
   background-color: rgb(255, 255, 255); 
 }
- .bouttonvalide
- {border-radius: 12px;       
+ 
+
+.boutons-validation {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* espace entre les boutons */
+  margin-top: 10px;
+}
+
+.buttonvalide {
+  border-radius: 12px;       
   padding: 10px 14px;        
   border: 1px solid #141010;  
   background-color: rgb(225, 214, 214); 
   z-index: 5;
   transition: background-color 0.3s, transform 0.2s;
-  cursor : pointer; }
+  cursor : pointer;
+}
 
-  .buttonvalide :hover {
+.buttonvalide:hover {
   background-color: #46a012;
   transform: scale(1.03);
   color : #ffffff;
