@@ -333,6 +333,10 @@ window.onload = (event) => {
         }
     });
 
+    document.getElementById('boutonSupprimer').addEventListener('click', function() {
+        suppressionEtudiant();
+    });
+
     document.getElementById('onglet1').addEventListener('click', function () {
         // Masquer contenu l'onglet 2
         document.getElementById('contenuOnglet2').classList.add('cache');
