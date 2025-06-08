@@ -375,6 +375,86 @@ window.onload = (event) => {
         document.getElementById('onglet1').classList.remove('active');
         document.getElementById('onglet2').classList.remove('active');
     })
+let ordreIdInverse = false; // par défaut : tri croissant
+
+
+document.getElementById("triId").addEventListener("click", async () => {
+    const etudiants = await recupererEtudiants();
+
+
+    const sorted = etudiants.sort((a, b) => {
+        return ordreIdInverse
+            ? b.num_insa - a.num_insa // décroissant
+            : a.num_insa - b.num_insa; // croissant
+    });
+
+
+    const tbody = document.querySelector("#tableauEtudiants tbody");
+    tbody.innerHTML = "";
+
+
+    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
+
+
+    sorted.forEach(etudiant => {
+        const lig = tbody.insertRow();
+        ordreColonnes.forEach(col => {
+            const cell = lig.insertCell();
+            cell.textContent = etudiant[col];
+        });
+        lig.addEventListener('click', () => {
+            clicEtudiants(lig, etudiant.num_insa);
+        });
+    });
+
+
+    // Inverser pour prochain clic
+    ordreIdInverse = !ordreIdInverse;
+
+
+    // Changer texte bouton
+    const bouton = document.getElementById("triId");
+    bouton.innerText = ordreIdInverse ? "Trier ID ↓" : "Trier ID ↑";
+});
+let ordreInverse = true; // état initial : Z → A
+document.getElementById("triNomDesc").addEventListener("click", async () => {
+    const etudiants = await recupererEtudiants();
+
+
+    const sorted = etudiants.sort((a, b) => {
+        return ordreInverse
+            ? b.nom.localeCompare(a.nom) // Z → A
+            : a.nom.localeCompare(b.nom); // A → Z
+    });
+
+
+    const tbody = document.querySelector("#tableauEtudiants tbody");
+    tbody.innerHTML = "";
+
+
+    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
+
+
+    sorted.forEach(etudiant => {
+        const lig = tbody.insertRow();
+        ordreColonnes.forEach(col => {
+            const cell = lig.insertCell();
+            cell.textContent = etudiant[col];
+        });
+        lig.addEventListener('click', () => {
+            clicEtudiants(lig, etudiant.num_insa);
+        });
+    });
+
+
+    // Inverse l’ordre pour la prochaine fois
+    ordreInverse = !ordreInverse;
+
+
+    // Optionnel : changer le texte du bouton
+    const bouton = document.getElementById("triNomDesc");
+    bouton.innerText = ordreInverse ? "Trier Z → A" : "Trier A → Z";
+});
 
     document.getElementById('submit').addEventListener('click', async function(event) {
         const verification = await Message_verification(`Etes-vous sûr de vouloir faire cette modification pour le groupe : ${document.getElementById('groupe').value} ?`);
