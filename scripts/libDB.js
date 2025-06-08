@@ -10,21 +10,6 @@ const groupes_espd = [["Mercredi 15h",["D","I","J","K"]],["Mercredi  16h45",["A"
 const libDB = require('./libDB');
 
 
-function init_groupe(db) {
-    return new Promise((resolve, reject)=> {
-        console.log("presque");
-        db.run(`UPDATE students SET Nouveau_groupe = '0' WHERE Nouveau_groupe IS NULL`, [], (err, rows) => {
-            if (err) {
-                console.error("Erreur lors de l'initialisation des nouveaux groupes :", err.message);
-                console.log("il y a un problème");
-                reject(err);
-                return;
-            }
-            resolve(rows);
-        });
-
-    })
-}
 
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
@@ -61,7 +46,7 @@ function init(db) {
             Espagnol_grand_debutant BOOLEAN,
             Allemand_grand_debutant BOOLEAN,
             Nouvelle_section TEXT,
-            Nouveau_groupe TEXT
+            Nouveau_groupe TEXT DEFAULT '0'
         )`, (err) => {
             if (err) {
                 console.error("Erreur lors de la creation de la table:", err.message);
@@ -70,7 +55,6 @@ function init(db) {
             console.log("Table 'students' creee ou deja existante.");
         });
         console.log("Initialisation des nouveaux groupes");
-        //init_groupe(db);
         // Commencer une transaction pour les insertions
         db.run('BEGIN TRANSACTION', (err) => {
             if (err) {
@@ -481,5 +465,49 @@ function Supprimer_etudiant(db,id) {
     });
 }
 
+function Fichier_csv(db, nomFichier) {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT * FROM students', [], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            if (!rows || rows.length === 0) {
+                fs.writeFile(nomFichier, '', (err) => {
+                    if (err) reject(err);
+                    else resolve(` Fichier vide créé : ${nomFichier}`);
+                });
+                return;
+            }
+
+            const headers = Object.keys(rows[0]).join(',');
+
+            const escapeCSV = (value) => {
+                if (value === null || value === undefined) return '';
+                const stringValue = String(value);
+                // Si la valeur contient des caractères spéciaux, on la protège
+                if (/[",\n]/.test(stringValue)) {
+                    return `"${stringValue.replace(/"/g, '""')}"`;
+                }
+                return stringValue;
+            };
+
+            const csvLines = rows.map(row =>
+                Object.values(row).map(escapeCSV).join(',')
+            ).join('\n');
+
+            const csvContent = headers + '\n' + csvLines;
+
+            fs.writeFile(nomFichier, csvContent, (err) => {
+                if (err) reject(err);
+                else resolve(` Fichier CSV créé : ${nomFichier}`);
+            });
+        });
+    });
+}
+
+
+
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,Supprimer_etudiant,init_groupe };
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,Supprimer_etudiant,Fichier_csv};

@@ -29,6 +29,7 @@ let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREA
 
 libDB.init(db);
 
+
 app.whenReady().then(() => {
     createWindow()
     app.on('activate', () => {
