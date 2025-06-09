@@ -452,7 +452,7 @@ function recupererCreneauxParGroupes() {
         };
 }
 
-function Supprimer_etudiant(db,id) {
+function supprimerEtudiant(db,id) {
     return new Promise((resolve, reject) => {
         db.run('DELETE FROM students WHERE num_insa = ?', [id], (err, rows) => {
             if (err) {
@@ -510,4 +510,4 @@ function Fichier_csv(db, nomFichier) {
 
 
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,Supprimer_etudiant,Fichier_csv};
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,supprimerEtudiant,Fichier_csv};

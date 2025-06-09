@@ -415,6 +415,7 @@ document.getElementById("triId").addEventListener("click", async () => {
     // Changer texte bouton
     const bouton = document.getElementById("triId");
     bouton.innerText = ordreIdInverse ? "Trier ID ↓" : "Trier ID ↑";
+    rafraichirEtudiants();
 });
 let ordreInverse = true; // état initial : Z → A
 document.getElementById("triNomDesc").addEventListener("click", async () => {
@@ -454,6 +455,7 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
     // Optionnel : changer le texte du bouton
     const bouton = document.getElementById("triNomDesc");
     bouton.innerText = ordreInverse ? "Trier Z → A" : "Trier A → Z";
+    rafraichirEtudiants();
 });
 
     document.getElementById('submit').addEventListener('click', async function(event) {
@@ -491,6 +493,16 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
                 });;
             }
         }
+    });
+
+    document.getElementById('telechargerCSV').addEventListener('click', async function() {
+        await window.libDB.Fichier_csv('export.csv');
+        const a = document.createElement('a');
+        a.href = 'export.csv';
+        a.download = 'export.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     });
 
     async function afficherGroupesEtValeurs() {
@@ -625,11 +637,5 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
 
         tableau.innerHTML = html;
     }
-
-    document.getElementById('.boutonSupprimer').addEventListener('click', function() {
-        suppressionEtudiant(this.getAttribute('data-id'));
-        
-    });
 });
 }
-

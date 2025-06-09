@@ -154,8 +154,7 @@ function rafraichirEtudiants() {
                     img.style.width = "20px";
                     img.style.height = "20px";
                     boutondeSuppression.appendChild(img);
-                    boutondeSuppression.addEventListener("click", (e) => {
-                        e.stopPropagation();
+                    boutondeSuppression.addEventListener("click", () => {
                         suppressionEtudiant(etudiant.num_insa);
                     });
                     cell.appendChild(boutondeSuppression);

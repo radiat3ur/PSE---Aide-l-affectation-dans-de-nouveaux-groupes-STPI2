@@ -14,7 +14,7 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js')
         },
     })
-    win.loadFile('pageTest.html')
+    win.loadFile('index.html')
 }
 
 const dbPath = path.resolve(__dirname, './students.db'); // cree le fichier students.db dans le dossier PSE
@@ -126,6 +126,16 @@ ipcMain.handle('supprimerEtudiant', async (event, id) => {
         await libDB.supprimerEtudiant(db, id);
     } catch (err) {
         console.error("Erreur lors de la suppression de l'étudiant:", err.message);
+        throw err;
+    }
+});
+
+ipcMain.handle('Fichier_csv', async (event, nomFichier) => {
+    try {
+        const resultat = await libDB.Fichier_csv(db, nomFichier);
+        return resultat;
+    } catch (err) {
+        console.error("Erreur lors de la génération du CSV:", err.message);
         throw err;
     }
 });
