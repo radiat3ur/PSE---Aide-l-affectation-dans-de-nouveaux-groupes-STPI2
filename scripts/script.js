@@ -393,7 +393,7 @@ document.getElementById("triId").addEventListener("click", async () => {
     tbody.innerHTML = "";
 
 
-    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
+    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
 
 
     sorted.forEach(etudiant => {
@@ -415,7 +415,6 @@ document.getElementById("triId").addEventListener("click", async () => {
     // Changer texte bouton
     const bouton = document.getElementById("triId");
     bouton.innerText = ordreIdInverse ? "Trier ID ↓" : "Trier ID ↑";
-    rafraichirEtudiants();
 });
 let ordreInverse = true; // état initial : Z → A
 document.getElementById("triNomDesc").addEventListener("click", async () => {
@@ -433,7 +432,7 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
     tbody.innerHTML = "";
 
 
-    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe"];
+    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
 
 
     sorted.forEach(etudiant => {
@@ -455,7 +454,6 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
     // Optionnel : changer le texte du bouton
     const bouton = document.getElementById("triNomDesc");
     bouton.innerText = ordreInverse ? "Trier Z → A" : "Trier A → Z";
-    rafraichirEtudiants();
 });
 
     document.getElementById('submit').addEventListener('click', async function(event) {
