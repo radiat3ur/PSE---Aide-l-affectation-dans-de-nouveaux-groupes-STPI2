@@ -233,7 +233,7 @@ select:hover {
 .boutons-validation {
   display: flex;
   justify-content: center;
-  gap: 10px; /* espace entre les boutons */
+  gap: 10px; 
   margin-top: 10px;
 }
 
