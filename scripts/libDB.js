@@ -188,7 +188,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                     if (lv2.langue === 'ESP') {
                         if (! (groupes_esp.some(lettre_groupe => lettre_groupe[1].includes(groupe))) && groupe !== "0" && !groupe.includes("SA")) {
                             db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                resolve(`Le groupe ${groupe} ne contient pas d'espagnols. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                resolve(`Le groupe ${groupe} ne contient pas de cours d'espagnols. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                             })
                             return;
                         }
@@ -209,7 +209,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                         if (lv2.langue === 'ALL') {
                             if (! (groupes_all.some(lettre_groupe => lettre_groupe[1].includes(groupe))) && groupe !== "0" && !groupe.includes("SA")) {
                                 db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                    resolve(`Le groupe ${groupe} ne contient pas d'allemands. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                    resolve(`Le groupe ${groupe} ne contient pas de cours d'allemands. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                                 })
                                 return;
                             }
@@ -230,7 +230,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                             if (lv2.langue === 'ESPD') {
                                 if (! (groupes_all.some(lettre_groupe => lettre_groupe[1].includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
                                     db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                        resolve(`Le groupe ${groupe} ne contient pas d'espagnols debutants. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                        resolve(`Le groupe ${groupe} ne contient pas de cours d'espagnols debutants. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                                     })
                                     return;
                                 }
@@ -251,7 +251,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                                 if (lv2.langue === 'FLE') {
                                     if (! (groupes_fle.some(lettre_groupe => lettre_groupe.includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
                                         db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                            resolve(`Le groupe ${groupe} ne contient pas de français. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                            resolve(`Le groupe ${groupe} ne contient pas de cours de français. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                                         })
                                         return;
                                     }
