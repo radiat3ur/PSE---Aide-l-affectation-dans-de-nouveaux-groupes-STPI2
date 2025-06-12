@@ -577,6 +577,7 @@ window.onload = (event) => { //
 
     // permet de supprimer un étudiant en cliquant sur le bouton "Supprimer" de la ligne
     tbody.addEventListener("click", function(event) {
+        etudiantsCliques = []; // évite d'avoir une erreur lorsque l'on veut affecter des étudiants et qu'il fait parti du tableau alors qu'on l'a supprimé
         const boutonSupp = event.target.closest('.boutonSupprimer');
         if (boutonSupp) {
             event.stopPropagation();
@@ -586,13 +587,13 @@ window.onload = (event) => { //
         }
     });
 
-    tbody.querySelectorAll("tr").forEach(lig => {
-        const id = lig.getAttribute('data-id');
-        lig.onclick = (e) => {
-            if (e.target.closest('.boutonSupprimer')) return;
-            clicEtudiants(lig, id);
-        };
-    });
+    // mis dans libAffichage.js
+    // tbody.querySelectorAll("tr").forEach(lig => {
+    //     const id = lig.getAttribute('data-id');
+    //     lig.onclick = (e) => {
+    //         clicEtudiants(lig, id);
+    //     };
+    // });
 
     // gestion des tris
     document.getElementById('triId').addEventListener('click', function() {
