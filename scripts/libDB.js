@@ -188,7 +188,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                     if (lv2.langue === 'ESP') {
                         if (! (groupes_esp.some(lettre_groupe => lettre_groupe[1].includes(groupe))) && groupe !== "0" && !groupe.includes("SA")) {
                             db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                resolve(`Le groupe ${groupe} ne contient pas d'espagnols. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                resolve(`Le groupe ${groupe} ne contient pas de cours d'espagnols. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                             })
                             return;
                         }
@@ -209,7 +209,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                         if (lv2.langue === 'ALL') {
                             if (! (groupes_all.some(lettre_groupe => lettre_groupe[1].includes(groupe))) && groupe !== "0" && !groupe.includes("SA")) {
                                 db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                    resolve(`Le groupe ${groupe} ne contient pas d'allemands. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                    resolve(`Le groupe ${groupe} ne contient pas de cours d'allemands. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                                 })
                                 return;
                             }
@@ -230,7 +230,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                             if (lv2.langue === 'ESPD') {
                                 if (! (groupes_all.some(lettre_groupe => lettre_groupe[1].includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
                                     db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                        resolve(`Le groupe ${groupe} ne contient pas d'espagnols debutants. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                        resolve(`Le groupe ${groupe} ne contient pas de cours d'espagnols debutants. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                                     })
                                     return;
                                 }
@@ -251,7 +251,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                                 if (lv2.langue === 'FLE') {
                                     if (! (groupes_fle.some(lettre_groupe => lettre_groupe.includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
                                         db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
-                                            resolve(`Le groupe ${groupe} ne contient pas de français. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
+                                            resolve(`Le groupe ${groupe} ne contient pas de cours de français. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                                         })
                                         return;
                                     }
@@ -378,58 +378,61 @@ function ajoutCommentaire(db, id, commentaire) {
 }
 
 function compterEtudiantsParGroupe(db) {
-    return new Promise((resolve, reject) => {
-        db.all('SELECT groupe, COUNT(*) AS nombre_etudiants FROM students GROUP BY groupe', [], (err, rows) => {
+    return new Promise((resolve, reject) => {   // On compte le nombre d'étudiants par groupe
+        db.all('SELECT groupe, COUNT(*) AS nombre_etudiants FROM students GROUP BY groupe', [], (err, rows) => {    // On sélectionne la colonne groupe et on compte le nombre d'étudiants par groupe
             if (err) {
-                console.error("Erreur lors du comptage des étudiants par groupe :", err.message);
+                console.error("Erreur lors du comptage des étudiants par groupe :", err.message);   // Message d'erreur
                 reject(err);
                 return;
             }
-            resolve(rows);
+            resolve(rows); // On renvoie les résultats sous forme de tableau d'objets
         });
     });
 }
 
 function compterEtudiantsParNouveauGroupe(db) {
-    return new Promise((resolve, reject)=> {
-        db.all('SELECT Nouveau_groupe, COUNT(*) AS nombre_etudiants_nouveau_groupe FROM students GROUP BY Nouveau_groupe', [], (err, rows) => {
+    return new Promise((resolve, reject)=> {        // On compte le nombre d'étudiants par nouveau groupe
+        db.all('SELECT Nouveau_groupe, COUNT(*) AS nombre_etudiants_nouveau_groupe FROM students GROUP BY Nouveau_groupe', [], (err, rows) => { // On sélectionne la colonne Nouveau_groupe et on compte le nombre d'étudiants par groupe
             if (err) {
-                console.error("Erreur lors du comptage des étudiants par nouveau groupe :", err.message);
+                console.error("Erreur lors du comptage des étudiants par nouveau groupe :", err.message);   // Message d'erreur
                 reject(err);
                 return;
             }
-            resolve(rows);
+            resolve(rows);      // On renvoie les résultats sous forme de tableau d'objets
         });
 
     })
 }
 
 // fonction pour compter les étudiants par langue dans chaque groupe
-function compterEtudiantsParLangue(db) {
+function compterEtudiantsParLangue(db) {                                  // On sélectionne les colonnes Nouveau_groupe et langue de la base de données 
+                                                                        // Si Nouveau_groupe est NULL ou vide, on le remplace par 'Non attribué'
+                                                                        // Sinon, on garde la valeur de Nouveau_groupe
+                                                                        // On compte le nombre d'étudiants par langue et par groupe
+                                                                         // On groupe les résultats par Nouveau_groupe et langue
     return new Promise((resolve, reject) => {
         db.all(`
-            SELECT 
+            SELECT
                 CASE 
-                    WHEN Nouveau_groupe IS NULL OR Nouveau_groupe = '' THEN 'Non attribué'
+                    WHEN Nouveau_groupe IS NULL OR Nouveau_groupe = '' THEN 'Non attribué' 
                     ELSE Nouveau_groupe
                 END AS Nouveau_groupe,
                 langue,
                 COUNT(*) AS nombre_etudiants_langue_nouveau_groupe
-            FROM students
+            FROM students                                                           
             GROUP BY Nouveau_groupe, langue
         `, [], (err, rows) => {
             if (err) {
-                console.error("Erreur lors du comptage des étudiants par langue :", err.message);
+                console.error("Erreur lors du comptage des étudiants par langue :", err.message);          //Message d'erreur si la requête échoue
                 reject(err);
                 return;
             }
-            resolve(rows);
+            resolve(rows);          // On renvoie les résultats sous forme de tableau d'objets
         });
     });
 }
 
-function recupererCreneauxParGroupes() {
-    console.log(groupes_all)
+function recupererCreneauxParGroupes() {   // fonction récupérant les créneaux par groupes présents au début du fichier
     return {
             groupes_all:groupes_all,
             groupes_esp:groupes_esp,
