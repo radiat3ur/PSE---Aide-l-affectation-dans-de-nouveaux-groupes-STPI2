@@ -188,16 +188,16 @@ function affectationGroupe(db, id, groupe, tousValides) {
                             return;
                         }
                         else {
-                                db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
-                                    if (err) {
-                                        console.error("Erreur lors de la mise à jour du groupe:", err.message);
-                                        reject("Erreur DB");
-                                        return;
-                                    }
-                                });
-                                miseAJourNouvelleSection(db, id, groupe)
-                                resolve("Etudiant rajouté dans le groupe")
-                                return
+                            db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
+                                if (err) {
+                                    console.error("Erreur lors de la mise à jour du groupe:", err.message);
+                                    reject("Erreur DB");
+                                    return;
+                                }
+                            });
+                            miseAJourNouvelleSection(db, id, groupe)
+                            resolve("Etudiant rajouté dans le groupe")
+                            return
                         }
                     }
                     else {
@@ -223,7 +223,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                         }
                         else {
                             if (lv2.langue === 'ESPD') {
-                                if (! (groupes_all.some(lettre_groupe => lettre_groupe[1].includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
+                                if (! (groupes_espd.some(lettre_groupe => lettre_groupe[1].includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
                                     db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
                                         resolve(`Le groupe ${groupe} ne contient pas de cours d'espagnols debutants. Pour l'etudiant : ${id} ${info.nom} ${info.prenom}`)
                                     })
@@ -264,7 +264,6 @@ function affectationGroupe(db, id, groupe, tousValides) {
                                     }
                                 }
                                 else {
-                                    console.log('presque')
                                     db.run('UPDATE students SET Nouveau_groupe = ? WHERE num_insa = ?',[groupe,id], (err) => {
                                         if (err) {
                                             console.error("Erreur lors de la mise à jour du groupe:", err.message);
