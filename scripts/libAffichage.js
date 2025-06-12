@@ -159,12 +159,7 @@ function rafraichirEtudiants() {
         ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
         filtreEtudiants.forEach(etudiant => {
             const lig = tbody.insertRow();
-            // lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id
-            // déplacé depuis script.js ici car sinon ne fonctionne plus après une action
-            // ligne du dessus est donc inutile
-            lig.onclick = () => {
-                clicEtudiants(lig, etudiant.num_insa);
-            };
+            lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id
             ordreColonnes.forEach((col, idx) => {
                 const cell = lig.insertCell();
                 if (col === "commentaire") {
