@@ -1,23 +1,26 @@
 const fs = require('fs'); // permet de travailler avec des fichiers (lire, écrire, ...)
 const csv = require('csv-parser'); // analyser des fichiers CSV, ligne par ligne
 const path = require('path'); // module path pour gérer les chemins de manière robuste
+
+//non du fichier CSV à lire *A MODIFIER*
 const nom_fichier = './Sujet5_base.csv';
+
+// Groupes et créneaux pour les cours de langues *A MODIFIER*
 const groupes_all = [["Mercredi 15h",["D","I","J","K"]],["Vendredi 13h15",["E"]]];
 const groupes_esp = [["Lundi 16h45",["I","K"]],["Mercredi 8h",["F"]],["Mercredi 9h45",["G"]],["Mercredi 11h30",["C"]],["Mercredi 15h",["D","J"]],["Mercredi 16h45",["A"]],["Jeudi 9h45",["B"]]];
 const groupes_fle =[["Mardi 18h30",["I","J","K"]]];
 const groupes_alld = [["Mercredi 18h30",["ALLD"]]];
 const groupes_espd = [["Mercredi 15h",["D","I","J","K"]],["Mercredi  16h45",["A","G"]]];
+
 const libDB = require('./libDB');
 
 
-
+// Fonction d'initialisation de la base de données
 function init(db) {
     // Activer le mode WAL (Write-Ahead Logging) pour éviter les verrous
     db.run('PRAGMA journal_mode = WAL', (err) => {
         if (err) {
             console.error("Erreur lors de l'activation du mode WAL:", err.message);
-        } else {
-            // console.log("Mode WAL active.");
         }
     });
 
@@ -52,9 +55,8 @@ function init(db) {
                 console.error("Erreur lors de la creation de la table:", err.message);
                 return;
             }
-            console.log("Table 'students' creee ou deja existante.");
         });
-        console.log("Initialisation des nouveaux groupes");
+
         // Commencer une transaction pour les insertions
         db.run('BEGIN TRANSACTION', (err) => {
             if (err) {
@@ -66,7 +68,6 @@ function init(db) {
             fs.createReadStream(csvFilePath)
                 .pipe(csv({ separator: ',' }))
                 .on('data', (row) => {
-                    // console.log("Ligne lue du CSV:", row); // Affiche chaque ligne lue
                     const { "num_insa": num_insa, "M/Mme": civilite, Prenom: prenom, NOM: nom, Année: annee, Langue: langue, mail: email, Groupe: groupe, "Decision Jury STPI1": decision_jury, Commentaire: commentaire } = row;
                     // Vérifier si l'étudiant existe déjà dans la base de données
                     db.get('SELECT num_insa FROM students WHERE num_insa = ?', [num_insa], (err, existingRow) => {
@@ -81,12 +82,8 @@ function init(db) {
                                     [num_insa, civilite, prenom, nom, annee, langue, email, groupe, decision_jury, commentaire], (err) => {
                                         if (err) {
                                             console.error("Erreur lors de l'insertion des données:", err.message);
-                                        } else {
-                                            // console.log(`Étudiant ${num_insa} inséré avec succès.`);
-                                        }
+                                        } 
                                     });
-                        } else {
-                            // console.log(`Étudiant ${num_insa} déjà présent, pas d'insertion.`);
                         }
                     });
                 })
@@ -97,9 +94,7 @@ function init(db) {
                             console.error("Erreur lors de la validation de la transaction:", err.message);
                             return; 
                         }
-                    
-                        console.log("Debut des mises a jour...");
-                    
+                                        
                         // Mise à jour de la colonne 'an'
                         db.run('UPDATE students SET an = SUBSTR(annee, 1, 4)', (err) => {
                             if (err) console.error("Erreur mise à jour 'an':", err.message);
@@ -159,8 +154,6 @@ function init(db) {
                         db.run(`UPDATE students SET section = CASE WHEN (groupe LIKE '%A%' OR groupe LIKE '%B%' OR groupe LIKE '%C%' OR groupe LIKE '%D%') AND groupe NOT LIKE '%SA%' THEN 1 WHEN groupe LIKE '%E%' OR groupe LIKE '%F%' OR groupe LIKE '%G%' OR groupe LIKE '%H%' THEN 2 WHEN groupe LIKE '%I%' OR groupe LIKE '%J%' OR groupe LIKE '%K%' THEN 'SIB' ELSE 0 END`, (err) => {
                             if (err) console.error("Erreur mise à jour 'Espagnol_grand_debutant':", err.message);
                         });
-                    
-                        console.log("Toutes les mises a jour sont terminees.");
                     });
                 });
             
@@ -168,6 +161,7 @@ function init(db) {
     });
 }
 
+// Mise à jour de la nouvelle section
 function miseAJourNouvelleSection(db, id, groupe) {
     db.run(`UPDATE students SET Nouvelle_section = CASE 
         WHEN (? LIKE '%A%' OR ? LIKE '%B%' OR ? LIKE '%C%') AND ? NOT LIKE '%SA%' THEN 1 
@@ -179,6 +173,7 @@ function miseAJourNouvelleSection(db, id, groupe) {
     });
 }
 
+// Mise à jour du nouveau groupe
 function affectationGroupe(db, id, groupe, tousValides) {
     return new Promise((resolve, reject) => {
         db.get("SELECT num_insa FROM students WHERE num_insa = ? ", [id], (err, row) => {
@@ -292,13 +287,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
     })
 }
 
-function ajoutCommentaire(db, id, commentaire) {
-        db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`,
-                [commentaire, id], (err) => {
-            if (err) console.error("Erreur mise à jour d un commentaire", err.message);
-        });
-}
-
+// Fonction pour ajouter un étudiant à la base de données
 function ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail) {
     return new Promise((resolve, reject) => {
         db.get(`SELECT num_insa FROM students WHERE num_insa = ? `,
@@ -371,8 +360,10 @@ function recupererEtudiants(db) {
     });
 }
 
+// Fonction pour ajouter un commentaire
 function ajoutCommentaire(db, id, commentaire) {
-    db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`, [commentaire, id], (err) => {
+    db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`,
+            [commentaire, id], (err) => {
         if (err) console.error("Erreur mise à jour d un commentaire", err.message);
     });
 }
@@ -443,6 +434,7 @@ function recupererCreneauxParGroupes() {   // fonction récupérant les créneau
         };
 }
 
+// Fonction pour supprimer un étudiant de la base de données
 function supprimerEtudiant(db,id) {
     return new Promise((resolve, reject) => {
         db.run('DELETE FROM students WHERE num_insa = ?', [id], (err, rows) => {
@@ -456,14 +448,16 @@ function supprimerEtudiant(db,id) {
     });
 }
 
+// Fonction pour créer un fichier CSV à partir de la base de données
 function Fichier_csv(db, nomFichier) {
     return new Promise((resolve, reject) => {
         db.all('SELECT * FROM students', [], (err, rows) => {
             if (err) {
-                reject(err);
+                reject(err);        //En cas d'erreur lors de la récupération des données
                 return;
             }
 
+            // Si aucune ligne n'est trouvée, on crée un fichier vide
             if (!rows || rows.length === 0) {
                 fs.writeFile(nomFichier, '', (err) => {
                     if (err) reject(err);
@@ -474,6 +468,7 @@ function Fichier_csv(db, nomFichier) {
 
             const headers = Object.keys(rows[0]).join(',');
 
+            // Pour les caractères spéciaux
             const escapeCSV = (value) => {
                 if (value === null || value === undefined) return '';
                 const stringValue = String(value);
@@ -484,12 +479,14 @@ function Fichier_csv(db, nomFichier) {
                 return stringValue;
             };
 
+            // On crée les lignes du CSV en séparant les valeurs par des virgules
             const csvLines = rows.map(row =>
                 Object.values(row).map(escapeCSV).join(',')
             ).join('\n');
 
             const csvContent = headers + '\n' + csvLines;
 
+            // Écriture du contenu CSV dans le fichier
             fs.writeFile(nomFichier, csvContent, (err) => {
                 if (err) reject(err);
                 else resolve(` Fichier CSV créé : ${nomFichier}`);
@@ -499,6 +496,4 @@ function Fichier_csv(db, nomFichier) {
 }
 
 
-
-// Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
 module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,supprimerEtudiant,Fichier_csv};
