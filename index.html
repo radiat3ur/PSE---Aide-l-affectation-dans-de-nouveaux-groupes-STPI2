@@ -54,8 +54,6 @@
         <button class="active" id="onglet1">Onglet 1</button>
         <button id="onglet2">Onglet 2</button>
         <button id="onglet3">Onglet 3</button>
-        <button id="triId">Trier ID ↑</button>
-        <button id="triNomDesc">Trier Z → A</button>
         <button id="telechargerCSV">Télécharger le CSV</button>
       </div> 
 
@@ -75,22 +73,26 @@
       </table>
     </header>
 
+    <div id="barreTri" style="margin:10px 0;">
+        <button id="triId">Trier par ID</button>
+        <button id="triNom">Trier par Nom</button>
+        <button id="triGroupe">Trier par Groupe</button>
+        <button id="triNouveauGroupe">Trier par Nouveau Groupe</button>
+    </div>
+
     <table border="1" id="tableauEtudiants">
       <thead>
         <tr>
           <th>Identifiant</th>
-          <!-- <th class="cache">Civilité</th> -->
           <th>Civilité</th>
           <th>Prénom</th>
           <th>Nom</th>
-          <!-- <th class="cache">Année</th> -->
           <th>Année</th>
           <th>
             Langue 
             <button id="filtreLangue" class="fleche-bas">▼</button>
             <div id="menuLangue" class="menu-absolute cache"></div>
           </th>
-          <!-- <th class="cache">Mail</th> -->
           <th>Mail</th>
           <th>
             Section
@@ -102,8 +104,6 @@
             <button id="filtreGroupe" class="fleche-bas">▼</button>
             <div id="menuGroupe" class="menu-absolute cache"></div>
           </th>
-          <!-- <th class="cache">Décision Jury STPI1</th> -->
-          <!-- <th class="cache">Commentaire</th> -->
           <th>Décision Jury STPI1</th>
           <th>Commentaire</th>
           <th>

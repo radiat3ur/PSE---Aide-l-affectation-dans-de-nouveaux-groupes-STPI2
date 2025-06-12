@@ -1,9 +1,11 @@
+// programmation principale de l'application Electron
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('node:path');
 const { groupes_esp, groupes_fle, groupes_espd, groupes_alld } = require('./libDB');
 const libDB = require(path.join(__dirname,'libDB.js'));
 const sqlite3 = require('sqlite3').verbose(); // importe sqlite3 ; .verbose() permet d'afficher des messages d'erreur plus detailles
 
+// créer la fenêtre de l'application (voir la doc)
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 1900,
@@ -14,6 +16,7 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js')
         },
     })
+    // ouvre le fichier index.html dans la fenêtre créée
     win.loadFile('index.html')
 }
 
@@ -27,9 +30,11 @@ let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREA
     console.log("Base de donnees ouverte.");
 });
 
+// initialise la base de données
 libDB.init(db);
 
 
+// voir la doc mais lorsque l'application est prête, on crée la fenêtre
 app.whenReady().then(() => {
     createWindow()
     app.on('activate', () => {
@@ -37,6 +42,7 @@ app.whenReady().then(() => {
     })
 })
 
+// lorsque l'on quitte l'application, on ferme la database
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin'){
         app.quit();
@@ -54,11 +60,13 @@ ipcMain.handle('affectationGroupe', async (event, id, groupe, tousValides) => {
 });
 
 
+// fonction permettant d'ajouter un étudiant lorsque l'on reçoit un message du preload.js
 ipcMain.handle('ajoutEtudiant', async (event, id, civilite, prenom, nom, annee, langue, mail) => {
     const resultat = await libDB.ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail)
     return resultat
 });
 
+// fonction permettant de récupérer les étudiants de la db lorsque l'on reçoit un message du preload.js
 ipcMain.handle('recupererEtudiants', async (event) => {
     try {
         const etudiants = await libDB.recupererEtudiants(db); // Attendre que la promesse soit résolue
@@ -69,12 +77,7 @@ ipcMain.handle('recupererEtudiants', async (event) => {
     }
 });
 
-ipcMain.handle('lectureCommentaire', async (event, id) => {
-    const commentaire = await libDB.lectureCommentaire(db, id);
-    return commentaire;
-});
-
-
+// fonction permettant d'ajouter un commentaire lorsque l'on reçoit un message du preload.js
 ipcMain.handle('ajoutCommentaire', async (event, id, nouveauCommentaire) => {
     const commentaireFinal = nouveauCommentaire.trim();
     db.prepare('UPDATE students SET commentaire = ? WHERE num_insa = ?').run(commentaireFinal, id);
@@ -121,6 +124,7 @@ ipcMain.handle('recupererCreneauxParGroupes',async () => {
 
 });
 
+// fonction permettant de supprimer un étudiant lorsque l'on reçoit un message du preload.js
 ipcMain.handle('supprimerEtudiant', async (event, id) => {
     try {
         await libDB.supprimerEtudiant(db, id);
@@ -130,6 +134,7 @@ ipcMain.handle('supprimerEtudiant', async (event, id) => {
     }
 });
 
+// fonction permettant de générer un fichier CSV lorsque l'on reçoit un message du preload.js
 ipcMain.handle('Fichier_csv', async (event, nomFichier) => {
     try {
         const resultat = await libDB.Fichier_csv(db, nomFichier);

@@ -357,6 +357,7 @@ function ajoutEtudiant(db, id, civilite, prenom, nom, annee, langue, mail) {
     })
 }
 
+// Fonction pour récupérer tous les étudiants de la base de données
 function recupererEtudiants(db) {
     return new Promise((resolve, reject) => {
         db.all('SELECT num_insa, civilite, prenom, nom, annee, langue, email, section, groupe, decision_jury, commentaire, Nouveau_groupe, Nouvelle_section FROM students', [], (err, rows) => {
@@ -373,19 +374,6 @@ function recupererEtudiants(db) {
 function ajoutCommentaire(db, id, commentaire) {
     db.run(`UPDATE students SET commentaire = ? WHERE num_insa = ?`, [commentaire, id], (err) => {
         if (err) console.error("Erreur mise à jour d un commentaire", err.message);
-    });
-}
-
-function lectureCommentaire(db, id) {
-    return new Promise((resolve, reject) => {
-        db.get(`SELECT commentaire FROM students WHERE num_insa = ?`, [id], (err, row) => {
-            if (err) {
-                console.error("Erreur lecture d'un commentaire", err.message);
-                reject(err);
-                return;
-            }
-            resolve(row ? row.commentaire : '');
-        });
     });
 }
 
@@ -510,4 +498,4 @@ function Fichier_csv(db, nomFichier) {
 
 
 // Pour Lilian : pense à exporter les fonctions qui sont utilisées par l'affichage puis les mettre dans le preload.js
-module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, lectureCommentaire, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,supprimerEtudiant,Fichier_csv};
+module.exports = { init, affectationGroupe, ajoutCommentaire, ajoutEtudiant, recupererEtudiants, compterEtudiantsParGroupe, compterEtudiantsParNouveauGroupe, compterEtudiantsParLangue,recupererCreneauxParGroupes,supprimerEtudiant,Fichier_csv};

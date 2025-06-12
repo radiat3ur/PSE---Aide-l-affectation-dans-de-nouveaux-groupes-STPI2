@@ -1,9 +1,8 @@
-window.onload = (event) => {
-    (async () => {})();
-
+// script pour gérer les intéractions utilisateur
+window.onload = (event) => { //
     rafraichirEtudiants();
 
-    // Aidé par Yann
+    // Aidé par Yann (à force de rajouter des choses, on aurait dû faire une fonction pour plus d'efficacité)
     // ____
     let LANGUES = {};
     fetch('./json/langues.json')
@@ -174,9 +173,10 @@ window.onload = (event) => {
             });
     // ____     
 
+    // Lorsque l'on clique sur le bouton "AjoutEtudiant", on ajoute les info dans la base de données
     document.getElementById("AjoutEtudiant").addEventListener('submit', async function(event) {
-        event.preventDefault();
-        const formData = new FormData(this);
+        event.preventDefault(); // empêche le rechargement de la page sinon ça ne fonctionne pas
+        const formData = new FormData(this); // on récèpre les données du formulaire
         const id = formData.get('identifiant');
         const civilite = formData.get('civilite');
         const prenom = formData.get('prenom');
@@ -195,6 +195,7 @@ window.onload = (event) => {
 
     const barreRecherche = document.querySelector('.barre-recherche');
 
+    // afficher la barre de recherche avec Ctrl + F
     document.addEventListener('keydown', (event) => {
         if (event.ctrlKey && event.code == 'KeyF') {
             barreRecherche.style.display = 'block';
@@ -203,11 +204,13 @@ window.onload = (event) => {
         }
     });
 
+    // fermer la barre de recherche avec la croix
     const croix = barreRecherche.querySelector('.fermer-recherche');
     croix.addEventListener('click', () => {
         barreRecherche.style.display = 'none';
     });
 
+    // permet de surligner les correspondances
     document.getElementById("recherche").addEventListener("keyup", (event) => { // problème avec keydown
         if (event.key === "Enter") return; // évite de surligner quand on valide la saisie (sinon on reste bloqué à la première correspondance)
         let saisie = event.target.value.trim(); // trim() enlève espaces avant et après
@@ -233,6 +236,7 @@ window.onload = (event) => {
         correspondance = document.querySelectorAll("#tableauEtudiants .surligner");
     });
 
+    // permet de changer de correspondance current en appuyant sur Entrée
     document.getElementById("recherche").addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
@@ -247,12 +251,14 @@ window.onload = (event) => {
         }
     });
 
+    // gestion des filtres
     const filtreLangue = document.getElementById('filtreLangue');
     const menuLangue = document.getElementById('menuLangue');
     
     filtreLangue.addEventListener('click', function(e) {
         menuLangue.classList.toggle('cache'); // toggle enlève si présent, ajoute si absent
  
+        // on récupère la position
         const rect = filtreLangue.getBoundingClientRect();
         menuLangue.style.top = rect.bottom;
         menuLangue.style.left = rect.left;
@@ -301,18 +307,7 @@ window.onload = (event) => {
         menuNouveauGroupe.style.left = rect.left;
     });
 
-    // const colonnesInfoSup = ['Civilité', 'Année', 'Mail', 'Décision Jury STPI1', 'Commentaire'];
-    // document.querySelectorAll('#tableauEtudiants th').forEach((titre, index) => {
-    //     if (colonnesInfoSup.includes(titre.textContent)) {
-    //         document.querySelectorAll('#tableauEtudiants tbody tr').forEach(lig => {
-    //             const cells = lig.querySelectorAll('td');
-    //             if (cells[index]) {
-    //                 cells[index].classList.add('cache');
-    //             }
-    //         });
-    //     }
-    // });
-
+    // gère l'affichage des informations supplémentaires
     document.getElementById('changerInfo').addEventListener('click', function() {
         document.querySelectorAll('#tableauEtudiants th').forEach((titre, index) => {
             if (titre.innerText === 'Civilité' || titre.innerText === 'Année' || titre.innerText === 'Mail' || titre.innerText === 'Décision Jury STPI1' || titre.innerText=== 'Commentaire') {
@@ -375,87 +370,8 @@ window.onload = (event) => {
         document.getElementById('onglet1').classList.remove('active');
         document.getElementById('onglet2').classList.remove('active');
     })
-let ordreIdInverse = false; // par défaut : tri croissant
 
-
-document.getElementById("triId").addEventListener("click", async () => {
-    const etudiants = await recupererEtudiants();
-
-
-    const sorted = etudiants.sort((a, b) => {
-        return ordreIdInverse
-            ? b.num_insa - a.num_insa // décroissant
-            : a.num_insa - b.num_insa; // croissant
-    });
-
-
-    const tbody = document.querySelector("#tableauEtudiants tbody");
-    tbody.innerHTML = "";
-
-
-    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
-
-
-    sorted.forEach(etudiant => {
-        const lig = tbody.insertRow();
-        ordreColonnes.forEach(col => {
-            const cell = lig.insertCell();
-            cell.textContent = etudiant[col];
-        });
-        lig.addEventListener('click', () => {
-            clicEtudiants(lig, etudiant.num_insa);
-        });
-    });
-
-
-    // Inverser pour prochain clic
-    ordreIdInverse = !ordreIdInverse;
-
-
-    // Changer texte bouton
-    const bouton = document.getElementById("triId");
-    bouton.innerText = ordreIdInverse ? "Trier ID ↓" : "Trier ID ↑";
-});
-let ordreInverse = true; // état initial : Z → A
-document.getElementById("triNomDesc").addEventListener("click", async () => {
-    const etudiants = await recupererEtudiants();
-
-
-    const sorted = etudiants.sort((a, b) => {
-        return ordreInverse
-            ? b.nom.localeCompare(a.nom) // Z → A
-            : a.nom.localeCompare(b.nom); // A → Z
-    });
-
-
-    const tbody = document.querySelector("#tableauEtudiants tbody");
-    tbody.innerHTML = "";
-
-
-    const ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
-
-
-    sorted.forEach(etudiant => {
-        const lig = tbody.insertRow();
-        ordreColonnes.forEach(col => {
-            const cell = lig.insertCell();
-            cell.textContent = etudiant[col];
-        });
-        lig.addEventListener('click', () => {
-            clicEtudiants(lig, etudiant.num_insa);
-        });
-    });
-
-
-    // Inverse l’ordre pour la prochaine fois
-    ordreInverse = !ordreInverse;
-
-
-    // Optionnel : changer le texte du bouton
-    const bouton = document.getElementById("triNomDesc");
-    bouton.innerText = ordreInverse ? "Trier Z → A" : "Trier A → Z";
-});
-
+    // permet de mettre tous les étudiants cliqués dans un nouveau groupe
     document.getElementById('submit').addEventListener('click', async function(event) {
         const verification = await Message_verification(`Etes-vous sûr de vouloir faire cette modification pour le groupe : ${document.getElementById('groupe').value} ?`);
 
@@ -466,7 +382,6 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
                 await nvGroupe(id, groupe, tousValides);
             }
 
-            // Récupérer la liste à jour des étudiants
             const etudiants = await recupererEtudiants();
 
             const tousDansLeBonGroupe = etudiantsCliques.every(id => {
@@ -474,25 +389,15 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
                 return etudiant && etudiant.Nouveau_groupe === groupe;
             });
 
+            // Si tous les étudiants cliqués sont dans le bon groupe, on vide le tableau des étudiants cliqués
             if (tousDansLeBonGroupe) {
                 etudiantsCliques = [];
                 rafraichirEtudiants();
-            } else {
-                etudiantsCliques.forEach(id => {
-                    const ligne = document.querySelector(`#tableauEtudiants tr[data-id='${id}']`);
-                    if (ligne) {
-                        const etu = etudiants.find(e => e.num_insa == id);
-                        if (etu && etu.Nouveau_groupe !== groupeCible) {
-                            ligne.classList.add('surligner-rouge');
-                        } else {
-                            ligne.classList.add('surligner');
-                        }
-                    }
-                });;
             }
         }
     });
 
+    // permet de télécharger le tableau des étudiants au format CSV (appelle directement libDB.js, ce qui ne devrait pas être le cas)
     document.getElementById('telechargerCSV').addEventListener('click', async function() {
         await window.libDB.Fichier_csv('export.csv');
         const a = document.createElement('a');
@@ -635,5 +540,72 @@ document.getElementById("triNomDesc").addEventListener("click", async () => {
 
         tableau.innerHTML = html;
     }
+
+    const tbody = document.querySelector("#tableauEtudiants tbody");
+
+    // permet de rajouter un commentaire en double cliquant sur la cellule
+    // cet usage a été compliqué à faire, nous n'avons pas utilisé libAffichage et preload.js comme on aurait dû
+    // On appelle directement la fonction de libDB.js (ce qui ne devrait pas être le cas)
+    tbody.addEventListener("dblclick", function(event) {
+        const cell = event.target;
+        if (cell.tagName === "TD" && cell.cellIndex === 10) {
+            const lig = cell.parentElement;
+            const id = lig.getAttribute('data-id');
+            const texteExistant = cell.textContent;
+            const textarea = cell.querySelector('textarea');
+            // si on clic autre part, on quitte la zone de texte (en mettant à jour le commentaire avec ajoutCommentaire)
+            textarea.addEventListener("blur", async function() {
+                const ajoutTexte = this.value.trim();
+                if (ajoutTexte === texteExistant) {
+                    cell.textContent = texteExistant;
+                } else {
+                    await window.libDB.ajoutCommentaire(id, ajoutTexte);
+                    rafraichirEtudiants();
+                }
+            });
+            textarea.addEventListener("keydown", function(event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    textarea.blur();
+                }
+            });
+        }
+    });
+
+    // permet de supprimer un étudiant en cliquant sur le bouton "Supprimer" de la ligne
+    tbody.addEventListener("click", function(event) {
+        const boutonSupp = event.target.closest('.boutonSupprimer');
+        if (boutonSupp) {
+            event.stopPropagation();
+            const lig = boutonSupp.closest('tr');
+            const id = lig.getAttribute('data-id');
+            suppressionEtudiant(id);
+        }
+    });
+
+    tbody.querySelectorAll("tr").forEach(lig => {
+        const id = lig.getAttribute('data-id');
+        lig.onclick = (e) => {
+            if (e.target.closest('.boutonSupprimer')) return;
+            clicEtudiants(lig, id);
+        };
+    });
+
+    // gestion des tris
+    document.getElementById('triId').addEventListener('click', function() {
+        window.setTriEtudiants([{colonne: 'num_insa'}]);
+    });
+    document.getElementById('triNom').addEventListener('click', function() {
+        window.setTriEtudiants([{colonne: 'nom'}]);
+    });
+    document.getElementById('triGroupe').addEventListener('click', function() {
+        window.setTriEtudiants([{colonne: 'groupe'}, {colonne: 'nom'}]);
+    });
+    document.getElementById('triNouveauGroupe').addEventListener('click', function() {
+        window.setTriEtudiants([{colonne: 'Nouveau_groupe'}, {colonne: 'nom'}]);
+    });
+    document.getElementById('triClasseNom').addEventListener('click', function() {
+        window.setTriEtudiants([{colonne: 'section'}, {colonne: 'groupe'}, {colonne: 'nom'}]);
+    });
 });
-}
+} // on ne s'explique toujours pas le fait de devoir rajouter }); que l'on ouvre nul part

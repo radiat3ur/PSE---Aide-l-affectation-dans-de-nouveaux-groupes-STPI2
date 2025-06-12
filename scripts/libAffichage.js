@@ -1,3 +1,6 @@
+// Information à noter :
+// window.libDB appelle les fonctions de preload.js et pas libDB.js en réalité
+
 function popup(message){
     const dialog = document.getElementById("alerte");
     const texteAlerte = document.getElementById("texteAlerte");
@@ -31,12 +34,13 @@ async function Message_verification(message){
     })
 }
 
+// fonction permettant d'ajouter plusieurs étudiants à un groupe
 async function nvGroupe(id, groupe, tousValides) {
     const alerte = await window.libDB.affectationGroupe(id, groupe, tousValides);
     if (alerte !== "Etudiant rajouté dans le groupe") {
         popup(alerte);
         tousValides = false;
-        // Surligner en rouge la ligne de l'étudiant problématique
+        // Surligner en rouge les lignes des étudiant problématique
         const ligne = document.querySelector(`#tableauEtudiants tr[data-id='${id}']`);
         if (ligne) {
             ligne.classList.add('surligner-rouge');
@@ -44,6 +48,7 @@ async function nvGroupe(id, groupe, tousValides) {
     }
 }
 
+// fonction permettant d'ajouter un commentaire à un étudiant
 async function nvCommentaire(id, commentaire) {
     try {
         await window.libDB.ajoutCommentaire(id, commentaire);
@@ -52,6 +57,7 @@ async function nvCommentaire(id, commentaire) {
     }
 }
 
+// fonction permettant d'ajouter un étudiant à la base de données
 async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
     const alerte = await window.libDB.ajoutEtudiant(id, civilite, prenom, nom, annee, langue, mail);
     if (alerte !== "Etudiant ajouté") {
@@ -59,6 +65,7 @@ async function nvEtudiant(id, civilite, prenom, nom, annee, langue, mail) {
         }
 }
 
+// fonction permettant de récupérer la liste des étudiants
 async function recupererEtudiants() {
     try {
         const etudiants = await window.libDB.recupererEtudiants();
@@ -69,19 +76,24 @@ async function recupererEtudiants() {
     }
 }
 
+
+// fonction permettant de cliquer sur les étudiants et de les mettre dans un tableau (dans le but de les affecter dans un groupe tous en même temps)
 let etudiantsCliques = [];
 
 function clicEtudiants(ligne, id) {
+    // si l'étudiant est déjà dans le tableau etudiantsCliques, on le retire et on enlève le surlignage
     if (etudiantsCliques.includes(id)) {
         etudiantsCliques = etudiantsCliques.filter(idEtudiant => idEtudiant !== id);
         ligne.classList.remove('surligner');
         ligne.classList.remove('surligner-rouge');
+    // sinon, on l'ajoute au tableau et on le surligne
     } else {
         etudiantsCliques.push(id);
         ligne.classList.add('surligner');
     }
 }
 
+// fonction permettant de supprimer un étudiant
 function suppressionEtudiant(id) {
     Message_verification("Êtes-vous sûr de vouloir supprimer cet étudiant ?").then(async (result) => {
         if (result === "valider") {
@@ -91,6 +103,34 @@ function suppressionEtudiant(id) {
     });
 }
 
+window.triEtudiants = window.triEtudiants || [];
+
+// fonction pour définir le tri des étudiants
+function setTriEtudiants(criteres) {
+    window.triEtudiants = criteres;
+    rafraichirEtudiants();
+}
+
+// fonction permettant de trier les étudiants
+function trierEtudiants(etudiants) {
+    return etudiants.slice().sort((a, b) => { // Utilisation de slice() pour ne pas modifier l'original (copie)
+        for (const critere of window.triEtudiants) {
+            let valA = a[critere.colonne] || '';
+            let valB = b[critere.colonne] || '';
+            if (critere.colonne === 'num_insa') {
+                if (valA !== valB) return valA - valB;
+            } else {
+                valA = valA.toLowerCase(); // Convertir en minuscules que que soit insensible à la casse quand on compare
+                valB = valB.toLowerCase();
+                if (valA < valB) return -1;
+                if (valA > valB) return 1;
+            }
+        }
+        return 0;
+    });
+}
+
+// fonction permettant de rafraîchir la liste des étudiants
 function rafraichirEtudiants() {
     (async () => {
         const etudiants = await recupererEtudiants();
@@ -114,38 +154,27 @@ function rafraichirEtudiants() {
             filtreEtudiants = filtreEtudiants.filter(etudiant => window.filtreNouveauxGroupes.includes(etudiant.Nouveau_groupe));
         }
 
+        filtreEtudiants = trierEtudiants(filtreEtudiants);
+
         ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
         filtreEtudiants.forEach(etudiant => {
             const lig = tbody.insertRow();
             lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id
-            ordreColonnes.forEach((col) => {
+            ordreColonnes.forEach((col, idx) => {
                 const cell = lig.insertCell();
                 if (col === "commentaire") {
+                    // Zone de texte pour le commentaire
                     cell.textContent = etudiant[col] || "";
-                    cell.addEventListener("dblclick", () => {
+                    cell.ondblclick = () => {
                         const texteExistant = cell.textContent;
+                        cell.innerHTML = "";
                         const zoneDeTexte = document.createElement("textarea");
                         zoneDeTexte.value = texteExistant;
-                        cell.textContent = "";
                         cell.appendChild(zoneDeTexte);
                         zoneDeTexte.focus();
-                        zoneDeTexte.addEventListener("blur", () => {
-                            const ajoutTexte = zoneDeTexte.value.trim();
-                            if (ajoutTexte !== texteExistant) {
-                                window.libDB.ajoutCommentaire(etudiant.num_insa, ajoutTexte);
-                                cell.textContent = ajoutTexte;
-                            } else {
-                                cell.textContent = texteExistant;
-                            }
-                        });
-                        zoneDeTexte.addEventListener("keydown", (event) => {
-                            if (event.key === "Enter" && !event.shiftKey) {
-                                event.preventDefault();
-                                zoneDeTexte.blur();
-                            }
-                        });
-                    });
+                    };
                 } else if (col === "") {
+                    // Bouton pour supprimer l'étudiant de la database
                     const boutondeSuppression = document.createElement("button");
                     boutondeSuppression.classList.add("boutonSupprimer");
                     const img = document.createElement("img");
@@ -154,19 +183,15 @@ function rafraichirEtudiants() {
                     img.style.width = "20px";
                     img.style.height = "20px";
                     boutondeSuppression.appendChild(img);
-                    boutondeSuppression.addEventListener("click", () => {
+                    boutondeSuppression.onclick = (e) => {
+                        e.stopPropagation();
                         suppressionEtudiant(etudiant.num_insa);
-                    });
+                    };
                     cell.appendChild(boutondeSuppression);
                 } else {
+                    // Remplissage des autres cellules
                     cell.textContent = etudiant[col];
                 }
-            });
-            if (etudiantsCliques.includes(etudiant.num_insa)) {
-                lig.classList.add('surligner');
-            }
-            lig.addEventListener('click', () => {
-                clicEtudiants(lig, etudiant.num_insa)
             });
         });
     })();
