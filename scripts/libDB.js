@@ -49,7 +49,7 @@ function init(db) {
             Espagnol_grand_debutant BOOLEAN,
             Allemand_grand_debutant BOOLEAN,
             Nouvelle_section TEXT,
-            Nouveau_groupe TEXT DEFAULT '0'
+            Nouveau_groupe TEXT 
         )`, (err) => {
             if (err) {
                 console.error("Erreur lors de la creation de la table:", err.message);
