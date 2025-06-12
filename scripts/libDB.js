@@ -244,7 +244,7 @@ function affectationGroupe(db, id, groupe, tousValides) {
                             }
                             else {
                                 if (lv2.langue === 'FLE') {
-                                    if (! (groupes_fle.some(lettre_groupe => lettre_groupe.includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
+                                    if (! (groupes_fle.some(lettre_groupe => lettre_groupe[1].includes(groupe)))&& groupe !== "0" && !groupe.includes("SA")) {
                                         db.get('SELECT nom,prenom FROM students WHERE num_insa = ?',[id], (err,info) => {
                                             resolve(`Le groupe ${groupe} ne contient pas de cours de FLE. Pour l'étudiant : ${id} ${info.nom} ${info.prenom}`)
                                         })
