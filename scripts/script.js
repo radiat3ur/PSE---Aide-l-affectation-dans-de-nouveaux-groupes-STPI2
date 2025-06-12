@@ -339,6 +339,7 @@ window.onload = (event) => { //
         document.getElementById('onglet1').classList.add('active');
         document.getElementById('onglet2').classList.remove('active');
         document.getElementById('onglet3').classList.remove('active');
+        document.getElementById("barreTri").classList.remove("cache");
     });
     
     document.getElementById('onglet2').addEventListener('click', function () {
@@ -352,6 +353,7 @@ window.onload = (event) => { //
         document.getElementById('onglet2').classList.add('active');
         document.getElementById('onglet1').classList.remove('active');
         document.getElementById('onglet3').classList.remove('active');
+        document.getElementById("barreTri").classList.remove("cache");
          // Charger les données pour l'onglet 2
         afficherGroupesEtValeurs();
     });
@@ -369,6 +371,7 @@ window.onload = (event) => { //
         document.getElementById('onglet3').classList.add('active');
         document.getElementById('onglet1').classList.remove('active');
         document.getElementById('onglet2').classList.remove('active');
+        document.getElementById("barreTri").classList.add("cache");
     })
 
     // permet de mettre tous les étudiants cliqués dans un nouveau groupe
