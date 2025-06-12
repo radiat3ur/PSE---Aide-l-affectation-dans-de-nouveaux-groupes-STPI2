@@ -183,16 +183,17 @@ function rafraichirEtudiants() {
                     img.style.width = "20px";
                     img.style.height = "20px";
                     boutondeSuppression.appendChild(img);
-                    boutondeSuppression.onclick = (e) => {
-                        e.stopPropagation();
-                        suppressionEtudiant(etudiant.num_insa);
-                    };
                     cell.appendChild(boutondeSuppression);
                 } else {
                     // Remplissage des autres cellules
                     cell.textContent = etudiant[col];
                 }
             });
+            // devrait être dans script.js mais ne fonctionne pas après une autre action dans ce cas
+            // nous n'avons réussi à résoudre ce problème qu'en mettant cela ici même si ce n'est pas le bon endroit
+            lig.onclick = (e) => {
+                clicEtudiants(lig, etudiant.num_insa);
+            };
         });
     })();
 }

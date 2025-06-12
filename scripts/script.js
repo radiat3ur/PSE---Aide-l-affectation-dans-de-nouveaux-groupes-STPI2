@@ -586,13 +586,13 @@ window.onload = (event) => { //
         }
     });
 
-    tbody.querySelectorAll("tr").forEach(lig => {
-        const id = lig.getAttribute('data-id');
-        lig.onclick = (e) => {
-            if (e.target.closest('.boutonSupprimer')) return;
-            clicEtudiants(lig, id);
-        };
-    });
+    // déplacé dans libAffichage.js
+    // tbody.querySelectorAll("tr").forEach(lig => {
+    //     const id = lig.getAttribute('data-id');
+    //     lig.onclick = (e) => {
+    //         clicEtudiants(lig, id);
+    //     };
+    // });
 
     // gestion des tris
     document.getElementById('triId').addEventListener('click', function() {
