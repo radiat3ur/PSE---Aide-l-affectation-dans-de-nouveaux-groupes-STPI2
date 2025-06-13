@@ -356,6 +356,7 @@ window.onload = (event) => { //
         document.getElementById("barreTri").classList.add("cache");
          // Charger les données pour l'onglet 2
         afficherGroupesEtValeurs();
+        afficherGroupesTheoriques();
     });
 
     document.getElementById('onglet3').addEventListener('click', function () {
@@ -415,6 +416,8 @@ window.onload = (event) => { //
         try {
             // Récupère le nombre d'étudiants par groupe, nouveau groupe et langue
             const groupes = await window.libDB.compterEtudiantsParGroupe();
+            groupes.push({ groupe: "SA3", nombre_etudiants: 0 }); // On rajoute une ligne SA3 à la main car elle n'est pas prise en compte dans la fonction de comptage car pas d'élèves dedans
+
             const nouveauxGroupes = await window.libDB.compterEtudiantsParNouveauGroupe();
             const langues = await window.libDB.compterEtudiantsParLangue();
     
@@ -450,7 +453,7 @@ window.onload = (event) => { //
     
             // Ajouter les données au tableau
             groupes
-            .filter(groupe => groupe.groupe && groupe.groupe!="H") // filtre pour que la ligne 0 et H ne s'affichent pas
+            .filter(groupe => groupe.groupe && groupe.groupe!="H" && groupe.groupe!="SA1") // filtre pour que la ligne 0 et H ne s'affichent pas
             .forEach((groupe) => {
                 const ligne = document.createElement('tr'); // créer une ligne pour chaque groupe
     
@@ -534,6 +537,16 @@ window.onload = (event) => { //
 
         tableau.innerHTML = html;
     }
+
+    function afficherGroupesTheoriques() {
+    // GROUPES doit déjà être chargé depuis groupes.json dans ton script
+    if (typeof GROUPES !== "object") {
+        console.warn("GROUPES n'est pas chargé !");
+        return;
+    }
+    const groupesTheoriques = Object.keys(GROUPES);
+    console.log("Groupes théoriques :", groupesTheoriques);
+}
 
     const tbody = document.querySelector("#tableauEtudiants tbody");
 
