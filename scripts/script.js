@@ -413,29 +413,29 @@ window.onload = (event) => { //
 
     async function afficherGroupesEtValeurs() {
         try {
-            // Récupérer les données des groupes, nouveaux groupes et langues depuis le backend
+            // Récupère le nombre d'étudiants par groupe, nouveau groupe et langue
             const groupes = await window.libDB.compterEtudiantsParGroupe();
             const nouveauxGroupes = await window.libDB.compterEtudiantsParNouveauGroupe();
             const langues = await window.libDB.compterEtudiantsParLangue();
     
             console.log("Données des groupes :", groupes);
-            console.log("Données des nouveaux groupes :", nouveauxGroupes);
+            console.log("Données des nouveaux groupes :", nouveauxGroupes);//tests console
             console.log("Données des langues :", langues);
     
-            // Sélectionner le tableau de l'onglet 2
+            // Sélectionne tableau onglet 2
             const tableau = document.getElementById('contenuOnglet2');
             const thead = tableau.querySelector('thead');
             const tbody = tableau.querySelector('tbody') || document.createElement('tbody');
             tableau.appendChild(tbody);
     
-            // Vider le tableau avant de le remplir
+            // Tableau vide
             thead.innerHTML = '';
             tbody.innerHTML = '';
     
-            // Obtenir la liste unique des langues
+            // Liste langue sans doublons
             const languesUniques = [...new Set(langues.map(langue => langue.langue))];
     
-            // Créer l'en-tête du tableau
+            // en-tête du tableau
             const ligneEnTete = document.createElement('tr');
             ligneEnTete.innerHTML = `
                 <th>Groupe</th>
@@ -449,13 +449,15 @@ window.onload = (event) => { //
              languesUniques.forEach(langue => totauxParLangue[langue] = 0);
     
             // Ajouter les données au tableau
-            groupes.forEach((groupe) => {
-                const ligne = document.createElement('tr');
+            groupes
+            .filter(groupe => groupe.groupe && groupe.groupe!="H") // filtre pour que la ligne 0 et H ne s'affichent pas
+            .forEach((groupe) => {
+                const ligne = document.createElement('tr'); // créer une ligne pour chaque groupe
     
-                // Calculer les données pour chaque langue
-                const colonnesLangues = languesUniques.map(langue => {
-                    const langueData = langues.find(l => l.Nouveau_groupe === groupe.groupe && l.langue === langue);
-                    const nb= langueData ? langueData.nombre_etudiants_langue_nouveau_groupe : 0;
+                
+                const colonnesLangues = languesUniques.map(langue => { // pour chaque langue, on crée une colonne
+                    const langueData = langues.find(l => l.Nouveau_groupe === groupe.groupe && l.langue === langue);   // on cherche dans le tableau des langues les données pour le groupe et la langue
+                    const nb= langueData ? langueData.nombre_etudiants_langue_nouveau_groupe : 0; // si vide on met 0
                     totauxParLangue[langue] += nb; // Maj total
                     return nb;
                 });
@@ -482,51 +484,40 @@ window.onload = (event) => { //
             ${languesUniques.map(langue => `<td><b>${totauxParLangue[langue]}</b></td>`).join('')}
             <td><b>${totalGeneral}</b></td>
         `;
-        tbody.appendChild(ligneTotal);
+        tbody.appendChild(ligneTotal); //ajout ligne total au tableau
 
         } catch (err) {
-            console.error("Erreur lors de l'affichage des groupes et valeurs :", err.message);
+            console.error("Erreur lors de l'affichage des groupes et valeurs :", err.message); // message d'erreur si il y a
         }
     } 
 
     async function afficherCreneaux() {
-        const infos = await window.libDB.recupererCreneauxParGroupes();
-        const tableau = document.getElementById('TableauCreneaux');
+        const infos = await window.libDB.recupererCreneauxParGroupes(); //récupère les créneaux des groupes
+        const tableau = document.getElementById('TableauCreneaux'); //selectionne le tableau de l'onglet 3
         console.log("afficherCreneaux appelé");
-        console.log("infos récupérées :", infos);
+        console.log("infos récupérées :", infos); // debug console
 
         let html = `<tr><th>Groupe Langue</th><th>Créneau</th><th>Groupe(s)</th></tr>`;
         let previousNom = null;
-        let currentRow = null;
+        let currentRow = null; // tableau vide
         let rows = [];
 
-        for (const [nom, valeur] of Object.entries(infos)) {
+        for (const [nom, valeur] of Object.entries(infos)) { // pour chaque nom et valeur dans infos
             if (Array.isArray(valeur)) {
                 for (const item of valeur) {
-                    if (Array.isArray(item) && item.length === 2) {
-                        if (previousNom === nom && currentRow) {
-                            // Ajoute un retour chariot dans la même cellule
-                            currentRow.creneau += `<br>${item[0]}`;
-                            currentRow.groupes += `<br>${Array.isArray(item[1]) ? item[1].join(', ') : item[1]}`;
-                        } else {
-                            // Nouvelle ligne
+                    if (Array.isArray(item) && item.length === 2) { // si tableau de 2 éléments
+                        if (previousNom === nom && currentRow) { // si le nom est le même que le précédent
+                            currentRow.creneau += `<br>${item[0]}`; // ajoute le créneau à la ligne actuelle
+                            currentRow.groupes += `<br>${Array.isArray(item[1]) ? item[1].join(', ') : item[1]}`; // ajoute les groupes à la ligne actuelle
+                        } else {// si nom différent
                             currentRow = {
                                 nom: nom,
                                 creneau: item[0],
-                                groupes: Array.isArray(item[1]) ? item[1].join(', ') : item[1]
+                                groupes: Array.isArray(item[1]) ? item[1].join(', ') : item[1] // nouvelle ligne créée et remplie
                             };
-                            rows.push(currentRow);
-                            previousNom = nom;
+                            rows.push(currentRow); // ajoute la ligne au tableau
+                            previousNom = nom; // stocke le nom pour savoir si le prochain est identique
                         }
-                    } else {
-                        // Cas particulier, on traite comme une nouvelle ligne
-                        currentRow = {
-                            nom: nom,
-                            creneau: JSON.stringify(item),
-                            groupes: ''
-                        };
-                        rows.push(currentRow);
-                        previousNom = nom;
                     }
                 }
             } 
