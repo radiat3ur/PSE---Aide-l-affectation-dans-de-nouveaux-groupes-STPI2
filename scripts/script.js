@@ -353,7 +353,7 @@ window.onload = (event) => { //
         document.getElementById('onglet2').classList.add('active');
         document.getElementById('onglet1').classList.remove('active');
         document.getElementById('onglet3').classList.remove('active');
-        document.getElementById("barreTri").classList.remove("cache");
+        document.getElementById("barreTri").classList.add("cache");
          // Charger les données pour l'onglet 2
         afficherGroupesEtValeurs();
     });
@@ -586,13 +586,13 @@ window.onload = (event) => { //
         }
     });
 
-    tbody.querySelectorAll("tr").forEach(lig => {
-        const id = lig.getAttribute('data-id');
-        lig.onclick = (e) => {
-            if (e.target.closest('.boutonSupprimer')) return;
-            clicEtudiants(lig, id);
-        };
-    });
+    // déplacé dans libAffichage.js
+    // tbody.querySelectorAll("tr").forEach(lig => {
+    //     const id = lig.getAttribute('data-id');
+    //     lig.onclick = (e) => {
+    //         clicEtudiants(lig, id);
+    //     };
+    // });
 
     // gestion des tris
     document.getElementById('triId').addEventListener('click', function() {

@@ -159,8 +159,8 @@ function rafraichirEtudiants() {
         ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
         filtreEtudiants.forEach(etudiant => {
             const lig = tbody.insertRow();
-            lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id
-            ordreColonnes.forEach((col, idx) => {
+            // lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id (ligne devenue inutile depuis le déplacement du clic ici)
+            ordreColonnes.forEach((col) => {
                 const cell = lig.insertCell();
                 if (col === "commentaire") {
                     // Zone de texte pour le commentaire
@@ -183,16 +183,17 @@ function rafraichirEtudiants() {
                     img.style.width = "20px";
                     img.style.height = "20px";
                     boutondeSuppression.appendChild(img);
-                    boutondeSuppression.onclick = (e) => {
-                        e.stopPropagation();
-                        suppressionEtudiant(etudiant.num_insa);
-                    };
                     cell.appendChild(boutondeSuppression);
                 } else {
                     // Remplissage des autres cellules
                     cell.textContent = etudiant[col];
                 }
             });
+            // devrait être dans script.js mais ne fonctionne pas après une autre action dans ce cas
+            // nous n'avons réussi à résoudre ce problème qu'en mettant cela ici même si ce n'est pas le bon endroit
+            lig.onclick = (e) => {
+                clicEtudiants(lig, etudiant.num_insa);
+            };
         });
     })();
 }
