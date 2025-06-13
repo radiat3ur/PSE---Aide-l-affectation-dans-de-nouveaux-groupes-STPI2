@@ -1,15 +1,18 @@
+/* Style global de la page */
 body {
-  background-color: #fff;
-  font-family: 'Arial', sans-serif;
+  background-color: #fff; 
+  font-family: 'Arial', sans-serif; 
 }
 
+/* Classe pour masquer un élément */
 .cache {
   display: none;
 }
 
+/* Carré rouge */
 .carre-rouge {
   display: block;
-  background-color: #eb1f1f;
+  background-color: #eb1f1f; 
   padding: 10px 20px;
   border-radius: 7px;
   border: none;
@@ -18,7 +21,7 @@ body {
   z-index: 1;
 }
 
-
+/* Bandeau du haut qui reste visible au scroll */
 header {
   position: sticky;
   top: 0px;
@@ -26,18 +29,20 @@ header {
 }
 
 
-/* .surligner et .surligner.current à ne pas enlever ! (tu peux changer les couleurs par contre) */
 .surligner {
   background-color: #948d968d !important;
 }
 
-.surligner.current {
-    background-color: #b31b1b !important;
-}
 
-.surligner-rouge { /* ne sait pas pourquoi, en utilisant surligner-current, ça ne marche pas */
+.surligner.current {
   background-color: #b31b1b !important;
 }
+
+
+.surligner-rouge {
+  background-color: #b31b1b !important;
+}
+
 
 .barre-recherche {
   display: none;
@@ -48,6 +53,7 @@ header {
   z-index: 4;
 }
 
+
 .barre-recherche .fermer-recherche {
   background: none;
   border: none;
@@ -56,6 +62,7 @@ header {
   margin-left: 5px;
 }
 
+
 .filtre-dropdown {
   position: relative;
   display: inline-block;
@@ -63,67 +70,72 @@ header {
   z-index: 15;
 }
 
+
 .filtre-dropdown button {
   padding: 8px 12px;
   font-size: 16px;
   cursor: pointer;
 }
 
-
-
+/* Style commun des menus des filtres*/
 .menu-absolute {
-  position: absolute ;
-  background-color: #f0f0f0 ;
-  color: #000000;
+  position: absolute;
+  background-color: #f0f0f0;
+  color: #000;
   padding: 10px 20px;
   border-radius: 7px;
   z-index: 20;
   border: 1px solid #ccc;
 }
 
-
+/* Petite flèche vers le bas pour les menus */
 .fleche-bas {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: 5px;
-    z-index: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 5px;
+  z-index: 1;
 }
 
- #recherche {
+/* Champ de recherche stylisé */
+#recherche {
   border-radius: 20px;
   padding: 8px 12px;
   border: 1px solid #ccc;
 }
 
+/* Style général pour les champs et boutons */
 input[type="text"],
 input[type="number"],
 textarea,
 select,
 button {
-  border-radius: 12px;       
-  padding: 10px 14px;        
-  border: 1px solid #141010;  
-  background-color: rgb(225, 214, 214); 
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid #141010;
+  background-color: rgb(225, 214, 214);
   z-index: 5;
   transition: background-color 0.3s, transform 0.2s;
-  cursor : pointer;
-  margin-top: 0.2rem
+  cursor: pointer;
+  margin-top: 0.2rem;
 }
 
+/* Effet au survol des boutons */
 button:hover {
   background-color: #d81b1b;
   transform: scale(1.03);
-  color : #FFF;
+  color: #FFF;
 }
 
+/* Effet au survol des menus déroulants */
 select:hover {
   background-color: #d81b1b;
   transform: scale(1.03);
-  color : #FFF;
+  color: #FFF;
 }
 
+/* Style commun des tableaux */
 #tableauEtudiants,
 #TableauCreneaux,
 #contenuOnglet2 {
@@ -133,12 +145,11 @@ select:hover {
   font-size: 0.95rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   margin-top: 1rem;
-  border-radius: 12px; 
+  border-radius: 12px;
   z-index: 5;
-
 }
 
-
+/* En-têtes des tableaux */
 #tableauEtudiants th,
 #TableauCreneaux th,
 #contenuOnglet2 th {
@@ -148,28 +159,31 @@ select:hover {
   padding: 12px 8px;
   position: sticky;
   top: 140px;
-  z-index: 10; 
+  z-index: 10;
   border-left: none;
   border-right: none;
 }
 
+/* Annule le position sticky pour l’onglet 2 */
 #contenuOnglet2 th {
-   position: static !important;
-  }
+  position: static !important;
+}
 
+/* Coins arrondis en haut à gauche */
 #tableauEtudiants th:first-child,
 #TableauCreneaux th:first-child,
 #contenuOnglet2 th:first-child {
   border-top-left-radius: 12px;
 }
 
+/* Coins arrondis en haut à droite */
 #tableauEtudiants th:last-child,
 #TableauCreneaux th:last-child,
 #contenuOnglet2 th:last-child {
   border-top-right-radius: 12px;
 }
 
-
+/* Cellules du tableau */
 #tableauEtudiants td,
 #contenuOnglet2 td,
 #TableauCreneaux td {
@@ -177,6 +191,7 @@ select:hover {
   border-bottom: 1px solid #ccc;
 }
 
+/* Boutons dans le tableau étudiant */
 #tableauEtudiants button {
   margin-left: 4px;
   background-color: red;
@@ -186,12 +201,15 @@ select:hover {
   border-radius: 4px;
   cursor: pointer;
 }
+
+/* Effet au survol de ces boutons */
 #tableauEtudiants button:hover {
   background-color: #d81b1b;
   transform: scale(1.03);
-  color : #FFF;
+  color: #FFF;
 }
 
+/* Lignes impaires en gris clair */
 #tableauEtudiants tr:nth-child(odd),
 #contenuOnglet2 tr:nth-child(odd),
 #TableauCreneaux tr:nth-child(odd) {
@@ -199,56 +217,62 @@ select:hover {
   z-index: 5;
 }
 
+/* Lignes survolées en gris un peu plus foncé */
 #tableauEtudiants tr:hover,
 #contenuOnglet2 tr:hover,
 #TableauCreneaux tr:hover {
   background-color: #f1f1f1;
 }
 
-
+/* Dernière ligne de l’onglet 2 avec un fond spécial */
 #contenuOnglet2 tr:last-child {
   background-color: #d5d4d4;
   z-index: 5;
 }
 
-#TableauCreneaux td:nth-child(2), #TableauCreneaux th:nth-child(2) {
-    min-width: 180px;
-    white-space: pre-line;
+
+#TableauCreneaux td:nth-child(2),
+#TableauCreneaux th:nth-child(2) {
+  min-width: 180px;
+  white-space: pre-line;
 }
 
-
-.active{
-  background-color: #0000008d !important ;
+/* Élément actif mis en valeur */
+.active {
+  background-color: #0000008d !important;
   color: white;
-  border : 1px solid #fff;
+  border: 1px solid #fff;
 }
 
+/* Bloc large blanc (pour cacher le tableau au niveau du carré rouge au moment du scroll */
 .carre {
   width: 1500px;
   height: 137px;
-  background-color: rgb(255, 255, 255); 
+  background-color: rgb(255, 255, 255);
 }
- 
 
+/* Conteneur pour les boutons de validation */
 .boutons-validation {
   display: flex;
   justify-content: center;
-  gap: 10px; 
+  gap: 10px;
   margin-top: 10px;
 }
 
+/* Style des boutons de validation */
 .buttonvalide {
-  border-radius: 12px;       
-  padding: 10px 14px;        
-  border: 1px solid #141010;  
-  background-color: rgb(225, 214, 214); 
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid #141010;
+  background-color: rgb(225, 214, 214);
   z-index: 5;
   transition: background-color 0.3s, transform 0.2s;
-  cursor : pointer;
+  cursor: pointer;
 }
 
+/* Effet au survol des boutons de validation */
 .buttonvalide:hover {
-  background-color: #46a012;
+  background-color: #46a012; /* Vert de validation */
   transform: scale(1.03);
-  color : #ffffff;
+  color: #ffffff;
 }
