@@ -159,7 +159,7 @@ function rafraichirEtudiants() {
         ordreColonnes = ["num_insa", "civilite", "prenom", "nom", "annee", "langue", "email", "section", "groupe", "decision_jury", "commentaire", "Nouvelle_section", "Nouveau_groupe", ""];
         filtreEtudiants.forEach(etudiant => {
             const lig = tbody.insertRow();
-            // lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id (ligne devenue inutile depuis le déplacement du clic ici)
+            lig.setAttribute('data-id', etudiant.num_insa); // Ajout de l'attribut data-id (pour la suppression de l'étudiant dans script.js)
             ordreColonnes.forEach((col) => {
                 const cell = lig.insertCell();
                 if (col === "commentaire") {

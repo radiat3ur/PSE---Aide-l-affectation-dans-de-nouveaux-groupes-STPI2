@@ -579,10 +579,10 @@ window.onload = (event) => { //
     tbody.addEventListener("click", function(event) {
         const boutonSupp = event.target.closest('.boutonSupprimer');
         if (boutonSupp) {
-            event.stopPropagation();
             const lig = boutonSupp.closest('tr');
             const id = lig.getAttribute('data-id');
             suppressionEtudiant(id);
+            etudiantsCliques = []; // on vide le tableau des étudiants cliqués pour ne pas laisser l'étudiant supprimé dedans
         }
     });
 
