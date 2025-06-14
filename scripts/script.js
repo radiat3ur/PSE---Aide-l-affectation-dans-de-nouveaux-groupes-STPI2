@@ -122,14 +122,6 @@ window.onload = (event) => { //
             GROUPES = data;
         })
         .finally(() => {
-            document.querySelectorAll('.selectionnerGroupe').forEach(select => {
-                Object.entries(GROUPES).forEach(([key, value]) => {
-                    var option = document.createElement('option');
-                    option.value = value;
-                    option.text = key;
-                    select.appendChild(option);
-                });
-            });
             Object.entries(GROUPES).forEach(([key, value]) => {
                 const div = document.createElement('div');
                 const checkbox = document.createElement('input');
@@ -150,7 +142,24 @@ window.onload = (event) => { //
                     rafraichirEtudiants();
                 });
             });
-            Object.entries(GROUPES).forEach(([key, value]) => {
+        });
+    
+    let NV_GROUPES = {};
+    fetch('./json/nv_groupes.json')
+        .then(reponse => reponse.json())
+        .then(data => {
+            NV_GROUPES = data;
+        })
+        .finally(() => {
+            document.querySelectorAll('.selectionnerGroupe').forEach(select => {
+                Object.entries(NV_GROUPES).forEach(([key, value]) => {
+                    var option = document.createElement('option');
+                    option.value = value;
+                    option.text = key;
+                    select.appendChild(option);
+                });
+            });
+            Object.entries(NV_GROUPES).forEach(([key, value]) => {
                 const div = document.createElement('div');
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
@@ -171,6 +180,7 @@ window.onload = (event) => { //
                     rafraichirEtudiants();
                 });
             });
+        });
     // ____     
 
     // Lorsque l'on clique sur le bouton "AjoutEtudiant", on ajoute les info dans la base de données
@@ -614,5 +624,4 @@ window.onload = (event) => { //
     document.getElementById('triClasseNom').addEventListener('click', function() {
         window.setTriEtudiants([{colonne: 'section'}, {colonne: 'groupe'}, {colonne: 'nom'}]);
     });
-});
-} // on ne s'explique toujours pas le fait de devoir rajouter }); que l'on ouvre nul part
+}
