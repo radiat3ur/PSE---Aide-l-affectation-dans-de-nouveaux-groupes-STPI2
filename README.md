@@ -23,3 +23,5 @@ Taper :
 cd “C:\Users\Loris\PSE\PSE---Aide-l-affectation-dans-de-nouveaux-groupes-STPI2”
 
 8- Pour lancer le page, taper npm start et vous verrez le projet électron se lancer.
+
+PS : Si vous rencontrez un bug ou une erreur, relancer la page en faisant CTRL+R ou simplement en fermant electron et en le relançant.
